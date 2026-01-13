@@ -1,54 +1,175 @@
 # InclusivChat
 
-Plataforma gamer inclusiva e segura voltada para mulheres e pessoas da comunidade LGBTQIAPN+.
+Aplicativo social inclusivo voltado ao acolhimento da comunidade feminina e LGBTQIAPN+, promovendo interações respeitosas, pertencimento e bem-estar por meio de mecânicas positivas e não competitivas.
 
-## 🎮 Sobre o Projeto
+🌈 Visão Geral
 
-O InclusivChat é uma aplicação web desenvolvida em React que oferece um ambiente seguro e acolhedor para gamers se conectarem, compartilharem experiências e formarem grupos de jogo. O projeto foi desenvolvido com foco em inclusividade, acessibilidade e prevenção de discurso de ódio.
+Este projeto foi desenvolvido como parte da Atividade Extensionista do curso de Análise e Desenvolvimento de Sistemas, com foco social e comunitário.
 
-## ✨ Funcionalidades
+O aplicativo busca criar um ambiente digital seguro, onde usuárias e usuários possam se expressar livremente, participar de grupos inclusivos e serem incentivados a comportamentos saudáveis por meio de um sistema de recompensas simbólicas.
 
-### 🔐 Autenticação
-- Login com e-mail e senha
-- Login com Google OAuth
-- Login com Facebook OAuth
-- Cadastro de novos usuários
-- Recuperação de senha por e-mail (EmailJS)
-- Indicadores de carregamento durante autenticação
-- Armazenamento de dados do usuário no localStorage
+🎯 Objetivos do Projeto
 
-### 📱 Feed de Postagens
-- Criar novas postagens
-- Curtir postagens
-- Comentar em postagens
-- Visualização em tempo real
+Promover um espaço digital acolhedor e inclusivo
 
-### 🎮 Grupos de Jogos
-- Criar grupos de jogos
-- Entrar e sair de grupos
-- Chat em tempo real dentro dos grupos
-- Filtro por jogos de interesse
+Incentivar interações respeitosas e empáticas
 
-### 🏆 Sistema de Gamificação
-- Pontos por ações (postar, curtir, comentar, criar grupos, enviar mensagens)
-- Badges/Conquistas desbloqueáveis:
-  - 📝 Primeira Postagem
-  - 🦋 Borboleta Social (10 comentários)
-  - ⭐ Popular (50 curtidas recebidas)
-  - 👑 Líder de Grupo
-  - 💬 Conversador (20 mensagens)
-  - 🤝 Ajudante
+Evitar rankings e comparações entre usuários
 
-### 🛡️ Filtro de Conteúdo
-- Filtro automático de palavras ofensivas
-- Prevenção de discurso de ódio
-- Substituição automática por asteriscos
+Valorizar ações positivas por meio de recompensas simbólicas
 
-### 👤 Perfil
-- Visualização de estatísticas
-- Badges conquistados
-- Pontos acumulados
-- Jogos de interesse
+Aplicar conceitos de UX, acessibilidade e bem-estar digital
+
+🧩 Funcionalidades Principais
+👤 Perfil do Usuário
+
+Foto com moldura padrão
+
+Nome, pronomes, cidade e estado
+
+Bio personalizada
+
+Jogos de interesse
+
+Redes sociais e plataformas de jogos
+
+Estatísticas de interação
+
+Exibição de conquistas (selos, títulos e molduras)
+
+✏️ Edição de Perfil
+
+Edição de dados pessoais (nome, pronomes, bio, cidade, estado)
+
+Atualização de redes sociais e plataformas de jogos
+
+Gerenciamento de recompensas desbloqueadas
+
+Interface com seções expansíveis para melhor UX
+
+📰 Feed e Postagens
+
+Criação de postagens respeitosas
+
+Comentários de apoio
+
+Sistema de denúncias de conteúdo ofensivo
+
+Notificações contextuais e não invasivas
+
+👥 Grupos Inclusivos
+
+Criação e participação em grupos
+
+Interações comunitárias
+
+Recompensas coletivas por ações positivas
+
+✨ Sistema de Essências e Recompensas
+
+O aplicativo utiliza Essências como forma simbólica de reconhecimento por ações positivas, com limite diário para evitar uso excessivo.
+
+🪄 Ações Positivas (exemplos)
+
+Criar postagem respeitosa
+
+Comentar com apoio
+
+Denunciar conteúdo ofensivo corretamente
+
+Participar de grupos inclusivos
+
+Completar o perfil
+
+Login em dias consecutivos
+
+🏆 Recompensas
+
+Selos (badges)
+
+Títulos místicos exibidos no perfil
+
+Molduras de avatar
+
+Temas visuais desbloqueáveis
+
+Mensagens narrativas de reconhecimento
+
+Recompensas coletivas para grupos
+
+🚫 Não há ranking público nem comparação entre usuários.
+
+🎨 Temas Visuais
+
+O app utiliza uma identidade visual baseada em gradiente rosa e roxo, com temas desbloqueáveis inspirados em elementos místicos e naturais, como:
+
+Lua Serena 🌙
+
+Aura Rosa ✨
+
+Bruma Rosada 🌿
+
+Amanhecer Lilás 🌅
+
+Pétala Rosa 🌸
+
+Cada tema ajusta:
+
+Paleta de cores
+
+Botões
+
+Destaques visuais
+
+Contraste e legibilidade
+
+🛠️ Tecnologias Utilizadas
+
+(adicione conforme seu projeto)
+
+Frontend:
+
+Backend:
+
+Banco de Dados:
+
+Testes:
+
+Controle de versão: Git + GitHub
+
+🧪 Testes e Validação
+
+Testes manuais focados em UX
+
+Validação de fluxo de recompensas
+
+Testes de estabilidade da tela de edição
+
+Verificação de acessibilidade e contraste
+
+Registro de resultados por meio de vídeo demonstrativo
+
+🤝 Impacto Social
+
+O projeto contribui para:
+
+Criação de ambientes digitais mais seguros
+
+Promoção de empatia e respeito online
+
+Fortalecimento de comunidades inclusivas
+
+Aplicação prática da tecnologia com foco social
+
+📚 Contexto Acadêmico
+
+Projeto desenvolvido para a Atividade Extensionista
+Curso: Análise e Desenvolvimento de Sistemas
+Instituição: UNINTER
+
+🧠 Considerações Finais
+
+Durante o desenvolvimento, foram enfrentados desafios relacionados à experiência do usuário, gerenciamento de estado e estabilidade da interface. Esses desafios proporcionaram aprendizados significativos sobre desenvolvimento incremental, foco em UX e responsabilidade social no uso da tecnologia.
 
 ## 🚀 Como Executar
 
