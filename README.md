@@ -5,160 +5,98 @@ Aplicativo social inclusivo voltado ao acolhimento da comunidade feminina e LGBT
 🌈 Visão Geral
 
 Este projeto foi desenvolvido como parte da Atividade Extensionista do curso de Análise e Desenvolvimento de Sistemas, com foco social e comunitário.
-
 O aplicativo busca criar um ambiente digital seguro, onde usuárias e usuários possam se expressar livremente, participar de grupos inclusivos e serem incentivados a comportamentos saudáveis por meio de um sistema de recompensas simbólicas.
 
 🎯 Objetivos do Projeto
 
 Promover um espaço digital acolhedor e inclusivo
-
 Incentivar interações respeitosas e empáticas
-
 Evitar rankings e comparações entre usuários
-
 Valorizar ações positivas por meio de recompensas simbólicas
-
 Aplicar conceitos de UX, acessibilidade e bem-estar digital
 
 🧩 Funcionalidades Principais
+
 👤 Perfil do Usuário
-
 Foto com moldura padrão
-
 Nome, pronomes, cidade e estado
-
 Bio personalizada
-
 Jogos de interesse
-
 Redes sociais e plataformas de jogos
-
 Estatísticas de interação
-
 Exibição de conquistas (selos, títulos e molduras)
 
 ✏️ Edição de Perfil
-
 Edição de dados pessoais (nome, pronomes, bio, cidade, estado)
-
 Atualização de redes sociais e plataformas de jogos
-
 Gerenciamento de recompensas desbloqueadas
-
 Interface com seções expansíveis para melhor UX
 
 📰 Feed e Postagens
-
 Criação de postagens respeitosas
-
 Comentários de apoio
-
 Sistema de denúncias de conteúdo ofensivo
-
 Notificações contextuais e não invasivas
 
 👥 Grupos Inclusivos
-
 Criação e participação em grupos
-
 Interações comunitárias
-
 Recompensas coletivas por ações positivas
 
 ✨ Sistema de Essências e Recompensas
-
 O aplicativo utiliza Essências como forma simbólica de reconhecimento por ações positivas, com limite diário para evitar uso excessivo.
-
 🪄 Ações Positivas (exemplos)
-
 Criar postagem respeitosa
-
 Comentar com apoio
-
 Denunciar conteúdo ofensivo corretamente
-
 Participar de grupos inclusivos
-
 Completar o perfil
-
 Login em dias consecutivos
 
 🏆 Recompensas
-
 Selos (badges)
-
 Títulos místicos exibidos no perfil
-
 Molduras de avatar
-
 Temas visuais desbloqueáveis
-
 Mensagens narrativas de reconhecimento
-
 Recompensas coletivas para grupos
-
 🚫 Não há ranking público nem comparação entre usuários.
 
 🎨 Temas Visuais
-
 O app utiliza uma identidade visual baseada em gradiente rosa e roxo, com temas desbloqueáveis inspirados em elementos místicos e naturais, como:
-
 Lua Serena 🌙
-
 Aura Rosa ✨
-
 Bruma Rosada 🌿
-
 Amanhecer Lilás 🌅
-
 Pétala Rosa 🌸
 
 Cada tema ajusta:
-
 Paleta de cores
-
 Botões
-
 Destaques visuais
-
 Contraste e legibilidade
 
 🛠️ Tecnologias Utilizadas
-
 (adicione conforme seu projeto)
 
-Frontend:
-
-Backend:
-
-Banco de Dados:
-
-Testes:
+Frontend: CSS, HTML e JavaScript
+Tests manuais
 
 Controle de versão: Git + GitHub
 
 🧪 Testes e Validação
-
 Testes manuais focados em UX
-
 Validação de fluxo de recompensas
-
 Testes de estabilidade da tela de edição
-
 Verificação de acessibilidade e contraste
-
 Registro de resultados por meio de vídeo demonstrativo
 
 🤝 Impacto Social
 
 O projeto contribui para:
-
 Criação de ambientes digitais mais seguros
-
 Promoção de empatia e respeito online
-
 Fortalecimento de comunidades inclusivas
-
 Aplicação prática da tecnologia com foco social
 
 📚 Contexto Acadêmico
