@@ -1,0 +1,1232 @@
+.profile {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.profile-header h2 {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.edit-profile-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--gradient-mystic);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  box-shadow: 0 4px 15px var(--shadow-mystic);
+}
+
+.edit-profile-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--shadow-mystic);
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.profile-section {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 2px 12px var(--shadow-soft), 0 1px 3px var(--shadow-soft);
+  border: 1px solid var(--border-light);
+  transition: var(--transition-smooth);
+  padding: var(--spacing-lg);
+}
+
+.profile-section:hover {
+  box-shadow: 0 4px 16px var(--shadow-mystic);
+}
+
+.profile-section:first-child,
+.profile-main-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.profile-avatar-large {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-mystic);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 3rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 20px var(--shadow-mystic);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-highlight-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  border-radius: var(--radius-full);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
+  z-index: 10;
+  animation: highlightPulse 2s ease-in-out infinite;
+}
+
+@keyframes highlightPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(255, 215, 0, 0.7);
+  }
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-highlight-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  border-radius: var(--radius-full);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
+  z-index: 10;
+  animation: highlightPulse 2s ease-in-out infinite;
+}
+
+@keyframes highlightPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(255, 215, 0, 0.7);
+  }
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.profile-name-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.profile-name {
+  font-size: 2.2rem;
+  color: var(--text-primary);
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.profile-mystic-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--gradient-mystic-soft);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  width: fit-content;
+  border: 1px solid var(--border);
+}
+
+.profile-highlight-message {
+  font-size: 0.9rem;
+  color: var(--primary);
+  font-weight: 600;
+  font-style: italic;
+  margin: var(--spacing-xs) 0 0 0;
+  padding: var(--spacing-sm);
+  background: var(--gradient-mystic-soft);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--primary);
+}
+
+.profile-pronoun {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.profile-location {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: var(--spacing-xs) 0 0 0;
+  opacity: 0.8;
+}
+
+.profile-bio {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: var(--spacing-sm) 0;
+  line-height: 1.6;
+}
+
+.profile-points {
+  font-size: 1.2rem;
+  color: var(--primary);
+  font-weight: 600;
+  background: var(--background);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  display: inline-block;
+  width: fit-content;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-md) 0;
+  font-weight: 600;
+}
+
+/* Barra de Progresso de Essências Diárias */
+.daily-essence-progress {
+  width: 100%;
+}
+
+.daily-essence-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.daily-essence-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.daily-essence-count {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mystic-purple);
+}
+
+.daily-essence-bar-container {
+  width: 100%;
+  height: 24px;
+  background: var(--background);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 2px solid var(--border);
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.daily-essence-bar {
+  height: 100%;
+  background: var(--gradient-mystic);
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease-out;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(107, 91, 138, 0.3);
+}
+
+.daily-essence-bar.complete {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  box-shadow: 0 2px 12px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3);
+  animation: essenceCompletePulse 2s ease-in-out infinite;
+}
+
+.daily-essence-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: essenceShine 2s ease-in-out infinite;
+}
+
+.daily-essence-bar.complete .daily-essence-bar-fill {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+@keyframes essenceShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes essenceCompletePulse {
+  0%, 100% {
+    box-shadow: 0 2px 12px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 2px 16px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.5);
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.stat-card {
+  background: var(--background);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  text-align: center;
+  border: 2px solid var(--border);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.games-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.game-tag {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--primary);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.no-games,
+.no-badges {
+  color: var(--text-secondary);
+  font-style: italic;
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.badge-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  border: 2px solid var(--border-light);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.badge-card.unlocked {
+  background: var(--gradient-mystic-soft);
+  border-color: var(--mystic-purple-light);
+}
+
+.badge-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-mystic);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.badge-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--shadow-mystic);
+  border-color: var(--mystic-purple);
+}
+
+.badge-card:hover::before {
+  opacity: 1;
+}
+
+.badge-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  animation: badgeGlow 2s ease-in-out infinite;
+}
+
+@keyframes badgeGlow {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.badge-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.badge-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.badge-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Redes Sociais */
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.social-link {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--background);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.social-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.social-link.instagram {
+  color: #E4405F;
+}
+
+.social-link.instagram:hover {
+  border-color: #E4405F;
+  background: rgba(228, 64, 95, 0.1);
+}
+
+.social-link.twitter {
+  color: #1DA1F2;
+}
+
+.social-link.twitter:hover {
+  border-color: #1DA1F2;
+  background: rgba(29, 161, 242, 0.1);
+}
+
+.social-link.discord {
+  cursor: default;
+  color: #5865F2;
+}
+
+.social-link.discord:hover {
+  border-color: #5865F2;
+  background: rgba(88, 101, 242, 0.1);
+}
+
+.social-link.twitch {
+  color: #9146FF;
+}
+
+.social-link.twitch:hover {
+  border-color: #9146FF;
+  background: rgba(145, 70, 255, 0.1);
+}
+
+.social-link.youtube {
+  color: #FF0000;
+}
+
+.social-link.youtube:hover {
+  border-color: #FF0000;
+  background: rgba(255, 0, 0, 0.1);
+}
+
+/* Plataformas */
+.platforms-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.platform-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--background);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  transition: all 0.2s;
+}
+
+.platform-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.platform-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.platform-icon.steam {
+  color: #171a21;
+}
+
+.platform-icon.epic {
+  color: #313131;
+}
+
+.platform-icon.xbox {
+  color: #107c10;
+}
+
+.platform-icon.playstation {
+  color: #003087;
+}
+
+.platform-icon.nintendo {
+  color: #e60012;
+}
+
+.platform-icon.riot {
+  color: #d32929;
+}
+
+.platform-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 140px;
+}
+
+.platform-value {
+  color: var(--text-secondary);
+  flex: 1;
+  word-break: break-word;
+}
+
+@media (max-width: 640px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .edit-profile-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .profile-section:first-child {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .badges-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .platform-name {
+    min-width: 100px;
+    font-size: 0.9rem;
+  }
+}
+
+/* ========================================
+   ESTILOS DOS TEMAS VISUAIS
+   ======================================== */
+
+/* 🌙 Tema: Lua Serena - Amarelo lunar claro */
+.profile-theme-serene_moon,
+.theme-serene_moon {
+  background: var(--theme-background, #F5F1E6) !important;
+}
+
+.profile-theme-serene_moon .profile-content,
+.theme-serene_moon .profile-content {
+  background: var(--theme-background, #F5F1E6);
+}
+
+.profile-theme-serene_moon .profile-section,
+.theme-serene_moon .profile-section {
+  background: var(--theme-secondary, #FAF8F2);
+  border-color: rgba(230, 212, 138, 0.4);
+}
+
+.profile-theme-serene_moon .profile-main-section,
+.theme-serene_moon .profile-main-section {
+  background: var(--theme-secondary, #FAF8F2);
+  border: 2px solid rgba(230, 212, 138, 0.5);
+}
+
+.profile-theme-serene_moon .profile-avatar-large,
+.theme-serene_moon .profile-avatar-large {
+  border: 4px solid var(--theme-primary, #E6D48A);
+  background: linear-gradient(135deg, var(--theme-primary, #E6D48A) 0%, var(--theme-secondary, #FAF8F2) 100%);
+  box-shadow: 0 4px 20px rgba(230, 212, 138, 0.3);
+}
+
+.profile-theme-serene_moon .profile-name,
+.profile-theme-serene_moon .profile-pronoun,
+.profile-theme-serene_moon .profile-bio,
+.profile-theme-serene_moon .profile-header h2,
+.theme-serene_moon .profile-name,
+.theme-serene_moon .profile-pronoun,
+.theme-serene_moon .profile-bio,
+.theme-serene_moon .profile-header h2 {
+  color: var(--theme-text, #4B4637);
+}
+
+.profile-theme-serene_moon .section-title,
+.theme-serene_moon .section-title {
+  color: var(--theme-text, #4B4637);
+  font-weight: 600;
+}
+
+.profile-theme-serene_moon .edit-profile-button,
+.theme-serene_moon .edit-profile-button {
+  background: var(--theme-primary, #E6D48A);
+  color: var(--theme-text, #4B4637);
+}
+
+.profile-theme-serene_moon .edit-profile-button:hover,
+.theme-serene_moon .edit-profile-button:hover {
+  background: var(--theme-hover, #DCCB78);
+}
+
+.profile-theme-serene_moon .edit-profile-button:disabled,
+.theme-serene_moon .edit-profile-button:disabled {
+  background: var(--theme-disabled, #EFEADA);
+  opacity: 0.5;
+}
+
+.profile-theme-serene_moon .stat-card,
+.theme-serene_moon .stat-card {
+  background: var(--theme-secondary, #FAF8F2);
+  border-color: rgba(230, 212, 138, 0.4);
+}
+
+.profile-theme-serene_moon .badge-card.unlocked,
+.theme-serene_moon .badge-card.unlocked {
+  background: var(--theme-secondary, #FAF8F2);
+  border-color: rgba(230, 212, 138, 0.5);
+  box-shadow: 0 2px 12px rgba(230, 212, 138, 0.3);
+}
+
+.profile-theme-serene_moon .game-tag,
+.profile-theme-serene_moon .platform-name,
+.profile-theme-serene_moon .platform-value,
+.theme-serene_moon .game-tag,
+.theme-serene_moon .platform-name,
+.theme-serene_moon .platform-value {
+  color: var(--theme-text, #4B4637);
+}
+
+/* ✨ Tema: Aura Rosa - Rosa luminoso */
+.profile-theme-pink_aura,
+.theme-pink_aura {
+  background: var(--theme-background, #F6C1D6) !important;
+}
+
+.profile-theme-pink_aura .profile-content,
+.theme-pink_aura .profile-content {
+  background: var(--theme-background, #F6C1D6);
+}
+
+.profile-theme-pink_aura .profile-section,
+.theme-pink_aura .profile-section {
+  background: var(--theme-secondary, #FDECF3);
+  border-color: rgba(240, 166, 193, 0.4);
+}
+
+.profile-theme-pink_aura .profile-main-section,
+.theme-pink_aura .profile-main-section {
+  background: var(--theme-secondary, #FDECF3);
+  border: 2px solid rgba(240, 166, 193, 0.5);
+}
+
+.profile-theme-pink_aura .profile-avatar-large,
+.theme-pink_aura .profile-avatar-large {
+  border: 4px solid var(--theme-primary, #F0A6C1);
+  background: linear-gradient(135deg, var(--theme-primary, #F0A6C1) 0%, var(--theme-secondary, #FDECF3) 100%);
+  box-shadow: 0 4px 20px rgba(240, 166, 193, 0.4);
+}
+
+.profile-theme-pink_aura .profile-name,
+.profile-theme-pink_aura .profile-pronoun,
+.profile-theme-pink_aura .profile-bio,
+.profile-theme-pink_aura .profile-header h2,
+.theme-pink_aura .profile-name,
+.theme-pink_aura .profile-pronoun,
+.theme-pink_aura .profile-bio,
+.theme-pink_aura .profile-header h2 {
+  color: var(--theme-text, #7A2E4D);
+}
+
+.profile-theme-pink_aura .section-title,
+.theme-pink_aura .section-title {
+  color: var(--theme-text, #7A2E4D);
+  font-weight: 600;
+}
+
+.profile-theme-pink_aura .edit-profile-button,
+.theme-pink_aura .edit-profile-button {
+  background: var(--theme-primary, #F0A6C1);
+  color: var(--theme-text, #7A2E4D);
+}
+
+.profile-theme-pink_aura .edit-profile-button:hover,
+.theme-pink_aura .edit-profile-button:hover {
+  background: var(--theme-hover, #E894B3);
+}
+
+.profile-theme-pink_aura .edit-profile-button:disabled,
+.theme-pink_aura .edit-profile-button:disabled {
+  background: var(--theme-disabled, #F8D6E4);
+  opacity: 0.5;
+}
+
+.profile-theme-pink_aura .badge-card.unlocked,
+.theme-pink_aura .badge-card.unlocked {
+  background: linear-gradient(135deg, var(--theme-background, #FDF1F7) 0%, rgba(243, 166, 200, 0.1) 100%);
+  border-color: var(--theme-primary, #F3A6C8);
+}
+
+.profile-theme-pink_aura .stat-card,
+.theme-pink_aura .stat-card {
+  background: var(--theme-background, #FDF1F7);
+  border-color: var(--theme-secondary, #E6C48A);
+}
+
+.profile-theme-pink_aura .stat-value,
+.theme-pink_aura .stat-value {
+  color: var(--theme-text, #8A3D5E);
+}
+
+.profile-theme-pink_aura .game-tag,
+.profile-theme-pink_aura .platform-name,
+.profile-theme-pink_aura .platform-value,
+.profile-theme-pink_aura .badge-card.unlocked,
+.profile-theme-pink_aura .stat-card,
+.theme-pink_aura .game-tag,
+.theme-pink_aura .platform-name,
+.theme-pink_aura .platform-value {
+  color: var(--theme-text, #7A2E4D);
+}
+
+.profile-theme-pink_aura .badge-card.unlocked,
+.theme-pink_aura .badge-card.unlocked {
+  background: var(--theme-background, #F4B6CF);
+  border-color: rgba(232, 157, 186, 0.5);
+  box-shadow: 0 2px 12px rgba(255, 214, 230, 0.4);
+}
+
+.profile-theme-pink_aura .stat-card,
+.theme-pink_aura .stat-card {
+  background: var(--theme-background, #F4B6CF);
+  border-color: rgba(232, 157, 186, 0.5);
+}
+
+/* ☁️ Tema: Céu Suave - Aplicado por inteiro */
+.profile-theme-soft_sky,
+.theme-soft_sky {
+  background: var(--theme-background, #F0F8FF) !important;
+}
+
+.profile-theme-soft_sky .profile-content,
+.theme-soft_sky .profile-content {
+  background: var(--theme-background, #F0F8FF);
+}
+
+.profile-theme-soft_sky .profile-section,
+.theme-soft_sky .profile-section {
+  background: var(--theme-background, #F0F8FF);
+  border-color: var(--theme-primary, #B8D4E8);
+}
+
+.profile-theme-soft_sky .profile-main-section,
+.theme-soft_sky .profile-main-section {
+  background: var(--theme-background, #F0F8FF);
+  border: 2px solid var(--theme-primary, #C4D5E8);
+}
+
+.profile-theme-soft_sky .profile-avatar-large,
+.theme-soft_sky .profile-avatar-large {
+  border: 4px solid var(--theme-primary, #C4D5E8);
+  background: linear-gradient(135deg, var(--theme-primary, #B8D4E8) 0%, var(--theme-secondary, #E6F3FF) 100%);
+}
+
+.profile-theme-soft_sky .profile-name,
+.profile-theme-soft_sky .profile-header h2,
+.profile-theme-soft_sky .section-title,
+.theme-soft_sky .profile-name,
+.theme-soft_sky .profile-header h2,
+.theme-soft_sky .section-title {
+  color: var(--theme-text, #6B9AC4);
+}
+
+.profile-theme-soft_sky .profile-pronoun,
+.profile-theme-soft_sky .profile-bio,
+.profile-theme-soft_sky .badge-description,
+.profile-theme-soft_sky .stat-label,
+.profile-theme-soft_sky .platform-value,
+.theme-soft_sky .profile-pronoun,
+.theme-soft_sky .profile-bio,
+.theme-soft_sky .badge-description,
+.theme-soft_sky .stat-label,
+.theme-soft_sky .platform-value {
+  color: var(--theme-text, #6B9AC4);
+}
+
+.theme-soft_sky .no-games,
+.theme-soft_sky .no-badges,
+.theme-soft_sky .platform-name {
+  color: var(--theme-text, #6B9AC4);
+  opacity: 0.7;
+}
+
+.profile-theme-soft_sky .badge-icon,
+.profile-theme-soft_sky .profile-points,
+.theme-soft_sky .badge-icon,
+.theme-soft_sky .profile-points {
+  color: var(--theme-primary, #C4D5E8);
+}
+
+.profile-theme-soft_sky .edit-profile-button,
+.theme-soft_sky .edit-profile-button {
+  background: linear-gradient(135deg, var(--theme-primary, #B8D4E8) 0%, var(--theme-secondary, #E6F3FF) 100%);
+  box-shadow: 0 4px 20px var(--theme-glow, rgba(196, 213, 232, 0.3));
+  color: var(--theme-text, #6B9AC4);
+  border: 1px solid var(--theme-primary, #C4D5E8);
+}
+
+.profile-theme-soft_sky .badge-card.unlocked,
+.theme-soft_sky .badge-card.unlocked {
+  background: linear-gradient(135deg, rgba(196, 213, 232, 0.3) 0%, rgba(232, 240, 248, 0.2) 100%);
+  border-color: var(--theme-accent, #A8D0E8);
+  color: var(--theme-text, #6B9AC4);
+}
+
+.theme-soft_sky .badge-description {
+  color: var(--theme-text, #6B9AC4);
+  opacity: 0.9;
+}
+
+.profile-theme-soft_sky .badge-name,
+.theme-soft_sky .badge-name {
+  color: var(--theme-text, #6B9AC4);
+  font-weight: 700;
+}
+
+.profile-theme-soft_sky .stat-card,
+.theme-soft_sky .stat-card {
+  background: var(--theme-background, #F0F8FF);
+  border-color: var(--theme-primary, #B8D4E8);
+  color: var(--theme-text, #6B9AC4);
+}
+
+.theme-soft_sky .stat-label {
+  color: var(--theme-text, #6B9AC4);
+  opacity: 0.8;
+}
+
+.profile-theme-soft_sky .stat-value,
+.profile-theme-soft_sky .social-link,
+.theme-soft_sky .stat-value,
+.theme-soft_sky .social-link {
+  color: var(--theme-text, #6B9AC4);
+}
+
+.profile-theme-soft_sky .game-tag,
+.theme-soft_sky .game-tag {
+  background: rgba(196, 213, 232, 0.4);
+  color: var(--theme-text, #6B9AC4);
+  border: 1px solid var(--theme-primary, #C4D5E8);
+  font-weight: 600;
+}
+
+.profile-theme-soft_sky .profile-points,
+.theme-soft_sky .profile-points {
+  background: rgba(196, 213, 232, 0.3);
+  color: var(--theme-text, #6B9AC4);
+  border: 1px solid var(--theme-primary, #C4D5E8);
+  font-weight: 600;
+}
+
+.theme-soft_sky .platform-name {
+  color: var(--theme-text, #6B9AC4);
+  opacity: 0.8;
+  font-weight: 600;
+}
+
+.theme-soft_sky .platform-value {
+  color: var(--theme-text, #6B9AC4);
+  opacity: 0.9;
+}
+
+/* 🌿 Tema: Bruma Rosada - Verde sálvia com rosa sutil */
+.profile-theme-pink_mist,
+.theme-pink_mist {
+  background: var(--theme-background, #DDEBE3) !important;
+}
+
+.profile-theme-pink_mist .profile-content,
+.theme-pink_mist .profile-content {
+  background: var(--theme-background, #DDEBE3);
+}
+
+.profile-theme-pink_mist .profile-section,
+.theme-pink_mist .profile-section {
+  background: var(--theme-secondary, #F3F8F5);
+  border-color: rgba(200, 222, 212, 0.4);
+}
+
+.profile-theme-pink_mist .profile-main-section,
+.theme-pink_mist .profile-main-section {
+  background: var(--theme-secondary, #F3F8F5);
+  border: 2px solid rgba(200, 222, 212, 0.5);
+}
+
+.profile-theme-pink_mist .profile-avatar-large,
+.theme-pink_mist .profile-avatar-large {
+  border: 4px solid var(--theme-primary, #C8DED4);
+  background: linear-gradient(135deg, var(--theme-primary, #C8DED4) 0%, var(--theme-accent, #E6C9D6) 100%);
+  box-shadow: 0 4px 20px rgba(200, 222, 212, 0.3);
+}
+
+.profile-theme-pink_mist .profile-name,
+.profile-theme-pink_mist .profile-pronoun,
+.profile-theme-pink_mist .profile-bio,
+.profile-theme-pink_mist .profile-header h2,
+.theme-pink_mist .profile-name,
+.theme-pink_mist .profile-pronoun,
+.theme-pink_mist .profile-bio,
+.theme-pink_mist .profile-header h2 {
+  color: var(--theme-text, #3E5E54);
+}
+
+.profile-theme-pink_mist .section-title,
+.theme-pink_mist .section-title {
+  color: var(--theme-text, #3E5E54);
+  font-weight: 600;
+}
+
+.profile-theme-pink_mist .edit-profile-button,
+.theme-pink_mist .edit-profile-button {
+  background: var(--theme-primary, #C8DED4);
+  color: var(--theme-text, #3E5E54);
+}
+
+.profile-theme-pink_mist .edit-profile-button:hover,
+.theme-pink_mist .edit-profile-button:hover {
+  background: var(--theme-hover, #B5D2C5);
+}
+
+.profile-theme-pink_mist .edit-profile-button:disabled,
+.theme-pink_mist .edit-profile-button:disabled {
+  background: var(--theme-disabled, #E6F2ED);
+  opacity: 0.5;
+}
+
+.profile-theme-pink_mist .stat-card,
+.theme-pink_mist .stat-card {
+  background: var(--theme-secondary, #F3F8F5);
+  border-color: rgba(200, 222, 212, 0.4);
+}
+
+.profile-theme-pink_mist .badge-card.unlocked,
+.theme-pink_mist .badge-card.unlocked {
+  background: var(--theme-secondary, #F3F8F5);
+  border-color: rgba(200, 222, 212, 0.5);
+  box-shadow: 0 2px 12px rgba(200, 222, 212, 0.3);
+}
+
+.profile-theme-pink_mist .game-tag,
+.profile-theme-pink_mist .platform-name,
+.profile-theme-pink_mist .platform-value,
+.profile-theme-pink_mist .badge-description,
+.profile-theme-pink_mist .stat-label,
+.theme-pink_mist .game-tag,
+.theme-pink_mist .platform-name,
+.theme-pink_mist .platform-value,
+.theme-pink_mist .badge-description,
+.theme-pink_mist .stat-label {
+  color: var(--theme-text, #3E5E54);
+}
+
+/* 🌅 Tema: Amanhecer Lilás - Aplicado por inteiro */
+.profile-theme-lilac_dawn,
+.theme-lilac_dawn {
+  background: var(--theme-background, #D6C9F0) !important;
+}
+
+.profile-theme-lilac_dawn .profile-content,
+.theme-lilac_dawn .profile-content {
+  background: var(--theme-background, #D6C9F0);
+}
+
+.profile-theme-lilac_dawn .profile-section,
+.theme-lilac_dawn .profile-section {
+  background: var(--theme-background, #D6C9F0);
+  border-color: rgba(183, 166, 230, 0.5);
+}
+
+.profile-theme-lilac_dawn .profile-main-section,
+.theme-lilac_dawn .profile-main-section {
+  background: var(--theme-background, #D6C9F0);
+  border: 2px solid rgba(183, 166, 230, 0.5);
+}
+
+.profile-theme-lilac_dawn .profile-avatar-large,
+.theme-lilac_dawn .profile-avatar-large {
+  border: 4px solid var(--theme-primary, #B7A6E6);
+  background: linear-gradient(135deg, var(--theme-primary, #B7A6E6) 0%, var(--theme-secondary, #E8E4FA) 100%);
+  box-shadow: 0 4px 20px rgba(232, 228, 250, 0.4);
+}
+
+.profile-theme-lilac_dawn .profile-name,
+.profile-theme-lilac_dawn .profile-pronoun,
+.profile-theme-lilac_dawn .profile-bio,
+.profile-theme-lilac_dawn .profile-header h2,
+.theme-lilac_dawn .profile-name,
+.theme-lilac_dawn .profile-pronoun,
+.theme-lilac_dawn .profile-bio,
+.theme-lilac_dawn .profile-header h2 {
+  color: var(--theme-text, #4B3F72);
+}
+
+.profile-theme-lilac_dawn .section-title,
+.theme-lilac_dawn .section-title {
+  color: var(--theme-text, #4B3F72);
+  font-weight: 600;
+}
+
+.profile-theme-lilac_dawn .edit-profile-button,
+.theme-lilac_dawn .edit-profile-button {
+  background: var(--theme-primary, #B7A6E6);
+  color: var(--theme-text, #4B3F72);
+}
+
+.profile-theme-lilac_dawn .edit-profile-button:hover,
+.theme-lilac_dawn .edit-profile-button:hover {
+  background: #C1B2EA;
+  filter: brightness(1.08);
+}
+
+.profile-theme-lilac_dawn .stat-card,
+.theme-lilac_dawn .stat-card {
+  background: var(--theme-background, #D6C9F0);
+  border-color: rgba(183, 166, 230, 0.5);
+}
+
+.profile-theme-lilac_dawn .badge-card.unlocked,
+.theme-lilac_dawn .badge-card.unlocked {
+  background: var(--theme-background, #D6C9F0);
+  border-color: rgba(183, 166, 230, 0.5);
+  box-shadow: 0 2px 12px rgba(232, 228, 250, 0.4);
+}
+
+.profile-theme-lilac_dawn .game-tag,
+.profile-theme-lilac_dawn .platform-name,
+.profile-theme-lilac_dawn .platform-value,
+.profile-theme-lilac_dawn .badge-description,
+.profile-theme-lilac_dawn .stat-label,
+.theme-lilac_dawn .game-tag,
+.theme-lilac_dawn .platform-name,
+.theme-lilac_dawn .platform-value,
+.theme-lilac_dawn .badge-description,
+.theme-lilac_dawn .stat-label {
+  color: var(--theme-text, #4B3F72);
+}
+
+/* 🌸 Tema: Pétala Rosa - Rosa floral suave */
+.profile-theme-petal,
+.theme-petal {
+  background: var(--theme-background, #F7C6D9) !important;
+}
+
+.profile-theme-petal .profile-content,
+.theme-petal .profile-content {
+  background: var(--theme-background, #F7C6D9);
+}
+
+.profile-theme-petal .profile-section,
+.theme-petal .profile-section {
+  background: var(--theme-secondary, #FFF0F6);
+  border-color: rgba(229, 161, 188, 0.4);
+}
+
+.profile-theme-petal .profile-main-section,
+.theme-petal .profile-main-section {
+  background: var(--theme-secondary, #FFF0F6);
+  border: 2px solid rgba(229, 161, 188, 0.5);
+}
+
+.profile-theme-petal .profile-avatar-large,
+.theme-petal .profile-avatar-large {
+  border: 4px solid var(--theme-primary, #E5A1BC);
+  background: linear-gradient(135deg, var(--theme-primary, #E5A1BC) 0%, var(--theme-secondary, #FFF0F6) 100%);
+  box-shadow: 0 4px 20px rgba(229, 161, 188, 0.3);
+}
+
+.profile-theme-petal .profile-name,
+.profile-theme-petal .profile-pronoun,
+.profile-theme-petal .profile-bio,
+.profile-theme-petal .profile-header h2,
+.theme-petal .profile-name,
+.theme-petal .profile-pronoun,
+.theme-petal .profile-bio,
+.theme-petal .profile-header h2 {
+  color: var(--theme-text, #7C3A55);
+}
+
+.profile-theme-petal .section-title,
+.theme-petal .section-title {
+  color: var(--theme-text, #7C3A55);
+  font-weight: 600;
+}
+
+.profile-theme-petal .edit-profile-button,
+.theme-petal .edit-profile-button {
+  background: var(--theme-primary, #E5A1BC);
+  color: var(--theme-text, #7C3A55);
+}
+
+.profile-theme-petal .edit-profile-button:hover,
+.theme-petal .edit-profile-button:hover {
+  background: var(--theme-hover, #DC8FAF);
+}
+
+.profile-theme-petal .edit-profile-button:disabled,
+.theme-petal .edit-profile-button:disabled {
+  background: var(--theme-disabled, #F4D2E0);
+  opacity: 0.5;
+}
+
+.profile-theme-petal .stat-card,
+.theme-petal .stat-card {
+  background: var(--theme-secondary, #FFF0F6);
+  border-color: rgba(229, 161, 188, 0.4);
+}
+
+.profile-theme-petal .badge-card.unlocked,
+.theme-petal .badge-card.unlocked {
+  background: var(--theme-secondary, #FFF0F6);
+  border-color: rgba(229, 161, 188, 0.5);
+  box-shadow: 0 2px 12px rgba(229, 161, 188, 0.3);
+}
+
+.profile-theme-petal .game-tag,
+.profile-theme-petal .platform-name,
+.profile-theme-petal .platform-value,
+.profile-theme-petal .badge-description,
+.profile-theme-petal .stat-label,
+.theme-petal .game-tag,
+.theme-petal .platform-name,
+.theme-petal .platform-value,
+.theme-petal .badge-description,
+.theme-petal .stat-label {
+  color: var(--theme-text, #7C3A55);
+}

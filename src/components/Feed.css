@@ -1,0 +1,200 @@
+.feed {
+  width: 100%;
+}
+
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.feed-header h2 {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.create-post-button {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--gradient-mystic);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 15px var(--shadow-mystic);
+  position: relative;
+  overflow: hidden;
+}
+
+.create-post-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.create-post-button:hover::before {
+  left: 100%;
+}
+
+.create-post-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--shadow-mystic);
+}
+
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xl);
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  box-shadow: 0 2px 12px var(--shadow-soft);
+  border: 1px solid var(--border-light);
+}
+
+/* Aplicação de temas no Feed */
+.theme-serene_moon .feed-header h2 {
+  color: #4B4637;
+}
+
+.theme-serene_moon .create-post-button {
+  background: #E6D48A;
+  color: #4B4637;
+  box-shadow: 0 4px 15px rgba(230, 212, 138, 0.3);
+}
+
+.theme-serene_moon .create-post-button:hover {
+  background: #DCCB78;
+}
+
+.theme-serene_moon .empty-state {
+  background: #FAF8F2;
+  border-color: rgba(230, 212, 138, 0.4);
+  color: #4B4637;
+}
+
+.theme-pink_aura .feed-header h2 {
+  color: #7A2E4D;
+}
+
+.theme-pink_aura .create-post-button {
+  background: #F0A6C1;
+  color: #7A2E4D;
+  box-shadow: 0 4px 15px rgba(240, 166, 193, 0.4);
+}
+
+.theme-pink_aura .create-post-button:hover {
+  background: #E894B3;
+}
+
+.theme-pink_aura .empty-state {
+  background: #FDECF3;
+  border-color: rgba(240, 166, 193, 0.4);
+  color: #7A2E4D;
+}
+
+.theme-soft_sky .feed-header h2 {
+  color: #6B9AC4;
+}
+
+.theme-soft_sky .create-post-button {
+  background: linear-gradient(135deg, #B8D4E8 0%, #E6F3FF 100%);
+  color: #6B9AC4;
+  box-shadow: 0 4px 15px rgba(196, 213, 232, 0.3);
+}
+
+.theme-soft_sky .empty-state {
+  background: #F0F5FA;
+  border-color: #B8D4E8;
+  color: #6B9AC4;
+}
+
+/* 🌿 Tema: Bruma Rosada - Verde sálvia */
+.theme-pink_mist .feed-header h2 {
+  color: #3E5E54;
+}
+
+.theme-pink_mist .create-post-button {
+  background: #C8DED4;
+  color: #3E5E54;
+  box-shadow: 0 4px 15px rgba(200, 222, 212, 0.3);
+}
+
+.theme-pink_mist .create-post-button:hover {
+  background: #B5D2C5;
+}
+
+.theme-pink_mist .empty-state {
+  background: #F3F8F5;
+  border-color: rgba(200, 222, 212, 0.4);
+  color: #3E5E54;
+}
+
+/* 🌅 Tema: Amanhecer Lilás */
+.theme-lilac_dawn .feed-header h2 {
+  color: #4B3F72;
+}
+
+.theme-lilac_dawn .create-post-button {
+  background: #C2B4E8;
+  color: #4B3F72;
+  box-shadow: 0 4px 15px rgba(194, 180, 232, 0.3);
+}
+
+.theme-lilac_dawn .create-post-button:hover {
+  background: #B1A2DE;
+}
+
+.theme-lilac_dawn .empty-state {
+  background: #F2EEFA;
+  border-color: rgba(194, 180, 232, 0.4);
+  color: #4B3F72;
+}
+
+/* 🌸 Tema: Pétala Rosa */
+.theme-petal .feed-header h2 {
+  color: #7C3A55;
+}
+
+.theme-petal .create-post-button {
+  background: #E5A1BC;
+  color: #7C3A55;
+  box-shadow: 0 4px 15px rgba(229, 161, 188, 0.3);
+}
+
+.theme-petal .create-post-button:hover {
+  background: #DC8FAF;
+}
+
+.theme-petal .empty-state {
+  background: #FFF0F6;
+  border-color: rgba(229, 161, 188, 0.4);
+  color: #7C3A55;
+}
+
+@media (max-width: 640px) {
+  .feed-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .create-post-button {
+    width: 100%;
+  }
+}

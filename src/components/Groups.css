@@ -1,0 +1,649 @@
+.groups {
+  width: 100%;
+}
+
+.groups-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+}
+
+.groups-header h2 {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.create-group-button {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--gradient-mystic);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 15px var(--shadow-mystic);
+}
+
+.create-group-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--shadow-mystic);
+}
+
+.groups-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.groups-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.section-title {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin: 0;
+  font-weight: 600;
+}
+
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.group-item {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  box-shadow: 0 2px 12px var(--shadow-soft), 0 1px 3px var(--shadow-soft);
+  border: 1px solid var(--border-light);
+  transition: var(--transition-smooth);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.group-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-mystic);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.group-item:hover {
+  box-shadow: 0 8px 24px var(--shadow-mystic), 0 2px 8px var(--shadow-soft);
+  transform: translateY(-2px);
+  border-color: var(--border);
+}
+
+.group-item:hover::before {
+  opacity: 1;
+}
+
+.group-item-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.group-item-header h4 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin: 0;
+  font-weight: 600;
+}
+
+.group-game {
+  font-size: 0.9rem;
+  color: var(--mystic-purple);
+  font-weight: 600;
+}
+
+.group-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.group-meta {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.group-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.view-group-button,
+/* ========================================
+   DESIGN SYSTEM - BOTÕES DE AÇÃO
+   Aplicativo Social Inclusivo - Estética Mística Moderna
+   ======================================== */
+
+/* Base comum para todos os botões */
+.join-group-button {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  /* Acessibilidade: garantir contraste mínimo */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Estados de foco para acessibilidade */
+.join-group-button:focus-visible {
+  outline: 3px solid rgba(139, 92, 246, 0.5);
+  outline-offset: 2px;
+}
+
+.join-group-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Botão de ação positiva: ENTRAR no grupo
+   Usa cores do tema ativo, com microanimações suaves */
+.join-group-button:not(.joined) {
+  /* Estilos base - serão sobrescritos pelos temas */
+  background: var(--primary);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.join-group-button:not(.joined):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.join-group-button:not(.joined):active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Efeito de brilho suave para ações positivas */
+.join-group-button:not(.joined)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.join-group-button:not(.joined):hover::before {
+  left: 100%;
+}
+
+/* Botão de ação negativa: SAIR do grupo
+   Estilo neutro, sem cores do tema, sempre com confirmação
+   Sem microanimações para evitar distração de ações sensíveis */
+.join-group-button.joined {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 2px solid var(--border);
+  box-shadow: none;
+  /* Sem animações para ações negativas */
+  animation: none;
+}
+
+.join-group-button.joined::before {
+  display: none; /* Remove efeito de brilho para ações negativas */
+}
+
+.join-group-button.joined:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: var(--border);
+  transform: none;
+  box-shadow: none;
+  /* Sem animação de pulso para ações negativas */
+  animation: none;
+}
+
+.join-group-button.joined:active {
+  background: rgba(0, 0, 0, 0.08);
+  transform: none;
+  animation: none;
+}
+
+.join-group-button.joined:focus-visible {
+  outline-color: rgba(107, 114, 128, 0.5); /* Cinza neutro para ações negativas */
+}
+
+/* Botão de visualizar grupo (ação positiva) */
+.view-group-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.view-group-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ========================================
+   APLICAÇÃO DE TEMAS NOS BOTÕES
+   ======================================== */
+
+/* 🌙 TEMA: Lua Serena */
+.theme-serene_moon .view-group-button {
+  background: #C7B9E2;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(199, 185, 226, 0.3);
+}
+
+.theme-serene_moon .view-group-button:hover {
+  background: #B6A7D8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(199, 185, 226, 0.4);
+}
+
+/* Botão ENTRAR - usa cores do tema */
+.theme-serene_moon .join-group-button:not(.joined) {
+  background: #C7B9E2;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(199, 185, 226, 0.3);
+}
+
+.theme-serene_moon .join-group-button:not(.joined):hover {
+  background: #B6A7D8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(199, 185, 226, 0.4);
+}
+
+/* Botão SAIR - neutro, sem cores do tema */
+.theme-serene_moon .join-group-button.joined {
+  border-color: #DADAE3;
+  color: #6B5B8A;
+  background: transparent;
+}
+
+.theme-serene_moon .join-group-button.joined:hover {
+  background: rgba(218, 218, 227, 0.1);
+  border-color: #DADAE3;
+}
+
+/* ✨ TEMA: Aura Rosa */
+.theme-pink_aura .view-group-button {
+  background: #F3A6C8;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(243, 166, 200, 0.3);
+}
+
+.theme-pink_aura .view-group-button:hover {
+  background: #E88AB6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(243, 166, 200, 0.4);
+}
+
+/* Botão ENTRAR - usa cores do tema */
+.theme-pink_aura .join-group-button:not(.joined) {
+  background: #F3A6C8;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(243, 166, 200, 0.3);
+}
+
+.theme-pink_aura .join-group-button:not(.joined):hover {
+  background: #E88AB6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(243, 166, 200, 0.4);
+}
+
+/* Botão SAIR - neutro, sem cores do tema */
+.theme-pink_aura .join-group-button.joined {
+  border-color: #F2C4D8;
+  color: #8A3D5E;
+  background: transparent;
+}
+
+.theme-pink_aura .join-group-button.joined:hover {
+  background: rgba(242, 196, 216, 0.1);
+  border-color: #F2C4D8;
+}
+
+/* ☁️ TEMA: Céu Suave - Tons de azul claro */
+.theme-soft_sky .view-group-button {
+  background: var(--theme-primary, #B8D4E8);
+  color: var(--theme-background, #F0F8FF);
+  box-shadow: 0 2px 8px rgba(184, 212, 232, 0.3);
+  font-weight: 700;
+}
+
+.theme-soft_sky .view-group-button:hover {
+  background: var(--theme-accent, #A8D0E8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(184, 212, 232, 0.4);
+  color: var(--theme-background, #F0F8FF);
+}
+
+/* Botão ENTRAR - usa cores do tema */
+.theme-soft_sky .join-group-button:not(.joined) {
+  background: var(--theme-primary, #B8D4E8);
+  color: var(--theme-background, #F0F8FF);
+  box-shadow: 0 2px 8px rgba(184, 212, 232, 0.3);
+  font-weight: 700;
+}
+
+.theme-soft_sky .join-group-button:not(.joined):hover {
+  background: var(--theme-accent, #A8D0E8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(184, 212, 232, 0.4);
+  color: var(--theme-background, #F0F8FF);
+}
+
+/* Botão SAIR - neutro, sem cores do tema */
+.theme-soft_sky .join-group-button.joined {
+  border-color: var(--theme-primary, #B8D4E8);
+  color: var(--theme-text, #6B9AC4);
+  background: transparent;
+}
+
+.theme-soft_sky .join-group-button.joined:hover {
+  background: rgba(184, 212, 232, 0.1);
+  border-color: var(--theme-primary, #B8D4E8);
+  color: var(--theme-text, #6B9AC4);
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xl);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+/* Aplicação de temas no Groups */
+.theme-serene_moon .groups-header h2,
+.theme-serene_moon .section-title {
+  color: #4B4637;
+}
+
+.theme-serene_moon .create-group-button {
+  background: #E6D48A;
+  color: #4B4637;
+  box-shadow: 0 4px 15px rgba(230, 212, 138, 0.3);
+}
+
+.theme-serene_moon .create-group-button:hover {
+  background: #DCCB78;
+}
+
+.theme-serene_moon .group-item {
+  background: #F4F1FA;
+  border-color: #DADAE3;
+}
+
+.theme-serene_moon .group-item h4,
+.theme-serene_moon .group-description,
+.theme-serene_moon .group-meta {
+  color: #6B5B8A;
+}
+
+.theme-serene_moon .group-game {
+  color: #6B5B8A;
+}
+
+.theme-serene_moon .empty-state {
+  background: #F4F1FA;
+  border-color: #DADAE3;
+  color: #6B5B8A;
+}
+
+.theme-pink_aura .groups-header h2,
+.theme-pink_aura .section-title {
+  background: linear-gradient(135deg, #8A3D5E 0%, #F3A6C8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.theme-pink_aura .create-group-button {
+  background: #F0A6C1;
+  color: #7A2E4D;
+  box-shadow: 0 4px 15px rgba(240, 166, 193, 0.4);
+}
+
+.theme-pink_aura .create-group-button:hover {
+  background: #E894B3;
+}
+
+.theme-pink_aura .group-item {
+  background: #FDECF3;
+  border-color: rgba(240, 166, 193, 0.4);
+}
+
+.theme-pink_aura .group-item h4,
+.theme-pink_aura .group-description,
+.theme-pink_aura .group-meta {
+  color: #7A2E4D;
+}
+
+.theme-pink_aura .group-game {
+  color: #7A2E4D;
+}
+
+.theme-pink_aura .empty-state {
+  background: #FDECF3;
+  border-color: rgba(240, 166, 193, 0.4);
+  color: #7A2E4D;
+}
+
+.theme-soft_sky .groups-header h2,
+.theme-soft_sky .section-title {
+  color: var(--theme-text, #6B9AC4);
+  font-weight: 700;
+}
+
+.theme-soft_sky .create-group-button {
+  background: linear-gradient(135deg, var(--theme-primary, #B8D4E8) 0%, var(--theme-accent, #A8D0E8) 100%);
+  color: var(--theme-background, #F0F8FF);
+  box-shadow: 0 4px 15px rgba(184, 212, 232, 0.3);
+  border: 1px solid var(--theme-primary, #B8D4E8);
+  font-weight: 700;
+}
+
+.theme-soft_sky .group-item {
+  background: var(--theme-background, #F0F8FF);
+  border-color: var(--theme-primary, #B8D4E8);
+  color: var(--theme-text, #6B9AC4);
+  font-weight: 600;
+}
+
+.theme-soft_sky .group-item h4 {
+  color: var(--theme-text, #6B9AC4);
+  font-weight: 700;
+}
+
+.theme-soft_sky .group-description {
+  color: var(--theme-text, #6B9AC4);
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.theme-soft_sky .group-meta {
+  color: var(--theme-text, #6B9AC4);
+  opacity: 0.8;
+}
+
+.theme-soft_sky .group-game {
+  color: var(--theme-accent, #A8D0E8);
+  font-weight: 600;
+}
+
+.theme-soft_sky .empty-state {
+  background: var(--theme-background, #F0F8FF);
+  border-color: var(--theme-primary, #B8D4E8);
+  color: var(--theme-text, #6B9AC4);
+  opacity: 0.9;
+}
+
+/* 🌿 Tema: Bruma Rosada - Verde sálvia */
+.theme-pink_mist .groups-header h2,
+.theme-pink_mist .section-title {
+  color: #3E5E54;
+}
+
+.theme-pink_mist .create-group-button {
+  background: #C8DED4;
+  color: #3E5E54;
+  box-shadow: 0 4px 15px rgba(200, 222, 212, 0.3);
+}
+
+.theme-pink_mist .create-group-button:hover {
+  background: #B5D2C5;
+}
+
+.theme-pink_mist .group-item {
+  background: #F3F8F5;
+  border-color: rgba(200, 222, 212, 0.4);
+}
+
+.theme-pink_mist .group-item h4,
+.theme-pink_mist .group-description,
+.theme-pink_mist .group-meta {
+  color: #3E5E54;
+}
+
+.theme-pink_mist .group-game {
+  color: #3E5E54;
+}
+
+.theme-pink_mist .empty-state {
+  background: #F3F8F5;
+  border-color: rgba(200, 222, 212, 0.4);
+  color: #3E5E54;
+}
+
+/* 🌅 Tema: Amanhecer Lilás */
+.theme-lilac_dawn .groups-header h2,
+.theme-lilac_dawn .section-title {
+  color: #4B3F72;
+}
+
+.theme-lilac_dawn .create-group-button {
+  background: #C2B4E8;
+  color: #4B3F72;
+  box-shadow: 0 4px 15px rgba(194, 180, 232, 0.3);
+}
+
+.theme-lilac_dawn .create-group-button:hover {
+  background: #B1A2DE;
+}
+
+.theme-lilac_dawn .group-item {
+  background: #F2EEFA;
+  border-color: rgba(194, 180, 232, 0.4);
+}
+
+.theme-lilac_dawn .group-item h4,
+.theme-lilac_dawn .group-description,
+.theme-lilac_dawn .group-meta {
+  color: #4B3F72;
+}
+
+.theme-lilac_dawn .group-game {
+  color: #4B3F72;
+}
+
+.theme-lilac_dawn .empty-state {
+  background: #F2EEFA;
+  border-color: rgba(194, 180, 232, 0.4);
+  color: #4B3F72;
+}
+
+/* 🌸 Tema: Pétala Rosa */
+.theme-petal .groups-header h2,
+.theme-petal .section-title {
+  color: #7C3A55;
+}
+
+.theme-petal .create-group-button {
+  background: #E5A1BC;
+  color: #7C3A55;
+  box-shadow: 0 4px 15px rgba(229, 161, 188, 0.3);
+}
+
+.theme-petal .create-group-button:hover {
+  background: #DC8FAF;
+}
+
+.theme-petal .group-item {
+  background: #FFF0F6;
+  border-color: rgba(229, 161, 188, 0.4);
+}
+
+.theme-petal .group-item h4,
+.theme-petal .group-description,
+.theme-petal .group-meta {
+  color: #7C3A55;
+}
+
+.theme-petal .group-game {
+  color: #7C3A55;
+}
+
+.theme-petal .empty-state {
+  background: #FFF0F6;
+  border-color: rgba(229, 161, 188, 0.4);
+  color: #7C3A55;
+}
+
+@media (max-width: 640px) {
+  .groups-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .create-group-button {
+    width: 100%;
+  }
+
+  .groups-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .group-actions {
+    flex-direction: column;
+  }
+}

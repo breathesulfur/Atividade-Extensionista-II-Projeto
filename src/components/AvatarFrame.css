@@ -1,0 +1,445 @@
+.avatar-frame {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  padding: 4px;
+  transition: var(--transition-smooth);
+}
+
+/* Tamanhos */
+.avatar-frame-size-small {
+  padding: 3px;
+}
+
+.avatar-frame-size-medium {
+  padding: 4px;
+}
+
+.avatar-frame-size-large {
+  padding: 6px;
+}
+
+/* Moldura Lunar 🌙 */
+.avatar-frame-lunar_frame {
+  background: linear-gradient(135deg, rgba(199, 185, 226, 0.4) 0%, rgba(218, 218, 227, 0.3) 100%);
+  border: 2px solid rgba(199, 185, 226, 0.6);
+  box-shadow: 
+    0 0 15px rgba(199, 185, 226, 0.4),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  animation: lunarGlow 3s ease-in-out infinite;
+}
+
+@keyframes lunarGlow {
+  0%, 100% {
+    box-shadow: 
+      0 0 15px rgba(199, 185, 226, 0.4),
+      inset 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 25px rgba(199, 185, 226, 0.6),
+      inset 0 0 25px rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* Moldura de Aura ✨ */
+.avatar-frame-aura_frame {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(243, 166, 200, 0.2) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 0 20px rgba(243, 166, 200, 0.5),
+    0 0 40px rgba(243, 166, 200, 0.3),
+    inset 0 0 30px rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: visible;
+}
+
+.avatar-frame-aura_frame::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: auraRotate 4s linear infinite;
+  z-index: -1;
+}
+
+@keyframes auraRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Moldura Etérea 🔮 */
+.avatar-frame-ethereal_frame {
+  background: linear-gradient(135deg, rgba(184, 143, 230, 0.5) 0%, rgba(111, 143, 216, 0.4) 100%);
+  border: 2px solid rgba(184, 143, 230, 0.7);
+  box-shadow: 
+    0 0 25px rgba(184, 143, 230, 0.6),
+    0 0 50px rgba(111, 143, 216, 0.4),
+    inset 0 0 30px rgba(184, 143, 230, 0.3);
+  position: relative;
+  animation: etherealPulse 2s ease-in-out infinite;
+}
+
+@keyframes etherealPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 25px rgba(184, 143, 230, 0.6),
+      0 0 50px rgba(111, 143, 216, 0.4),
+      inset 0 0 30px rgba(184, 143, 230, 0.3);
+    border-color: rgba(184, 143, 230, 0.7);
+  }
+  50% {
+    box-shadow: 
+      0 0 35px rgba(184, 143, 230, 0.8),
+      0 0 70px rgba(111, 143, 216, 0.6),
+      inset 0 0 40px rgba(184, 143, 230, 0.4);
+    border-color: rgba(184, 143, 230, 0.9);
+  }
+}
+
+.avatar-frame-ethereal_frame::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: var(--radius-full);
+  background: conic-gradient(
+    transparent,
+    rgba(184, 143, 230, 0.3),
+    transparent,
+    rgba(111, 143, 216, 0.3),
+    transparent
+  );
+  animation: etherealRotate 6s linear infinite;
+  z-index: -1;
+}
+
+@keyframes etherealRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Molduras com personagens */
+.avatar-frame-with-character {
+  overflow: visible;
+}
+
+.avatar-frame-character {
+  position: absolute;
+  font-size: 1.5rem;
+  pointer-events: none;
+  z-index: 2;
+  animation: characterFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes characterFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Posicionamento dos personagens */
+.avatar-frame-size-small .avatar-frame-character {
+  font-size: 1rem;
+}
+
+.avatar-frame-size-medium .avatar-frame-character {
+  font-size: 1.3rem;
+}
+
+.avatar-frame-size-large .avatar-frame-character {
+  font-size: 2rem;
+}
+
+/* Ursinho 🐻 */
+.avatar-frame-character-bear {
+  bottom: -15px;
+  right: -10px;
+  animation: characterFloat 2.8s ease-in-out infinite;
+}
+
+/* Gatinho 🐱 */
+.avatar-frame-character-kitty {
+  top: -10px;
+  left: -15px;
+  animation: characterFloat 2.5s ease-in-out infinite;
+}
+
+/* Coelhinho 🐰 */
+.avatar-frame-character-bunny {
+  bottom: -20px;
+  left: -10px;
+  animation: characterBounce 2s ease-in-out infinite;
+}
+
+@keyframes characterBounce {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(-5px) rotate(5deg);
+  }
+}
+
+/* Coruja 🦉 */
+.avatar-frame-character-owl {
+  top: -15px;
+  right: -10px;
+  animation: characterGlide 4s ease-in-out infinite;
+}
+
+@keyframes characterGlide {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-5px) translateX(5px);
+  }
+}
+
+/* Molduras específicas com personagens */
+.avatar-frame-bear_frame {
+  background: linear-gradient(135deg, rgba(139, 90, 43, 0.3) 0%, rgba(160, 110, 60, 0.2) 100%);
+  border: 2px solid rgba(139, 90, 43, 0.6);
+  box-shadow: 
+    0 0 20px rgba(139, 90, 43, 0.4),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.avatar-frame-kitty_frame {
+  background: linear-gradient(135deg, rgba(255, 182, 193, 0.4) 0%, rgba(255, 192, 203, 0.3) 100%);
+  border: 2px solid rgba(255, 182, 193, 0.7);
+  box-shadow: 
+    0 0 20px rgba(255, 182, 193, 0.5),
+    inset 0 0 25px rgba(255, 255, 255, 0.2);
+  animation: kittyGlow 2s ease-in-out infinite;
+}
+
+@keyframes kittyGlow {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(255, 182, 193, 0.5),
+      inset 0 0 25px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(255, 182, 193, 0.7),
+      inset 0 0 30px rgba(255, 255, 255, 0.3);
+  }
+}
+
+.avatar-frame-bunny_frame {
+  background: linear-gradient(135deg, rgba(255, 240, 245, 0.5) 0%, rgba(255, 228, 225, 0.4) 100%);
+  border: 2px solid rgba(255, 192, 203, 0.8);
+  box-shadow: 
+    0 0 25px rgba(255, 192, 203, 0.6),
+    inset 0 0 30px rgba(255, 255, 255, 0.3);
+  animation: bunnyPulse 3s ease-in-out infinite;
+}
+
+@keyframes bunnyPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.avatar-frame-owl_frame {
+  background: linear-gradient(135deg, rgba(101, 67, 33, 0.4) 0%, rgba(139, 90, 43, 0.3) 100%);
+  border: 2px solid rgba(101, 67, 33, 0.7);
+  box-shadow: 
+    0 0 20px rgba(101, 67, 33, 0.5),
+    0 0 40px rgba(139, 90, 43, 0.3),
+    inset 0 0 25px rgba(255, 255, 255, 0.1);
+}
+
+.avatar-frame-star_frame {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.4) 0%, rgba(255, 255, 224, 0.3) 100%);
+  border: 2px solid rgba(255, 215, 0, 0.7);
+  box-shadow: 
+    0 0 30px rgba(255, 215, 0, 0.6),
+    0 0 60px rgba(255, 255, 224, 0.4),
+    inset 0 0 30px rgba(255, 255, 255, 0.2);
+  animation: starTwinkle 2s ease-in-out infinite;
+}
+
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 
+      0 0 30px rgba(255, 215, 0, 0.6),
+      0 0 60px rgba(255, 255, 224, 0.4),
+      inset 0 0 30px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    opacity: 0.9;
+    box-shadow: 
+      0 0 40px rgba(255, 215, 0, 0.8),
+      0 0 80px rgba(255, 255, 224, 0.6),
+      inset 0 0 35px rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Decoração com emojis para molduras específicas */
+.avatar-frame-decoration {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+}
+
+.frame-emoji {
+  font-size: 1rem;
+  animation: emojiFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes emojiFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-5px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes emojiTwinkle {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.9;
+  }
+  25% {
+    transform: scale(1.15) rotate(-5deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1) rotate(0deg);
+    opacity: 0.95;
+  }
+  75% {
+    transform: scale(1.15) rotate(5deg);
+    opacity: 1;
+  }
+}
+
+/* Respeitar prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .frame-emoji {
+    animation: none !important;
+  }
+  
+  .avatar-frame-character {
+    animation: none !important;
+  }
+  
+  .avatar-frame-lunar_frame {
+    animation: none !important;
+  }
+  
+  .avatar-frame-aura_frame::before {
+    animation: none !important;
+  }
+  
+  .avatar-frame-ethereal_frame {
+    animation: none !important;
+  }
+  
+  .avatar-frame-ethereal_frame::before {
+    animation: none !important;
+  }
+  
+  .avatar-frame-kitty_frame {
+    animation: none !important;
+  }
+  
+  .avatar-frame-bunny_frame {
+    animation: none !important;
+  }
+  
+  .avatar-frame-star_frame {
+    animation: none !important;
+  }
+}
+
+/* Moldura Lunar - emojis posicionados */
+.avatar-frame-decoration-lunar_frame {
+  top: -12px;
+  right: -8px;
+}
+
+.avatar-frame-decoration-lunar_frame .frame-emoji {
+  font-size: 1.2rem;
+  animation: emojiFloat 4s ease-in-out infinite;
+}
+
+/* Moldura Aura - emojis posicionados */
+.avatar-frame-decoration-aura_frame {
+  top: -12px;
+  left: -8px;
+  right: -8px;
+  justify-content: space-around;
+  width: calc(100% + 16px);
+}
+
+.avatar-frame-decoration-aura_frame .frame-emoji {
+  font-size: 0.9rem;
+  animation: emojiFloat 3.5s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.5s);
+}
+
+/* Moldura Estrela - emojis posicionados */
+.avatar-frame-decoration-star_frame {
+  top: -12px;
+  left: -8px;
+  right: -8px;
+  justify-content: center;
+  width: calc(100% + 16px);
+}
+
+.avatar-frame-decoration-star_frame .frame-emoji {
+  font-size: 1.1rem;
+  animation: emojiTwinkle 2.5s ease-in-out infinite;
+}
+
+/* Tamanhos responsivos para decorações */
+.avatar-frame-size-small .avatar-frame-decoration {
+  transform: scale(0.8);
+}
+
+.avatar-frame-size-large .avatar-frame-decoration {
+  transform: scale(1.2);
+}
+
+/* Garantir que o avatar interno mantenha o tamanho correto */
+.avatar-frame > *:not(.avatar-frame-character):not(.avatar-frame-decoration) {
+  position: relative;
+  z-index: 1;
+}

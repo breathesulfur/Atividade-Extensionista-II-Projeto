@@ -1,0 +1,129 @@
+.narrative-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10001;
+  animation: narrativeEnter 0.5s ease-out;
+}
+
+@keyframes narrativeEnter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.narrative-message-exit {
+  animation: narrativeExit 0.5s ease-in forwards;
+}
+
+@keyframes narrativeExit {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+
+.narrative-message-content {
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(255, 255, 255, 0.98) 100%);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  max-width: 500px;
+  width: 90vw;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 40px var(--mystic-purple-light),
+    inset 0 0 30px rgba(255, 255, 255, 0.1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  text-align: center;
+}
+
+.narrative-message-icon {
+  font-size: 4rem;
+  animation: narrativeIconFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(138, 43, 226, 0.3));
+}
+
+@keyframes narrativeIconFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.narrative-message-text {
+  color: var(--text-primary);
+}
+
+.narrative-message-text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  font-weight: 500;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.narrative-message-close {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-full);
+  transition: var(--transition-smooth);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.narrative-message-close:hover {
+  background: var(--background);
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+/* Overlay de fundo */
+.narrative-message::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: -1;
+  animation: overlayFadeIn 0.3s ease-out;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

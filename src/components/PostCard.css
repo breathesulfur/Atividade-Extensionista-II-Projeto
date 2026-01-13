@@ -1,0 +1,605 @@
+.post-card {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  box-shadow: 0 2px 12px var(--shadow-soft), 0 1px 3px var(--shadow-soft);
+  border: 1px solid var(--border-light);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: visible;
+}
+
+.post-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-mystic);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.post-card:hover {
+  box-shadow: 0 8px 24px var(--shadow-mystic), 0 2px 8px var(--shadow-soft);
+  transform: translateY(-2px);
+  border-color: var(--border);
+}
+
+.post-card:hover::before {
+  opacity: 1;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.post-author {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.author-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-mystic);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 2px 8px var(--shadow-mystic);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.author-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.author-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.author-pronoun {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.post-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.post-actions-buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.post-date {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.report-button,
+.delete-button {
+  background: none;
+  border: none;
+  padding: var(--spacing-xs);
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: transform 0.2s, opacity 0.2s;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+}
+
+.report-button:hover,
+.delete-button:hover {
+  transform: scale(1.1);
+  opacity: 1;
+  background: var(--background);
+}
+
+.delete-button:hover {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.report-button:focus,
+.delete-button:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.post-content {
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.post-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-weight: 600;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.action-button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.like-button.liked {
+  background: var(--secondary);
+  color: white;
+  border-color: var(--secondary);
+}
+
+.reactions-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.reaction-picker-wrapper {
+  position: relative;
+}
+
+.emoji-picker-wrapper {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.emoji-picker-wrapper > * {
+  pointer-events: auto;
+}
+
+.reaction-button {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  line-height: 1;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reaction-button:hover {
+  border-color: var(--primary);
+  background: var(--gradient-mystic-soft);
+  transform: scale(1.1);
+}
+
+.reactions-display {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.reaction-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--background);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-size: 0.9rem;
+}
+
+.reaction-item:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow-soft);
+}
+
+.reaction-item.active {
+  background: var(--gradient-mystic-soft);
+  border-color: var(--primary);
+}
+
+.reaction-emoji {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.reaction-count {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+.comments-section {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border);
+}
+
+.comments-list {
+  margin-bottom: var(--spacing-md);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.comment-item {
+  padding: var(--spacing-md);
+  background: var(--background);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-xs);
+  gap: var(--spacing-sm);
+}
+
+.comment-author {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.comment-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.report-comment-button {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-md);
+  transition: var(--transition-smooth);
+  opacity: 0.7;
+  line-height: 1;
+}
+
+.report-comment-button:hover {
+  opacity: 1;
+  background: var(--surface);
+  transform: scale(1.1);
+}
+
+.comment-author strong {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.comment-pronoun {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.comment-content {
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+  word-wrap: break-word;
+  margin-top: var(--spacing-xs);
+}
+
+.comment-date {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.no-comments {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: var(--spacing-md);
+  font-style: italic;
+}
+
+.comment-form {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.comment-input {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.comment-input:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.comment-submit {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.comment-submit:hover {
+  background: var(--primary-dark);
+}
+
+/* Aplicação de temas no PostCard */
+.theme-serene_moon .post-card {
+  background: #FAF8F2;
+  border-color: rgba(230, 212, 138, 0.4);
+}
+
+.theme-serene_moon .post-card .author-name,
+.theme-serene_moon .post-card .post-content {
+  color: #4B4637;
+}
+
+.theme-serene_moon .post-card .author-pronoun,
+.theme-serene_moon .post-card .post-date {
+  color: #4B4637;
+  opacity: 0.8;
+}
+
+.theme-serene_moon .author-avatar {
+  border-color: #E6D48A;
+  background: linear-gradient(135deg, #E6D48A 0%, #DCCB78 100%);
+}
+
+.theme-serene_moon .comment-item {
+  background: #FAF8F2;
+  border: 1px solid rgba(230, 212, 138, 0.4);
+}
+
+.theme-pink_aura .post-card {
+  background: #FDECF3;
+  border-color: rgba(240, 166, 193, 0.4);
+}
+
+.theme-pink_aura .post-card .author-name,
+.theme-pink_aura .post-card .post-content {
+  color: #7A2E4D;
+}
+
+.theme-pink_aura .post-card .author-pronoun,
+.theme-pink_aura .post-card .post-date {
+  color: #7A2E4D;
+  opacity: 0.8;
+}
+
+.theme-pink_aura .author-avatar {
+  border-color: #F0A6C1;
+  background: linear-gradient(135deg, #F0A6C1 0%, #E894B3 100%);
+  box-shadow: 0 2px 8px rgba(240, 166, 193, 0.4);
+}
+
+.theme-pink_aura .comment-item {
+  background: #FDECF3;
+  border: 1px solid rgba(240, 166, 193, 0.4);
+}
+
+.theme-soft_sky .post-card {
+  background: #F0F5FA;
+  border-color: #B8D4E8;
+}
+
+.theme-soft_sky .post-card .author-name,
+.theme-soft_sky .post-card .post-content {
+  color: #6B9AC4;
+}
+
+.theme-soft_sky .post-card .author-pronoun,
+.theme-soft_sky .post-card .post-date {
+  color: #6B9AC4;
+  opacity: 0.8;
+}
+
+.theme-soft_sky .author-avatar {
+  border-color: #B8D4E8;
+  background: linear-gradient(135deg, #B8D4E8 0%, #E6F3FF 100%);
+  box-shadow: 0 2px 8px rgba(196, 213, 232, 0.3);
+}
+
+.theme-soft_sky .comment-item {
+  background: #F0F5FA;
+  border: 1px solid #B8D4E8;
+}
+
+/* 🌿 Tema: Bruma Rosada - Verde sálvia */
+.theme-pink_mist .post-card {
+  background: #F3F8F5;
+  border-color: rgba(200, 222, 212, 0.4);
+}
+
+.theme-pink_mist .post-card .author-name,
+.theme-pink_mist .post-card .post-content {
+  color: #3E5E54;
+}
+
+.theme-pink_mist .post-card .author-pronoun,
+.theme-pink_mist .post-card .post-date {
+  color: #3E5E54;
+  opacity: 0.8;
+}
+
+.theme-pink_mist .author-avatar {
+  border-color: #C8DED4;
+  background: linear-gradient(135deg, #C8DED4 0%, #B5D2C5 100%);
+}
+
+.theme-pink_mist .comment-item {
+  background: #F3F8F5;
+  border: 1px solid rgba(200, 222, 212, 0.4);
+}
+
+/* 🌅 Tema: Amanhecer Lilás */
+.theme-lilac_dawn .post-card {
+  background: #F2EEFA;
+  border-color: rgba(194, 180, 232, 0.4);
+}
+
+.theme-lilac_dawn .post-card .author-name,
+.theme-lilac_dawn .post-card .post-content {
+  color: #4B3F72;
+}
+
+.theme-lilac_dawn .post-card .author-pronoun,
+.theme-lilac_dawn .post-card .post-date {
+  color: #4B3F72;
+  opacity: 0.8;
+}
+
+.theme-lilac_dawn .author-avatar {
+  border-color: #C2B4E8;
+  background: linear-gradient(135deg, #C2B4E8 0%, #B1A2DE 100%);
+}
+
+.theme-lilac_dawn .comment-item {
+  background: #F2EEFA;
+  border: 1px solid rgba(194, 180, 232, 0.4);
+}
+
+/* 🌸 Tema: Pétala Rosa */
+.theme-petal .post-card {
+  background: #FFF0F6;
+  border-color: rgba(229, 161, 188, 0.4);
+}
+
+.theme-petal .post-card .author-name,
+.theme-petal .post-card .post-content {
+  color: #7C3A55;
+}
+
+.theme-petal .post-card .author-pronoun,
+.theme-petal .post-card .post-date {
+  color: #7C3A55;
+  opacity: 0.8;
+}
+
+.theme-petal .author-avatar {
+  border-color: #E5A1BC;
+  background: linear-gradient(135deg, #E5A1BC 0%, #DC8FAF 100%);
+}
+
+.theme-petal .comment-item {
+  background: #FFF0F6;
+  border: 1px solid rgba(229, 161, 188, 0.4);
+}
+
+.theme-soft_sky .like-button.liked {
+  background: #9FAEFF;
+  border-color: #9FAEFF;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.theme-soft_sky .comment-item {
+  background: rgba(75, 44, 94, 0.6);
+  border: 1px solid #B88FE6;
+  color: #FFFFFF;
+}
+
+.theme-soft_sky .comment-item strong {
+  color: #B88FE6;
+  font-weight: 700;
+}
+
+.theme-soft_sky .comment-pronoun {
+  color: #B88FE6;
+  opacity: 0.85;
+}
+
+.theme-soft_sky .comment-input {
+  background: rgba(75, 44, 94, 0.5);
+  border-color: #B88FE6;
+  color: #FFFFFF;
+}
+
+.theme-soft_sky .comment-submit {
+  background: linear-gradient(135deg, #4B2C5E 0%, #B88FE6 100%);
+  color: #FFFFFF;
+  border: 1px solid #B88FE6;
+}
+
+@media (max-width: 640px) {
+  .post-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .comment-form {
+    flex-direction: column;
+  }
+
+  .comment-submit {
+    width: 100%;
+  }
+}

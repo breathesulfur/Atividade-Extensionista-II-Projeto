@@ -1,0 +1,192 @@
+.avatar-frame-selector {
+  width: 100%;
+}
+
+.frame-selector-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.6;
+}
+
+.frames-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.frame-card {
+  position: relative;
+  background: var(--surface);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  transition: var(--transition-smooth);
+  cursor: pointer;
+  overflow: hidden;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.frame-card.unlocked {
+  border-color: var(--mystic-purple-light);
+  box-shadow: 0 2px 12px var(--shadow-soft);
+}
+
+.frame-card.unlocked:hover {
+  border-color: var(--mystic-purple);
+  box-shadow: 0 4px 20px var(--shadow-mystic);
+  transform: translateY(-2px);
+}
+
+.frame-card.active {
+  border-color: var(--mystic-purple);
+  border-width: 3px;
+  box-shadow: 0 4px 25px var(--shadow-mystic);
+  background: var(--gradient-mystic-soft);
+}
+
+.frame-card.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+}
+
+.frame-card.locked.can-unlock {
+  opacity: 0.85;
+  cursor: pointer;
+  filter: grayscale(0);
+}
+
+.frame-card.locked.can-unlock:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.2);
+  border-color: var(--mystic-purple-light);
+}
+
+.frame-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+.frame-preview-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-mystic);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 2px 8px var(--shadow-mystic);
+}
+
+.frame-preview-emoji {
+  line-height: 1;
+}
+
+.frame-info {
+  flex: 1;
+  text-align: center;
+  width: 100%;
+}
+
+.frame-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.frame-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: var(--spacing-sm);
+}
+
+.frame-requirement {
+  font-size: 0.95rem;
+  color: var(--primary);
+  font-weight: 700;
+  background: var(--gradient-mystic-soft);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  display: inline-block;
+  margin-top: var(--spacing-xs);
+}
+
+.frame-lock-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  border-radius: var(--radius-xl);
+  z-index: 5;
+}
+
+.frame-card.can-unlock .frame-lock-overlay {
+  pointer-events: none;
+}
+
+.lock-icon {
+  font-size: 2rem;
+  opacity: 0.7;
+}
+
+.lock-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-align: center;
+}
+
+.frame-active-badge {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--mystic-purple) 100%);
+  color: white;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+  z-index: 10;
+}
+
+.frame-apply-button {
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-family: inherit;
+  margin-top: var(--spacing-xs);
+  width: 100%;
+}
+
+.frame-apply-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}

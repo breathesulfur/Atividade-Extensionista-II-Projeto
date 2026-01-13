@@ -1,0 +1,297 @@
+.create-group-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: 0 2px 8px var(--shadow);
+  border: 2px solid var(--border);
+}
+
+.create-group-card h3 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.create-group-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.form-textarea {
+  resize: vertical;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  background-color: var(--surface);
+  color: var(--text-primary);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--primary);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  outline: none;
+}
+
+.form-input:hover:not(:disabled),
+.form-select:hover:not(:disabled),
+.form-textarea:hover:not(:disabled) {
+  border-color: var(--primary-dark);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+}
+
+.cancel-button,
+.submit-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: all 0.2s;
+  border: none;
+}
+
+.cancel-button {
+  background: var(--border);
+  color: var(--text-primary);
+}
+
+.cancel-button:hover {
+  background: var(--text-secondary);
+  color: white;
+}
+
+.submit-button {
+  background: var(--primary);
+  color: white;
+}
+
+.submit-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* Aplicação de temas no CreateGroup */
+.theme-serene_moon .create-group-card {
+  background: #FAF8F2;
+  border-color: rgba(230, 212, 138, 0.4);
+}
+
+.theme-serene_moon .create-group-card h3 {
+  color: #4B4637;
+}
+
+.theme-serene_moon .form-input,
+.theme-serene_moon .form-select,
+.theme-serene_moon .form-textarea {
+  background: #FAF8F2;
+  border-color: rgba(230, 212, 138, 0.5);
+  color: #4B4637;
+}
+
+.theme-serene_moon .submit-button {
+  background: #E6D48A;
+  color: #4B4637;
+}
+
+.theme-serene_moon .submit-button:hover:not(:disabled) {
+  background: #DCCB78;
+}
+
+.theme-pink_aura .create-group-card {
+  background: #FDECF3;
+  border-color: rgba(240, 166, 193, 0.4);
+}
+
+.theme-pink_aura .create-group-card h3 {
+  color: #7A2E4D;
+}
+
+.theme-pink_aura .form-input,
+.theme-pink_aura .form-select,
+.theme-pink_aura .form-textarea {
+  background: #FDECF3;
+  border-color: rgba(240, 166, 193, 0.5);
+  color: #7A2E4D;
+}
+
+.theme-pink_aura .submit-button {
+  background: #F0A6C1;
+  color: #7A2E4D;
+}
+
+.theme-pink_aura .submit-button:hover:not(:disabled) {
+  background: #E894B3;
+}
+
+.theme-soft_sky .create-group-card {
+  background: var(--theme-background, #F0F8FF);
+  border-color: var(--theme-primary, #B8D4E8);
+}
+
+.theme-soft_sky .create-group-card h3,
+.theme-soft_sky .form-label {
+  color: var(--theme-text, #6B9AC4);
+  font-weight: 700;
+}
+
+.theme-soft_sky .form-input,
+.theme-soft_sky .form-select,
+.theme-soft_sky .form-textarea {
+  background: var(--theme-secondary, #E6F3FF);
+  border-color: var(--theme-primary, #B8D4E8);
+  color: var(--theme-text, #6B9AC4);
+}
+
+.theme-soft_sky .form-input::placeholder,
+.theme-soft_sky .form-textarea::placeholder {
+  color: var(--theme-text, #6B9AC4);
+  opacity: 0.6;
+}
+
+.theme-soft_sky .form-input:focus,
+.theme-soft_sky .form-select:focus,
+.theme-soft_sky .form-textarea:focus {
+  border-color: var(--theme-accent, #A8D0E8);
+  box-shadow: 0 0 0 3px rgba(184, 212, 232, 0.2);
+  background: var(--theme-secondary, #E6F3FF);
+}
+
+.theme-soft_sky .char-count {
+  color: var(--theme-text, #6B9AC4);
+  opacity: 0.8;
+}
+
+.theme-soft_sky .submit-button {
+  background: linear-gradient(135deg, var(--theme-primary, #B8D4E8) 0%, var(--theme-accent, #A8D0E8) 100%);
+  color: var(--theme-background, #F0F8FF);
+  border: 1px solid var(--theme-primary, #B8D4E8);
+  box-shadow: 0 2px 8px rgba(184, 212, 232, 0.3);
+}
+
+/* 🌿 Tema: Bruma Rosada - Verde sálvia */
+.theme-pink_mist .create-group-card {
+  background: #F3F8F5;
+  border-color: rgba(200, 222, 212, 0.4);
+}
+
+.theme-pink_mist .create-group-card h3 {
+  color: #3E5E54;
+}
+
+.theme-pink_mist .form-input,
+.theme-pink_mist .form-select,
+.theme-pink_mist .form-textarea {
+  background: #F3F8F5;
+  border-color: rgba(200, 222, 212, 0.5);
+  color: #3E5E54;
+}
+
+.theme-pink_mist .submit-button {
+  background: #C8DED4;
+  color: #3E5E54;
+}
+
+.theme-pink_mist .submit-button:hover:not(:disabled) {
+  background: #B5D2C5;
+}
+
+/* 🌅 Tema: Amanhecer Lilás */
+.theme-lilac_dawn .create-group-card {
+  background: #F2EEFA;
+  border-color: rgba(194, 180, 232, 0.4);
+}
+
+.theme-lilac_dawn .create-group-card h3 {
+  color: #4B3F72;
+}
+
+.theme-lilac_dawn .form-input,
+.theme-lilac_dawn .form-select,
+.theme-lilac_dawn .form-textarea {
+  background: #F2EEFA;
+  border-color: rgba(194, 180, 232, 0.5);
+  color: #4B3F72;
+}
+
+.theme-lilac_dawn .submit-button {
+  background: #C2B4E8;
+  color: #4B3F72;
+}
+
+.theme-lilac_dawn .submit-button:hover:not(:disabled) {
+  background: #B1A2DE;
+}
+
+/* 🌸 Tema: Pétala Rosa */
+.theme-petal .create-group-card {
+  background: #FFF0F6;
+  border-color: rgba(229, 161, 188, 0.4);
+}
+
+.theme-petal .create-group-card h3 {
+  color: #7C3A55;
+}
+
+.theme-petal .form-input,
+.theme-petal .form-select,
+.theme-petal .form-textarea {
+  background: #FFF0F6;
+  border-color: rgba(229, 161, 188, 0.5);
+  color: #7C3A55;
+}
+
+.theme-petal .submit-button {
+  background: #E5A1BC;
+  color: #7C3A55;
+}
+
+.theme-petal .submit-button:hover:not(:disabled) {
+  background: #DC8FAF;
+}
+
+@media (max-width: 640px) {
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-button,
+  .submit-button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,283 @@
+.create-post-card {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: 0 2px 12px var(--shadow-soft), 0 1px 3px var(--shadow-soft);
+  border: 1px solid var(--border-light);
+  transition: var(--transition-smooth);
+}
+
+.create-post-card:hover {
+  box-shadow: 0 4px 16px var(--shadow-mystic);
+}
+
+.create-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.post-textarea {
+  width: 100%;
+  padding: var(--spacing-md);
+  background-color: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--text-primary);
+  resize: vertical;
+  transition: all 0.2s;
+}
+
+.post-textarea:focus {
+  border-color: var(--mystic-purple);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15), var(--shadow-soft);
+  outline: none;
+}
+
+.post-textarea:hover:not(:disabled) {
+  border-color: var(--primary-dark);
+}
+
+.post-textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+}
+
+.cancel-button,
+.submit-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: all 0.2s;
+  border: none;
+}
+
+.cancel-button {
+  background: var(--border);
+  color: var(--text-primary);
+}
+
+.cancel-button:hover:not(:disabled) {
+  background: var(--text-secondary);
+  color: white;
+}
+
+.submit-button {
+  background: var(--gradient-mystic);
+  color: white;
+  box-shadow: 0 4px 15px var(--shadow-mystic);
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--shadow-mystic);
+}
+
+.submit-button:disabled,
+.cancel-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Aplicação de temas no CreatePost */
+.theme-serene_moon .create-post-card {
+  background: #FAF8F2;
+  border-color: rgba(230, 212, 138, 0.4);
+}
+
+.theme-serene_moon .create-post-card h3,
+.theme-serene_moon .form-label {
+  color: #4B4637;
+}
+
+.theme-serene_moon .post-textarea {
+  background: #FAF8F2;
+  border-color: rgba(230, 212, 138, 0.5);
+  color: #4B4637;
+}
+
+.theme-serene_moon .submit-button {
+  background: #E6D48A;
+  color: #4B4637;
+  box-shadow: 0 4px 15px rgba(230, 212, 138, 0.3);
+}
+
+.theme-serene_moon .submit-button:hover:not(:disabled) {
+  background: #DCCB78;
+}
+
+.theme-pink_aura .create-post-card {
+  background: #FDECF3;
+  border-color: rgba(240, 166, 193, 0.4);
+}
+
+.theme-pink_aura .create-post-card h3,
+.theme-pink_aura .form-label {
+  color: #7A2E4D;
+}
+
+.theme-pink_aura .post-textarea {
+  background: #FDECF3;
+  border-color: rgba(240, 166, 193, 0.5);
+  color: #7A2E4D;
+}
+
+.theme-pink_aura .submit-button {
+  background: #F0A6C1;
+  color: #7A2E4D;
+  box-shadow: 0 4px 15px rgba(240, 166, 193, 0.4);
+}
+
+.theme-pink_aura .submit-button:hover:not(:disabled) {
+  background: #E894B3;
+}
+
+.theme-soft_sky .create-post-card {
+  background: #F0F5FA;
+  border-color: #B8D4E8;
+}
+
+.theme-soft_sky .create-post-card h3,
+.theme-soft_sky .form-label {
+  color: #6B9AC4;
+}
+
+.theme-soft_sky .post-textarea {
+  background: #F0F5FA;
+  border-color: #B8D4E8;
+  color: #6B9AC4;
+}
+
+.theme-soft_sky .post-textarea::placeholder {
+  color: #6B9AC4;
+  opacity: 0.6;
+}
+
+.theme-soft_sky .post-textarea:focus {
+  border-color: #A8D0E8;
+  box-shadow: 0 0 0 3px rgba(196, 213, 232, 0.2);
+}
+
+.theme-soft_sky .char-count {
+  color: #6B9AC4;
+  opacity: 0.8;
+}
+
+.theme-soft_sky .submit-button {
+  background: linear-gradient(135deg, #B8D4E8 0%, #E6F3FF 100%);
+  color: #6B9AC4;
+  box-shadow: 0 4px 15px rgba(196, 213, 232, 0.3);
+}
+
+/* 🌿 Tema: Névoa Rosada */
+.theme-pink_mist .create-post-card {
+  background: #FFF0F5;
+  border-color: #F6D6E8;
+}
+
+.theme-pink_mist .create-post-card h3,
+.theme-pink_mist .form-label {
+  color: #4A2A4F;
+}
+
+.theme-pink_mist .post-textarea {
+  background: #F3F8F5;
+  border-color: rgba(200, 222, 212, 0.5);
+  color: #3E5E54;
+}
+
+.theme-pink_mist .post-textarea::placeholder {
+  color: #3E5E54;
+  opacity: 0.6;
+}
+
+.theme-pink_mist .submit-button {
+  background: #C8DED4;
+  color: #3E5E54;
+  box-shadow: 0 4px 15px rgba(200, 222, 212, 0.3);
+}
+
+.theme-pink_mist .submit-button:hover:not(:disabled) {
+  background: #B5D2C5;
+}
+
+/* 🌅 Tema: Amanhecer Lilás */
+.theme-lilac_dawn .create-post-card {
+  background: #F2EEFA;
+  border-color: rgba(194, 180, 232, 0.4);
+}
+
+.theme-lilac_dawn .create-post-card h3,
+.theme-lilac_dawn .form-label {
+  color: #4B3F72;
+}
+
+.theme-lilac_dawn .post-textarea {
+  background: #F2EEFA;
+  border-color: rgba(194, 180, 232, 0.5);
+  color: #4B3F72;
+}
+
+.theme-lilac_dawn .post-textarea::placeholder {
+  color: #4B3F72;
+  opacity: 0.6;
+}
+
+.theme-lilac_dawn .submit-button {
+  background: #C2B4E8;
+  color: #4B3F72;
+  box-shadow: 0 4px 15px rgba(194, 180, 232, 0.3);
+}
+
+.theme-lilac_dawn .submit-button:hover:not(:disabled) {
+  background: #B1A2DE;
+}
+
+/* 🌸 Tema: Pétala Rosa */
+.theme-petal .create-post-card {
+  background: #FFF0F6;
+  border-color: rgba(229, 161, 188, 0.4);
+}
+
+.theme-petal .create-post-card h3,
+.theme-petal .form-label {
+  color: #7C3A55;
+}
+
+.theme-petal .post-textarea {
+  background: #FFF0F6;
+  border-color: rgba(229, 161, 188, 0.5);
+  color: #7C3A55;
+}
+
+.theme-petal .post-textarea::placeholder {
+  color: #7C3A55;
+  opacity: 0.6;
+}
+
+.theme-petal .submit-button {
+  background: #E5A1BC;
+  color: #7C3A55;
+  box-shadow: 0 4px 15px rgba(229, 161, 188, 0.3);
+}
+
+.theme-petal .submit-button:hover:not(:disabled) {
+  background: #DC8FAF;
+}

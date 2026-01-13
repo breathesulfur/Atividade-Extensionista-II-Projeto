@@ -1,0 +1,250 @@
+/* Importar fonte moderna e arredondada */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Reset e estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Paleta mística: rosa, lilás e roxo */
+  --mystic-pink: #f472b6;
+  --mystic-pink-light: #f9a8d4;
+  --mystic-pink-dark: #ec4899;
+  --mystic-purple: #a78bfa;
+  --mystic-purple-light: #c4b5fd;
+  --mystic-purple-dark: #8b5cf6;
+  --mystic-violet: #7c3aed;
+  --mystic-violet-dark: #6d28d9;
+  
+  /* Gradiente principal místico */
+  --gradient-mystic: linear-gradient(135deg, #f472b6 0%, #a78bfa 50%, #8b5cf6 100%);
+  --gradient-mystic-soft: linear-gradient(135deg, rgba(244, 114, 182, 0.1) 0%, rgba(167, 139, 250, 0.1) 50%, rgba(139, 92, 246, 0.1) 100%);
+  --gradient-mystic-glow: radial-gradient(circle at center, rgba(244, 114, 182, 0.3) 0%, rgba(167, 139, 250, 0.2) 50%, transparent 100%);
+  
+  /* Cores funcionais */
+  --primary: var(--mystic-purple);
+  --primary-dark: var(--mystic-violet-dark);
+  --secondary: var(--mystic-pink);
+  --accent: var(--mystic-purple-light);
+  --success: #10b981;
+  --danger: #ef4444;
+  
+  /* Superfícies com tom lilás suave */
+  --background: #faf5ff; /* Off-white com tom lilás muito claro */
+  --background-alt: #f3e8ff; /* Alternativa mais suave */
+  --surface: #ffffff;
+  --surface-soft: rgba(255, 255, 255, 0.9);
+  
+  /* Texto com alto contraste */
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  
+  /* Bordas suaves */
+  --border: #e9d5ff; /* Lilás muito claro */
+  --border-light: #f3e8ff;
+  
+  /* Sombras suaves e místicas */
+  --shadow: rgba(139, 92, 246, 0.1);
+  --shadow-mystic: rgba(244, 114, 182, 0.15);
+  --shadow-soft: rgba(139, 92, 246, 0.08);
+  --shadow-glow: 0 0 30px rgba(167, 139, 250, 0.3);
+  
+  /* Espaçamentos */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  
+  /* Bordas arredondadas */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+  
+  /* Transições suaves */
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--background);
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(244, 114, 182, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(167, 139, 250, 0.03) 0%, transparent 50%);
+  color: var(--text-primary);
+  line-height: 1.7;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+}
+
+/* Tipografia moderna e arredondada */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+p {
+  line-height: 1.7;
+}
+
+/* Acessibilidade - alto contraste */
+*:focus {
+  outline: 2px solid var(--mystic-purple);
+  outline-offset: 2px;
+  outline-width: 3px;
+}
+
+*:focus-visible {
+  outline: 3px solid var(--mystic-purple);
+  outline-offset: 3px;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Estilos para campos obrigatórios - asterisco vermelho */
+/* Estiliza asteriscos em labels de campos obrigatórios */
+.required-asterisk {
+  color: var(--danger) !important;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+/* Estilos globais para campos de formulário */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+textarea,
+select {
+  background-color: var(--surface);
+  border: 2px solid var(--border);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+/* Estilos para campos com erro de validação */
+input:invalid:not(:placeholder-shown),
+select:invalid:not(:placeholder-shown),
+textarea:invalid:not(:placeholder-shown) {
+  border-color: var(--danger);
+}
+
+input:invalid:not(:placeholder-shown):focus,
+select:invalid:not(:placeholder-shown):focus,
+textarea:invalid:not(:placeholder-shown):focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--mystic-purple);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15), var(--shadow-soft);
+  outline: none;
+}
+
+input[type="text"]:hover:not(:disabled),
+input[type="email"]:hover:not(:disabled),
+input[type="password"]:hover:not(:disabled),
+input[type="number"]:hover:not(:disabled),
+input[type="url"]:hover:not(:disabled),
+textarea:hover:not(:disabled),
+select:hover:not(:disabled) {
+  border-color: var(--primary-dark);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mystic-purple-light);
+  border-radius: var(--radius-full);
+  transition: var(--transition-smooth);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mystic-purple);
+}
+
+/* Elementos místicos sutis - partículas etéreas */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.6;
+  }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+/* Aura luminosa sutil */
+.mystic-aura {
+  position: relative;
+}
+
+.mystic-aura::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: var(--gradient-mystic-glow);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.mystic-aura:hover::before {
+  opacity: 1;
+}

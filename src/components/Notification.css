@@ -1,0 +1,354 @@
+.notifications-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  align-items: flex-end;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  pointer-events: none;
+}
+
+.notifications-container > * {
+  pointer-events: auto;
+}
+
+.notifications-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.notifications-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notifications-container::-webkit-scrollbar-thumb {
+  background: var(--mystic-purple-light);
+  border-radius: var(--radius-full);
+}
+
+.notifications-container::-webkit-scrollbar-thumb:hover {
+  background: var(--mystic-purple);
+}
+
+.notification {
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+  max-width: 400px;
+  width: 400px;
+  flex-shrink: 0;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification-content {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 25px var(--shadow);
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  min-width: 300px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.notification-success {
+  border-color: #10b981;
+}
+
+.notification-success .notification-content {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border-color: #10b981;
+  border-width: 2px;
+  box-shadow: 
+    0 10px 25px rgba(16, 185, 129, 0.2), 
+    0 4px 10px rgba(16, 185, 129, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.notification-success .notification-icon {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  animation: gentle-pulse-success 2s ease-in-out infinite;
+}
+
+@keyframes gentle-pulse-success {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.notification-success .notification-message {
+  color: #065f46;
+}
+
+.notification-success .notification-message h4 {
+  color: #065f46;
+  font-weight: 700;
+}
+
+.notification-success .notification-message p {
+  color: #047857;
+  font-weight: 500;
+}
+
+.notification-error {
+  border-color: var(--mystic-pink-dark);
+}
+
+.notification-error .notification-content {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border-color: var(--mystic-pink-dark);
+  border-width: 2px;
+  box-shadow: 
+    0 10px 25px rgba(236, 72, 153, 0.15), 
+    0 4px 10px rgba(244, 114, 182, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.notification-error .notification-icon {
+  background: linear-gradient(135deg, var(--mystic-pink-dark) 0%, #db2777 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+  animation: gentle-pulse-error 2s ease-in-out infinite;
+}
+
+@keyframes gentle-pulse-error {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.notification-warning {
+  border-color: var(--accent);
+}
+
+.notification-warning .notification-content {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+  border-color: var(--accent);
+}
+
+.notification-warning .notification-icon {
+  background: var(--accent);
+  color: white;
+}
+
+.notification-info {
+  border-color: var(--primary);
+}
+
+.notification-info .notification-content {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+  border-color: var(--primary);
+}
+
+.notification-info .notification-icon {
+  background: var(--primary);
+  color: white;
+}
+
+.notification-achievement {
+  border-color: var(--mystic-pink-dark);
+}
+
+.notification-achievement .notification-content {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border-color: var(--mystic-pink-dark);
+  border-width: 2px;
+  box-shadow: 
+    0 10px 25px rgba(236, 72, 153, 0.15), 
+    0 4px 10px rgba(244, 114, 182, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.notification-achievement .notification-icon {
+  background: linear-gradient(135deg, var(--mystic-pink-dark) 0%, #db2777 100%);
+  color: white;
+  font-size: 1.5rem;
+  animation: gentle-pulse-error 2s ease-in-out infinite;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.notification-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.notification-message {
+  flex: 1;
+  color: var(--text-primary);
+}
+
+.notification-message h4 {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.notification-message p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* Ajuste específico para notificação de erro - texto mais escuro para melhor contraste */
+.notification-error .notification-message {
+  color: var(--text-primary);
+}
+
+.notification-error .notification-message h4 {
+  color: var(--mystic-pink-dark);
+  font-weight: 700;
+}
+
+.notification-error .notification-message p {
+  color: #1e293b;
+  font-weight: 500;
+}
+
+/* Ajuste específico para notificação de conquista - mesmo estilo da notificação de erro */
+.notification-achievement .notification-message {
+  color: var(--text-primary);
+}
+
+.notification-achievement .notification-message h4 {
+  color: var(--mystic-pink-dark);
+  font-weight: 700;
+}
+
+.notification-achievement .notification-message p {
+  color: #1e293b;
+  font-weight: 500;
+}
+
+/* Notificação de Essências - Paleta mística do app */
+.notification-essence {
+  border-color: var(--mystic-purple);
+}
+
+.notification-essence .notification-content {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border-color: var(--mystic-purple);
+  border-width: 2px;
+  box-shadow: 
+    0 10px 25px rgba(167, 139, 250, 0.25), 
+    0 4px 10px rgba(167, 139, 250, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.notification-essence .notification-icon {
+  background: linear-gradient(135deg, var(--mystic-purple) 0%, var(--mystic-violet) 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(167, 139, 250, 0.4);
+  animation: gentle-pulse-essence 2s ease-in-out infinite;
+}
+
+@keyframes gentle-pulse-essence {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.notification-essence .notification-message {
+  color: var(--mystic-violet-dark);
+}
+
+.notification-essence .notification-message h4 {
+  color: var(--mystic-violet-dark);
+  font-weight: 700;
+}
+
+.notification-essence .notification-message p {
+  color: var(--mystic-violet);
+  font-weight: 600;
+}
+
+.notification-close {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  font-family: inherit;
+  padding: 0;
+}
+
+.notification-close:hover {
+  background: var(--border);
+  color: var(--text-primary);
+}
+
+@media (max-width: 640px) {
+  .notifications-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+
+  .notification {
+    max-width: 100%;
+  }
+
+  .notification-content {
+    min-width: auto;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}

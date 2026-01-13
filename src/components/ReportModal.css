@@ -1,0 +1,312 @@
+.report-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+  padding: var(--spacing-md);
+  animation: fadeIn 0.3s ease;
+  pointer-events: auto;
+}
+
+/* Desabilita hover e interações em elementos de fundo quando o modal está aberto */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Bloqueia interações apenas em elementos de fundo (fora do modal) */
+body.modal-open .post-card:hover,
+body.modal-open .post-card::before {
+  opacity: 1 !important;
+  transform: none !important;
+  box-shadow: 0 2px 12px var(--shadow-soft), 0 1px 3px var(--shadow-soft) !important;
+  border-color: var(--border-light) !important;
+  pointer-events: none !important;
+}
+
+body.modal-open .post-card * {
+  pointer-events: none !important;
+}
+
+body.modal-open .action-button:hover,
+body.modal-open .reaction-button:hover,
+body.modal-open .report-button:hover {
+  pointer-events: none !important;
+  transform: none !important;
+}
+
+/* Garante que elementos dentro do modal de denúncia tenham interações habilitadas */
+body.modal-open .report-modal-overlay,
+body.modal-open .report-modal-content,
+body.modal-open .report-modal-content * {
+  pointer-events: auto !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.report-modal-content {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  max-width: 600px;
+  width: 100%;
+  max-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), var(--shadow-glow);
+  animation: slideUp 0.3s ease;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.report-modal-header {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  padding: var(--spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.report-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.report-modal-close-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: var(--transition-smooth);
+}
+
+.report-modal-close-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.report-modal-close-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.report-modal-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.report-modal-body {
+  padding: var(--spacing-xl);
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.report-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.report-modal-body::-webkit-scrollbar-track {
+  background: var(--background-alt);
+  border-radius: var(--radius-full);
+}
+
+.report-modal-body::-webkit-scrollbar-thumb {
+  background: var(--mystic-purple-light);
+  border-radius: var(--radius-full);
+}
+
+.report-modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--mystic-purple);
+}
+
+.report-modal-description {
+  color: var(--text-primary);
+  line-height: 1.7;
+  margin-bottom: var(--spacing-lg);
+  margin-top: 0;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.report-modal-note {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(244, 114, 182, 0.08) 100%);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--mystic-purple);
+  margin-top: auto;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.form-group {
+  margin-bottom: var(--spacing-lg);
+  flex-shrink: 0;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.report-reason-textarea {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text-primary);
+  background-color: var(--background-alt);
+  resize: vertical;
+  transition: var(--transition-smooth);
+  min-height: 120px;
+  box-sizing: border-box;
+}
+
+.report-reason-textarea:focus {
+  outline: none;
+  border-color: var(--mystic-purple);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+}
+
+.report-reason-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--background-alt);
+}
+
+.report-reason-textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.character-count {
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
+.report-modal-footer {
+  padding: var(--spacing-lg);
+  background: var(--background-alt);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.report-button-cancel,
+.report-button-submit {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  min-width: 120px;
+  border: 2px solid transparent;
+}
+
+.report-button-cancel {
+  background: var(--background);
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+
+.report-button-cancel:hover:not(:disabled) {
+  background: var(--background-alt);
+  border-color: var(--mystic-purple-light);
+  color: var(--mystic-purple);
+}
+
+.report-button-submit {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.report-button-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+}
+
+.report-button-submit:disabled,
+.report-button-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .report-modal-content {
+    max-width: 100%;
+    margin: var(--spacing-sm);
+  }
+
+  .report-modal-body {
+    padding: var(--spacing-lg);
+  }
+
+  .report-modal-title {
+    font-size: 1.1rem;
+  }
+
+  .report-modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .report-button-cancel,
+  .report-button-submit {
+    width: 100%;
+  }
+}

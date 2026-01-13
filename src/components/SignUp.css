@@ -1,0 +1,446 @@
+.signup-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  background: var(--gradient-mystic);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Textura sutil de grain */
+.signup-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+  background-size: 20px 20px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.signup-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.signup-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 20px 25px -5px var(--shadow), 0 10px 10px -5px var(--shadow);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.signup-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.signup-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.signup-header .logo-container {
+  justify-content: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.signup-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  cursor: pointer;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.social-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.google-button:hover {
+  border-color: #4285F4;
+  background: #f8f9fa;
+}
+
+.facebook-button:hover {
+  border-color: #1877F2;
+  background: #f0f2f5;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: var(--spacing-lg) 0;
+  color: var(--text-secondary);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border);
+}
+
+.divider span {
+  padding: 0 var(--spacing-md);
+  font-size: 0.9rem;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input {
+  padding-right: 45px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: var(--spacing-md);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+
+.password-toggle:hover {
+  color: var(--mystic-purple);
+}
+
+.password-toggle:focus {
+  outline: 2px solid var(--mystic-purple);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.form-input,
+.form-select {
+  padding: var(--spacing-md);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.game-chip {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.game-chip:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.game-chip.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.games-selected {
+  color: var(--success);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: var(--spacing-xs);
+}
+
+/* Campo para adicionar jogos customizados */
+.custom-game-input-group {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  align-items: stretch;
+}
+
+.custom-game-input {
+  flex: 1;
+  margin-top: 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  transition: var(--transition-smooth);
+  font-family: inherit;
+}
+
+.custom-game-input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+}
+
+.custom-game-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.add-custom-game-button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--gradient-mystic);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  white-space: nowrap;
+  min-width: 100px;
+  font-family: inherit;
+}
+
+.add-custom-game-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-mystic);
+}
+
+.add-custom-game-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Lista de jogos selecionados */
+.selected-games-list {
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-light);
+}
+
+.games-selected-info {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: var(--spacing-sm);
+}
+
+.selected-games-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.game-tag-removable {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: var(--gradient-mystic-soft);
+  border: 1px solid var(--mystic-purple-light);
+  border-radius: var(--radius-full);
+  color: var(--mystic-purple-dark);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+}
+
+.game-tag-removable:hover {
+  border-color: var(--mystic-purple);
+  background: rgba(167, 139, 250, 0.15);
+}
+
+.remove-game-button {
+  background: none;
+  border: none;
+  color: var(--mystic-purple);
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: var(--transition-smooth);
+  font-family: inherit;
+  font-weight: 700;
+}
+
+.remove-game-button:hover:not(:disabled) {
+  background: rgba(167, 139, 250, 0.2);
+  color: var(--mystic-purple-dark);
+  transform: scale(1.1);
+}
+
+.remove-game-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.signup-button {
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  margin-top: var(--spacing-md);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.signup-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px var(--shadow);
+}
+
+.signup-button:active {
+  transform: translateY(0);
+}
+
+.signup-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.social-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.signup-footer {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+  color: var(--text-secondary);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+}
+
+.link-button:hover {
+  color: var(--primary-dark);
+}
+
+@media (max-width: 640px) {
+  .signup-card {
+    padding: var(--spacing-lg);
+  }
+
+  .signup-title {
+    font-size: 2rem;
+  }
+
+  .games-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}

@@ -1,0 +1,143 @@
+.edit-profile-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10002;
+  padding: var(--spacing-md);
+  animation: fadeIn 0.3s ease;
+  pointer-events: auto;
+}
+
+/* Desabilita hover e interações em elementos de fundo quando o modal está aberto */
+body.edit-profile-modal-open {
+  overflow: hidden;
+}
+
+/* Bloqueia interações apenas em elementos de fundo (fora do modal) */
+body.edit-profile-modal-open .post-card:hover,
+body.edit-profile-modal-open .post-card::before {
+  opacity: 1 !important;
+  transform: none !important;
+  box-shadow: 0 2px 12px var(--shadow-soft), 0 1px 3px var(--shadow-soft) !important;
+  border-color: var(--border-light) !important;
+  pointer-events: none !important;
+}
+
+body.edit-profile-modal-open .post-card * {
+  pointer-events: none !important;
+}
+
+body.edit-profile-modal-open .action-button:hover,
+body.edit-profile-modal-open .reaction-button:hover,
+body.edit-profile-modal-open .report-button:hover {
+  pointer-events: none !important;
+  transform: none !important;
+}
+
+/* Garante que elementos dentro do modal de edição tenham interações habilitadas */
+body.edit-profile-modal-open .edit-profile-modal-overlay,
+body.edit-profile-modal-open .edit-profile-modal-content,
+body.edit-profile-modal-open .edit-profile-modal-content * {
+  pointer-events: auto !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.edit-profile-modal-content {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  max-width: 900px;
+  width: 100%;
+  max-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), var(--shadow-glow);
+  animation: slideUp 0.3s ease;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Ajustes para o EditProfile dentro do modal */
+.edit-profile-modal-content .edit-profile {
+  max-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  min-height: auto;
+  margin: 0;
+}
+
+.edit-profile-modal-content .edit-profile-form {
+  overflow-y: auto;
+  flex: 1;
+  padding: var(--spacing-lg);
+  max-height: calc(100vh - 120px);
+}
+
+/* Scrollbar personalizada para o formulário */
+.edit-profile-modal-content .edit-profile-form::-webkit-scrollbar {
+  width: 8px;
+}
+
+.edit-profile-modal-content .edit-profile-form::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+.edit-profile-modal-content .edit-profile-form::-webkit-scrollbar-thumb {
+  background: var(--mystic-purple-light);
+  border-radius: var(--radius-full);
+}
+
+.edit-profile-modal-content .edit-profile-form::-webkit-scrollbar-thumb:hover {
+  background: var(--mystic-purple);
+}
+
+/* Ajustes do header do EditProfile no modal */
+.edit-profile-modal-content .edit-profile-header {
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: var(--spacing-lg);
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .edit-profile-modal-content {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .edit-profile-modal-overlay {
+    padding: 0;
+  }
+}
