@@ -4,7 +4,7 @@ import CreateGroup from './CreateGroup'
 import { getGroups, saveGroups } from '../utils/storage'
 import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES } from '../utils/gamification'
 import { getPosts } from '../utils/storage'
-import { notifyAchievement, notifyEssenceGained } from '../utils/notifications'
+import { notifyAchievement, notifyEssenceGained, notifySuccess, notifyError } from '../utils/notifications'
 import './Groups.css'
 
 function Groups({ user, onUserUpdate }) {
@@ -32,6 +32,31 @@ function Groups({ user, onUserUpdate }) {
     setGroups(updatedGroups)
     saveGroups(updatedGroups)
     setShowCreateGroup(false)
+  }
+
+  // Exclui um grupo (apenas grupos criados pelo usuário)
+  const handleDeleteGroup = (groupId) => {
+    const group = groups.find(g => g.id === groupId)
+    
+    if (!group) {
+      notifyError('Grupo não encontrado.')
+      return
+    }
+
+    if (group.createdBy !== user.id) {
+      notifyError('Você só pode excluir grupos que você criou.')
+      return
+    }
+
+    const confirmed = window.confirm(`Tem certeza que deseja excluir o grupo "${group.name}"? Esta ação não pode ser desfeita.`)
+    if (!confirmed) {
+      return
+    }
+
+    const updatedGroups = groups.filter(g => g.id !== groupId)
+    setGroups(updatedGroups)
+    saveGroups(updatedGroups)
+    notifySuccess('Grupo excluído com sucesso!')
   }
 
   // Entra/sai de um grupo
@@ -204,6 +229,15 @@ function Groups({ user, onUserUpdate }) {
                     >
                       {group.members.includes(user.id) ? 'Sair' : 'Entrar'}
                     </button>
+                    {group.createdBy === user.id && (
+                      <button
+                        onClick={() => handleDeleteGroup(group.id)}
+                        className="delete-group-button"
+                        title="Excluir grupo"
+                      >
+                        🗑️
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -240,6 +274,15 @@ function Groups({ user, onUserUpdate }) {
                     >
                       {group.members.includes(user.id) ? 'Sair' : 'Entrar'}
                     </button>
+                    {group.createdBy === user.id && (
+                      <button
+                        onClick={() => handleDeleteGroup(group.id)}
+                        className="delete-group-button"
+                        title="Excluir grupo"
+                      >
+                        🗑️
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}

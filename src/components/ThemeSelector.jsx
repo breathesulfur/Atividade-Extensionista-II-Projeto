@@ -1,5 +1,5 @@
 import React from 'react'
-import { THEMES, canUnlockTheme, unlockTheme } from '../utils/gamification'
+import { THEMES, canUnlockTheme, unlockTheme, applyTheme } from '../utils/gamification'
 import './ThemeSelector.css'
 
 function ThemeSelector({ user, onThemeSelect }) {
@@ -8,16 +8,28 @@ function ThemeSelector({ user, onThemeSelect }) {
   const activeTheme = user.activeTheme || null
 
   const handleThemeSelect = (themeId) => {
+    // Se themeId for null, retorna ao tema padrão
+    if (themeId === null || themeId === undefined) {
+      onThemeSelect(null, user)
+      return
+    }
+    
     if (unlockedThemes.includes(themeId)) {
       // Tema já desbloqueado, apenas aplica
       onThemeSelect(themeId, user)
     } else if (canUnlockTheme(user, themeId)) {
-      // Pode desbloquear, então desbloqueia primeiro e depois aplica
+      // Pode desbloquear, então desbloqueia primeiro
       const updatedUser = unlockTheme(user, themeId)
-      // Aplica o tema imediatamente após desbloquear
-      onThemeSelect(themeId, updatedUser)
+      // Aplica o tema imediatamente após desbloquear para prévia visual
+      // Garante que o tema seja aplicado diretamente no usuário atualizado
+      const userWithThemeApplied = applyTheme(updatedUser, themeId)
+      // Passa o usuário com tema aplicado para mostrar prévia imediatamente
+      onThemeSelect(themeId, userWithThemeApplied)
     }
   }
+  
+  // Verifica se o tema padrão está ativo (nenhum tema selecionado)
+  const isDefaultThemeActive = !activeTheme || activeTheme === null
 
   return (
     <div className="theme-selector">
@@ -27,6 +39,22 @@ function ThemeSelector({ user, onThemeSelect }) {
       </p>
       
       <div className="themes-grid">
+        {/* Card do Tema Padrão */}
+        <div
+          className={`theme-card unlocked ${isDefaultThemeActive ? 'active' : ''}`}
+          onClick={() => handleThemeSelect(null)}
+        >
+          <div className="theme-icon">🎨</div>
+          <div className="theme-info">
+            <div className="theme-name">Tema Padrão</div>
+            <div className="theme-description">Retorna ao tema padrão do aplicativo</div>
+          </div>
+          
+          {isDefaultThemeActive && (
+            <div className="theme-active-badge">Ativo</div>
+          )}
+        </div>
+        
         {Object.values(THEMES).map(theme => {
           const isUnlocked = unlockedThemes.includes(theme.id)
           const isActive = activeTheme === theme.id
@@ -49,7 +77,7 @@ function ThemeSelector({ user, onThemeSelect }) {
                   <div className="lock-icon">🔒</div>
                   <div className="lock-text">
                     {canUnlock ? (
-                      <span>Clique para desbloquear</span>
+                      <span>Clique para desbloquear e ver prévia</span>
                     ) : (
                       <span>Desbloqueie com {theme.requiredEssence} Essências</span>
                     )}

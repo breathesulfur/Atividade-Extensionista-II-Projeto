@@ -88,33 +88,37 @@
   opacity: 0.9;
 }
 
-/* Barra compacta de progresso diário */
+/* Barra compacta de progresso diário - Cores fixas para contraste consistente */
 .daily-essence-bar-compact {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
   font-size: 0.75rem;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .daily-essence-text {
   font-weight: 600;
   white-space: nowrap;
+  /* Herda cor do header (branco por padrão, adapta-se a temas) */
+  color: inherit;
 }
 
 .daily-essence-bar-compact-container {
   width: 60px;
   height: 8px;
-  background: rgba(255, 255, 255, 0.2);
+  /* Fundo fixo com boa visibilidade */
+  background: rgba(139, 92, 246, 0.15) !important;
   border-radius: var(--radius-full);
   overflow: hidden;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3) !important;
 }
 
 .daily-essence-bar-compact-fill {
   height: 100%;
-  background: rgba(255, 255, 255, 0.6);
+  /* Cor fixa do gradiente místico para preenchimento */
+  background: linear-gradient(90deg, #a78bfa 0%, #8b5cf6 100%) !important;
   border-radius: var(--radius-full);
   transition: width 0.4s ease-out;
   position: relative;
@@ -122,16 +126,17 @@
   align-items: center;
   justify-content: flex-end;
   padding-right: 2px;
+  box-shadow: 0 1px 3px rgba(139, 92, 246, 0.3);
 }
 
 .daily-essence-bar-compact-fill.complete {
-  background: linear-gradient(90deg, rgba(255, 215, 0, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%) !important;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6) !important;
 }
 
 .daily-essence-check {
   font-size: 0.6rem;
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(0, 0, 0, 0.8) !important;
   font-weight: bold;
   line-height: 1;
 }
@@ -344,19 +349,11 @@
 
 .dashboard.theme-serene_moon .user-name,
 .dashboard.theme-serene_moon .user-pronoun,
-.dashboard.theme-serene_moon .user-points,
-.dashboard.theme-serene_moon .daily-essence-text {
+.dashboard.theme-serene_moon .user-points {
   color: #4B4637;
 }
 
-.dashboard.theme-serene_moon .daily-essence-bar-compact-container {
-  background: rgba(230, 212, 138, 0.2);
-  border-color: rgba(230, 212, 138, 0.4);
-}
-
-.dashboard.theme-serene_moon .daily-essence-bar-compact-fill {
-  background: #E6D48A;
-}
+/* Barra de essências mantém cores fixas - não herda cores do tema */
 
 /* ✨ Tema: Aura Rosa - Rosa luminoso */
 .dashboard.theme-pink_aura,
@@ -393,19 +390,11 @@
 
 .dashboard.theme-pink_aura .user-name,
 .dashboard.theme-pink_aura .user-pronoun,
-.dashboard.theme-pink_aura .user-points,
-.dashboard.theme-pink_aura .daily-essence-text {
+.dashboard.theme-pink_aura .user-points {
   color: #7A2E4D;
 }
 
-.dashboard.theme-pink_aura .daily-essence-bar-compact-container {
-  background: rgba(240, 166, 193, 0.2);
-  border-color: rgba(240, 166, 193, 0.4);
-}
-
-.dashboard.theme-pink_aura .daily-essence-bar-compact-fill {
-  background: #F0A6C1;
-}
+/* Barra de essências mantém cores fixas - não herda cores do tema */
 
 /* ☁️ Tema: Céu Suave - Aplicado em toda a página */
 .dashboard.theme-soft_sky,
@@ -470,19 +459,11 @@
 
 .dashboard.theme-pink_mist .user-name,
 .dashboard.theme-pink_mist .user-pronoun,
-.dashboard.theme-pink_mist .user-points,
-.dashboard.theme-pink_mist .daily-essence-text {
+.dashboard.theme-pink_mist .user-points {
   color: #3E5E54;
 }
 
-.dashboard.theme-pink_mist .daily-essence-bar-compact-container {
-  background: rgba(200, 222, 212, 0.2);
-  border-color: rgba(200, 222, 212, 0.4);
-}
-
-.dashboard.theme-pink_mist .daily-essence-bar-compact-fill {
-  background: #C8DED4;
-}
+/* Barra de essências mantém cores fixas - não herda cores do tema */
 
 /* 🌅 Tema: Amanhecer Lilás - Lilás claro com calor suave */
 .dashboard.theme-lilac_dawn,
@@ -519,19 +500,11 @@
 
 .dashboard.theme-lilac_dawn .user-name,
 .dashboard.theme-lilac_dawn .user-pronoun,
-.dashboard.theme-lilac_dawn .user-points,
-.dashboard.theme-lilac_dawn .daily-essence-text {
+.dashboard.theme-lilac_dawn .user-points {
   color: #4B3F72;
 }
 
-.dashboard.theme-lilac_dawn .daily-essence-bar-compact-container {
-  background: rgba(194, 180, 232, 0.2);
-  border-color: rgba(194, 180, 232, 0.4);
-}
-
-.dashboard.theme-lilac_dawn .daily-essence-bar-compact-fill {
-  background: #C2B4E8;
-}
+/* Barra de essências mantém cores fixas - não herda cores do tema */
 
 /* 🌸 Tema: Pétala Rosa - Rosa floral suave */
 .dashboard.theme-petal,
@@ -568,19 +541,11 @@
 
 .dashboard.theme-petal .user-name,
 .dashboard.theme-petal .user-pronoun,
-.dashboard.theme-petal .user-points,
-.dashboard.theme-petal .daily-essence-text {
+.dashboard.theme-petal .user-points {
   color: #7C3A55;
 }
 
-.dashboard.theme-petal .daily-essence-bar-compact-container {
-  background: rgba(229, 161, 188, 0.2);
-  border-color: rgba(229, 161, 188, 0.4);
-}
-
-.dashboard.theme-petal .daily-essence-bar-compact-fill {
-  background: #E5A1BC;
-}
+/* Barra de essências mantém cores fixas - não herda cores do tema */
 
 /* Aplicação de temas em inputs e elementos de formulário globalmente */
 .theme-serene_moon input,

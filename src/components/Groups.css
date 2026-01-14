@@ -261,6 +261,34 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Botão de excluir grupo (apenas para criadores) */
+.delete-group-button {
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--danger);
+  background: transparent;
+  color: var(--danger);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-group-button:hover {
+  background: var(--danger);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.delete-group-button:active {
+  transform: translateY(0);
+}
+
 /* ========================================
    APLICAÇÃO DE TEMAS NOS BOTÕES
    ======================================== */
