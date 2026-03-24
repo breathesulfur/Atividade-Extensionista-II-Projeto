@@ -654,14 +654,14 @@
 
 .profile-theme-serene_moon .profile-section,
 .theme-serene_moon .profile-section {
-  background: var(--theme-secondary, #FAF8F2);
-  border-color: rgba(230, 212, 138, 0.4);
+  background: var(--theme-background, #E0E4E8);
+  border-color: var(--theme-primary, #E6D48A);
 }
 
 .profile-theme-serene_moon .profile-main-section,
 .theme-serene_moon .profile-main-section {
-  background: var(--theme-secondary, #FAF8F2);
-  border: 2px solid rgba(230, 212, 138, 0.5);
+  background: var(--theme-background, #E0E4E8);
+  border: 2px solid var(--theme-primary, #E6D48A);
 }
 
 .profile-theme-serene_moon .profile-avatar-large,
@@ -707,14 +707,14 @@
 
 .profile-theme-serene_moon .stat-card,
 .theme-serene_moon .stat-card {
-  background: var(--theme-secondary, #FAF8F2);
-  border-color: rgba(230, 212, 138, 0.4);
+  background: var(--theme-background, #E0E4E8);
+  border-color: var(--theme-primary, #E6D48A);
 }
 
 .profile-theme-serene_moon .badge-card.unlocked,
 .theme-serene_moon .badge-card.unlocked {
-  background: var(--theme-secondary, #FAF8F2);
-  border-color: rgba(230, 212, 138, 0.5);
+  background: var(--theme-background, #E0E4E8);
+  border-color: var(--theme-primary, #E6D48A);
   box-shadow: 0 2px 12px rgba(230, 212, 138, 0.3);
 }
 
@@ -740,14 +740,14 @@
 
 .profile-theme-pink_aura .profile-section,
 .theme-pink_aura .profile-section {
-  background: var(--theme-secondary, #FDECF3);
-  border-color: rgba(240, 166, 193, 0.4);
+  background: var(--theme-background, #F6C1D6);
+  border-color: var(--theme-primary, #F0A6C1);
 }
 
 .profile-theme-pink_aura .profile-main-section,
 .theme-pink_aura .profile-main-section {
-  background: var(--theme-secondary, #FDECF3);
-  border: 2px solid rgba(240, 166, 193, 0.5);
+  background: var(--theme-background, #F6C1D6);
+  border: 2px solid var(--theme-primary, #F0A6C1);
 }
 
 .profile-theme-pink_aura .profile-avatar-large,
@@ -793,14 +793,15 @@
 
 .profile-theme-pink_aura .badge-card.unlocked,
 .theme-pink_aura .badge-card.unlocked {
-  background: linear-gradient(135deg, var(--theme-background, #FDF1F7) 0%, rgba(243, 166, 200, 0.1) 100%);
-  border-color: var(--theme-primary, #F3A6C8);
+  background: var(--theme-background, #F6C1D6);
+  border-color: var(--theme-primary, #F0A6C1);
+  box-shadow: 0 2px 12px rgba(240, 166, 193, 0.4);
 }
 
 .profile-theme-pink_aura .stat-card,
 .theme-pink_aura .stat-card {
-  background: var(--theme-background, #FDF1F7);
-  border-color: var(--theme-secondary, #E6C48A);
+  background: var(--theme-background, #F6C1D6);
+  border-color: var(--theme-primary, #F0A6C1);
 }
 
 .profile-theme-pink_aura .stat-value,
@@ -819,18 +820,6 @@
   color: var(--theme-text, #7A2E4D);
 }
 
-.profile-theme-pink_aura .badge-card.unlocked,
-.theme-pink_aura .badge-card.unlocked {
-  background: var(--theme-background, #F4B6CF);
-  border-color: rgba(232, 157, 186, 0.5);
-  box-shadow: 0 2px 12px rgba(255, 214, 230, 0.4);
-}
-
-.profile-theme-pink_aura .stat-card,
-.theme-pink_aura .stat-card {
-  background: var(--theme-background, #F4B6CF);
-  border-color: rgba(232, 157, 186, 0.5);
-}
 
 /* ☁️ Tema: Céu Suave - Aplicado por inteiro */
 .profile-theme-soft_sky,
@@ -982,14 +971,14 @@
 
 .profile-theme-pink_mist .profile-section,
 .theme-pink_mist .profile-section {
-  background: var(--theme-secondary, #F3F8F5);
-  border-color: rgba(200, 222, 212, 0.4);
+  background: var(--theme-background, #D8E4DC);
+  border-color: var(--theme-primary, #E6C9D6);
 }
 
 .profile-theme-pink_mist .profile-main-section,
 .theme-pink_mist .profile-main-section {
-  background: var(--theme-secondary, #F3F8F5);
-  border: 2px solid rgba(200, 222, 212, 0.5);
+  background: var(--theme-background, #D8E4DC);
+  border: 2px solid var(--theme-primary, #E6C9D6);
 }
 
 .profile-theme-pink_mist .profile-avatar-large,
@@ -1035,14 +1024,14 @@
 
 .profile-theme-pink_mist .stat-card,
 .theme-pink_mist .stat-card {
-  background: var(--theme-secondary, #F3F8F5);
-  border-color: rgba(200, 222, 212, 0.4);
+  background: var(--theme-background, #D8E4DC);
+  border-color: var(--theme-primary, #E6C9D6);
 }
 
 .profile-theme-pink_mist .badge-card.unlocked,
 .theme-pink_mist .badge-card.unlocked {
-  background: var(--theme-secondary, #F3F8F5);
-  border-color: rgba(200, 222, 212, 0.5);
+  background: var(--theme-background, #D8E4DC);
+  border-color: var(--theme-primary, #E6C9D6);
   box-shadow: 0 2px 12px rgba(200, 222, 212, 0.3);
 }
 
@@ -1072,14 +1061,14 @@
 
 .profile-theme-lilac_dawn .profile-section,
 .theme-lilac_dawn .profile-section {
-  background: var(--theme-background, #D6C9F0);
-  border-color: rgba(183, 166, 230, 0.5);
+  background: var(--theme-background, #E6D9F0);
+  border-color: var(--theme-primary, #B19CD9);
 }
 
 .profile-theme-lilac_dawn .profile-main-section,
 .theme-lilac_dawn .profile-main-section {
-  background: var(--theme-background, #D6C9F0);
-  border: 2px solid rgba(183, 166, 230, 0.5);
+  background: var(--theme-background, #E6D9F0);
+  border: 2px solid var(--theme-primary, #B19CD9);
 }
 
 .profile-theme-lilac_dawn .profile-avatar-large,
@@ -1120,15 +1109,15 @@
 
 .profile-theme-lilac_dawn .stat-card,
 .theme-lilac_dawn .stat-card {
-  background: var(--theme-background, #D6C9F0);
-  border-color: rgba(183, 166, 230, 0.5);
+  background: var(--theme-background, #E6D9F0);
+  border-color: var(--theme-primary, #B19CD9);
 }
 
 .profile-theme-lilac_dawn .badge-card.unlocked,
 .theme-lilac_dawn .badge-card.unlocked {
-  background: var(--theme-background, #D6C9F0);
-  border-color: rgba(183, 166, 230, 0.5);
-  box-shadow: 0 2px 12px rgba(232, 228, 250, 0.4);
+  background: var(--theme-background, #E6D9F0);
+  border-color: var(--theme-primary, #B19CD9);
+  box-shadow: 0 2px 12px rgba(194, 180, 232, 0.3);
 }
 
 .profile-theme-lilac_dawn .game-tag,
@@ -1157,14 +1146,14 @@
 
 .profile-theme-petal .profile-section,
 .theme-petal .profile-section {
-  background: var(--theme-secondary, #FFF0F6);
-  border-color: rgba(229, 161, 188, 0.4);
+  background: var(--theme-background, #FFF0F6);
+  border-color: var(--theme-primary, #FF8FA3);
 }
 
 .profile-theme-petal .profile-main-section,
 .theme-petal .profile-main-section {
-  background: var(--theme-secondary, #FFF0F6);
-  border: 2px solid rgba(229, 161, 188, 0.5);
+  background: var(--theme-background, #FFF0F6);
+  border: 2px solid var(--theme-primary, #FF8FA3);
 }
 
 .profile-theme-petal .profile-avatar-large,
@@ -1210,15 +1199,15 @@
 
 .profile-theme-petal .stat-card,
 .theme-petal .stat-card {
-  background: var(--theme-secondary, #FFF0F6);
-  border-color: rgba(229, 161, 188, 0.4);
+  background: var(--theme-background, #FFF0F6);
+  border-color: var(--theme-primary, #FF8FA3);
 }
 
 .profile-theme-petal .badge-card.unlocked,
 .theme-petal .badge-card.unlocked {
-  background: var(--theme-secondary, #FFF0F6);
-  border-color: rgba(229, 161, 188, 0.5);
-  box-shadow: 0 2px 12px rgba(229, 161, 188, 0.3);
+  background: var(--theme-background, #FFF0F6);
+  border-color: var(--theme-primary, #FF8FA3);
+  box-shadow: 0 2px 12px rgba(255, 192, 203, 0.3);
 }
 
 .profile-theme-petal .game-tag,
