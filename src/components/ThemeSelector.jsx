@@ -76,11 +76,10 @@ function ThemeSelector({ user, onThemeSelect }) {
                 <div className="theme-lock-overlay">
                   <div className="lock-icon">🔒</div>
                   <div className="lock-text">
-                    {canUnlock ? (
-                      <span>Clique para desbloquear e ver prévia</span>
-                    ) : (
-                      <span>Desbloqueie com {theme.requiredEssence} Essências</span>
-                    )}
+                    {canUnlock ? 'Clique para desbloquear' : 'Bloqueado'}
+                  </div>
+                  <div className="lock-cost">
+                    🔮 {theme.requiredEssence} Essências
                   </div>
                 </div>
               )}

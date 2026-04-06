@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import Feed from './Feed'
 import Groups from './Groups'
 import Profile from './Profile'
@@ -8,7 +8,7 @@ import LoadingSpinner from './LoadingSpinner'
 import FAQ from './FAQ'
 import { updateUser } from '../utils/storage'
 import { setNotificationCallback, notifyEssenceGained, notifyAchievement } from '../utils/notifications'
-import { addEssence, DAILY_ESSENCE_LIMIT } from '../utils/gamification'
+import { addEssence, DAILY_ESSENCE_LIMIT, THEMES } from '../utils/gamification'
 import './Dashboard.css'
 
 // Componente de barra de progresso diária compacta
@@ -43,6 +43,25 @@ function Dashboard({ user, onLogout }) {
   const previousEssenceRef = useRef(user.essence || user.points || 0)
   const processedMilestonesRef = useRef(new Set([Math.floor((user.essence || user.points || 0) / 50)]))
   const dailyLimitNotificationRef = useRef(false)
+
+  // Calcula variáveis CSS do tema ativo para injetar em toda a árvore de componentes
+  const themeStyles = useMemo(() => {
+    if (!currentUser.activeTheme) return {}
+    const themeKey = Object.keys(THEMES).find(k => THEMES[k].id === currentUser.activeTheme)
+    const theme = themeKey ? THEMES[themeKey] : null
+    if (!theme) return {}
+    return {
+      '--theme-primary': theme.colors.primary,
+      '--theme-background': theme.colors.background,
+      '--theme-secondary': theme.colors.secondary,
+      '--theme-text': theme.colors.text,
+      '--theme-accent': theme.colors.accent,
+      '--theme-glow': theme.colors.glow,
+      '--theme-hover': theme.colors.hover || theme.colors.primary,
+      '--theme-disabled': theme.colors.disabled || theme.colors.secondary,
+      '--theme-links': theme.colors.links || theme.colors.primary,
+    }
+  }, [currentUser.activeTheme])
 
   // Configura o sistema de notificações (fila de notificações)
   useEffect(() => {
@@ -150,7 +169,10 @@ function Dashboard({ user, onLogout }) {
   }
 
   return (
-    <div className={`dashboard ${currentUser.activeTheme ? `theme-${currentUser.activeTheme}` : ''}`}>
+    <div
+      className={`dashboard ${currentUser.activeTheme ? `theme-${currentUser.activeTheme}` : ''}`}
+      style={themeStyles}
+    >
       {/* Notificações Gerais - Empilhadas uma abaixo da outra */}
       {notifications.length > 0 && (
         <div className="notifications-container">
