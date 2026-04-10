@@ -61,7 +61,115 @@
 
 .signup-header {
   text-align: center;
+  margin-bottom: var(--spacing-md);
+}
+
+/* ── Stepper de progresso ── */
+.signup-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
   margin-bottom: var(--spacing-xl);
+  padding: 0 var(--spacing-md);
+}
+
+.stepper-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.stepper-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.stepper-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.stepper-step.done .stepper-circle {
+  background: var(--gradient-mystic);
+  border-color: transparent;
+  color: white;
+}
+
+.stepper-step.done .stepper-label {
+  color: var(--mystic-purple);
+}
+
+.stepper-step.active .stepper-circle {
+  border-color: var(--mystic-purple);
+  color: var(--mystic-purple);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.stepper-step.active .stepper-label {
+  color: var(--mystic-purple);
+  font-weight: 700;
+}
+
+.stepper-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  margin: 0 6px;
+  margin-bottom: 16px;
+  min-width: 32px;
+  transition: background 0.3s ease;
+}
+
+.stepper-line.done {
+  background: var(--mystic-purple);
+}
+
+/* ── Divisores de seção no formulário ── */
+.form-section-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-lg) 0 var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.form-section-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-mystic);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.form-section-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--mystic-purple);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .signup-title {

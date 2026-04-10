@@ -7,6 +7,38 @@ import { getPosts } from '../utils/storage'
 import { notifyAchievement, notifyEssenceGained, notifySuccess, notifyError } from '../utils/notifications'
 import './Groups.css'
 
+// Mapa de ícones e cores por jogo
+const GAME_META = {
+  'valorant':          { icon: '🎯', color: '#FF4655' },
+  'league of legends': { icon: '⚔️', color: '#C89B3C' },
+  'lol':               { icon: '⚔️', color: '#C89B3C' },
+  'overwatch':         { icon: '🛡️', color: '#F99E1A' },
+  'apex legends':      { icon: '🔫', color: '#CD4F1F' },
+  'fortnite':          { icon: '🏗️', color: '#00B4FF' },
+  'minecraft':         { icon: '⛏️', color: '#7BAF2C' },
+  'among us':          { icon: '🚀', color: '#C51111' },
+  'genshin impact':    { icon: '✨', color: '#9B6B9E' },
+  'world of warcraft': { icon: '🐉', color: '#0070DE' },
+  'wow':               { icon: '🐉', color: '#0070DE' },
+  'final fantasy':     { icon: '🌟', color: '#8B6914' },
+  'cs:go':             { icon: '💣', color: '#F5B731' },
+  'csgo':              { icon: '💣', color: '#F5B731' },
+  'rocket league':     { icon: '🚗', color: '#1A73E8' },
+  'animal crossing':   { icon: '🌿', color: '#7AC74F' },
+  'stardew valley':    { icon: '🌾', color: '#86C154' },
+  'the sims':          { icon: '🏠', color: '#00A65A' },
+  'project zomboid':   { icon: '🧟', color: '#5C7A3A' },
+}
+
+function getGameMeta(gameName) {
+  if (!gameName) return { icon: '🎮', color: '#8B5CF6' }
+  const key = gameName.toLowerCase()
+  for (const [pattern, meta] of Object.entries(GAME_META)) {
+    if (key.includes(pattern)) return meta
+  }
+  return { icon: '🎮', color: '#8B5CF6' }
+}
+
 function Groups({ user, onUserUpdate }) {
   const [groups, setGroups] = useState([])
   const [showCreateGroup, setShowCreateGroup] = useState(false)
@@ -204,15 +236,20 @@ function Groups({ user, onUserUpdate }) {
               🎯 Grupos dos seus jogos favoritos
             </h3>
             <div className="groups-grid">
-              {relevantGroups.map(group => (
-                <div key={group.id} className="group-item">
+              {relevantGroups.map(group => {
+                const { icon, color } = getGameMeta(group.game)
+                return (
+                <div key={group.id} className="group-item" style={{ '--game-color': color }}>
                   <div className="group-item-header">
-                    <h4>{group.name}</h4>
-                    <span className="group-game">{group.game}</span>
+                    <span className="group-game-icon" style={{ background: color }}>{icon}</span>
+                    <div className="group-item-title">
+                      <h4>{group.name}</h4>
+                      <span className="group-game" style={{ color }}>{group.game}</span>
+                    </div>
                   </div>
                   <p className="group-description">{group.description}</p>
                   <div className="group-meta">
-                    <span>👥 {group.members.length} membro(s)</span>
+                    <span>👥 {group.members.length} membro{group.members.length !== 1 ? 's' : ''}</span>
                   </div>
                   <div className="group-actions">
                     <button
@@ -240,7 +277,8 @@ function Groups({ user, onUserUpdate }) {
                     )}
                   </div>
                 </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}
@@ -249,15 +287,20 @@ function Groups({ user, onUserUpdate }) {
           <div className="groups-section">
             <h3 className="section-title">🎮 Outros Grupos</h3>
             <div className="groups-grid">
-              {otherGroups.map(group => (
-                <div key={group.id} className="group-item">
+              {otherGroups.map(group => {
+                const { icon, color } = getGameMeta(group.game)
+                return (
+                <div key={group.id} className="group-item" style={{ '--game-color': color }}>
                   <div className="group-item-header">
-                    <h4>{group.name}</h4>
-                    <span className="group-game">{group.game}</span>
+                    <span className="group-game-icon" style={{ background: color }}>{icon}</span>
+                    <div className="group-item-title">
+                      <h4>{group.name}</h4>
+                      <span className="group-game" style={{ color }}>{group.game}</span>
+                    </div>
                   </div>
                   <p className="group-description">{group.description}</p>
                   <div className="group-meta">
-                    <span>👥 {group.members.length} membro(s)</span>
+                    <span>👥 {group.members.length} membro{group.members.length !== 1 ? 's' : ''}</span>
                   </div>
                   <div className="group-actions">
                     <button
@@ -285,7 +328,8 @@ function Groups({ user, onUserUpdate }) {
                     )}
                   </div>
                 </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}

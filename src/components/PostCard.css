@@ -76,6 +76,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, #c084fc 0%, #818cf8 100%);
+  color: white;
+  border-radius: var(--radius-full);
 }
 
 .author-info {
@@ -362,20 +369,47 @@
 .comment-form {
   display: flex;
   gap: var(--spacing-sm);
+  align-items: flex-start;
+}
+
+.comment-input-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .comment-input {
-  flex: 1;
+  width: 100%;
   padding: var(--spacing-sm) var(--spacing-md);
   border: 2px solid var(--border);
   border-radius: var(--radius-md);
   font-size: 0.95rem;
   font-family: inherit;
+  box-sizing: border-box;
 }
 
 .comment-input:focus {
   border-color: var(--primary);
   outline: none;
+}
+
+.comment-char-count {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: right;
+  margin-top: 2px;
+  transition: color 0.2s;
+}
+
+.comment-char-count.warning {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.comment-char-count.limit {
+  color: #ef4444;
+  font-weight: 700;
 }
 
 .comment-submit {
@@ -386,10 +420,21 @@
   border-radius: var(--radius-md);
   font-weight: 600;
   transition: all 0.2s;
+  flex-shrink: 0;
+  margin-top: 0;
 }
 
 .comment-submit:hover {
   background: var(--primary-dark);
+}
+
+/* Label do botão de reação */
+.reaction-button-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 2px;
+  opacity: 0.85;
+  vertical-align: middle;
 }
 
 /* Aplicação de temas no PostCard */

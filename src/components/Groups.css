@@ -80,7 +80,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--gradient-mystic);
+  background: var(--game-color, var(--gradient-mystic));
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -97,21 +97,45 @@
 
 .group-item-header {
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.group-game-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  opacity: 0.92;
+}
+
+.group-item-title {
+  display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: 2px;
+  min-width: 0;
 }
 
 .group-item-header h4 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--text-primary);
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .group-game {
-  font-size: 0.9rem;
-  color: var(--mystic-purple);
+  font-size: 0.82rem;
   font-weight: 600;
+  /* cor injetada via style prop para cada jogo */
 }
 
 .group-description {

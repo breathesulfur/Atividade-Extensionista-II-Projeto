@@ -25,6 +25,14 @@ function SignUp({ onSignUp, onBackToLogin }) {
   const [customGame, setCustomGame] = useState('')
   const [customPronoun, setCustomPronoun] = useState('')
 
+  // Calcula etapa atual com base nos campos preenchidos
+  const currentStep = (() => {
+    if (formData.games.length > 0) return 3
+    if (formData.pronoun && formData.state && formData.city) return 3
+    if (formData.name && formData.email && formData.password && formData.confirmPassword) return 2
+    return 1
+  })()
+
   // Lista de jogos populares para seleção
   const availableGames = [
     'League of Legends',
@@ -324,6 +332,23 @@ function SignUp({ onSignUp, onBackToLogin }) {
           </p>
         </div>
 
+        {/* Stepper de progresso */}
+        <div className="signup-stepper" aria-label="Progresso do cadastro">
+          {[
+            { n: 1, label: 'Conta' },
+            { n: 2, label: 'Perfil' },
+            { n: 3, label: 'Jogos' },
+          ].map(({ n, label }, idx) => (
+            <React.Fragment key={n}>
+              <div className={`stepper-step ${currentStep >= n ? 'done' : ''} ${currentStep === n ? 'active' : ''}`}>
+                <div className="stepper-circle">{currentStep > n ? '✓' : n}</div>
+                <span className="stepper-label">{label}</span>
+              </div>
+              {idx < 2 && <div className={`stepper-line ${currentStep > n ? 'done' : ''}`} />}
+            </React.Fragment>
+          ))}
+        </div>
+
         <form onSubmit={handleSubmit} className="signup-form">
           {/* Campo de Nome */}
           <div className="form-group">
@@ -445,6 +470,12 @@ function SignUp({ onSignUp, onBackToLogin }) {
             </div>
           </div>
 
+          {/* Divisor - Etapa 2: Perfil */}
+          <div className="form-section-divider">
+            <span className="form-section-badge">2</span>
+            <span className="form-section-title">Seu Perfil</span>
+          </div>
+
           {/* Campo de Pronome */}
           <div className="form-group">
             <label htmlFor="pronoun" className="form-label">
@@ -551,6 +582,12 @@ function SignUp({ onSignUp, onBackToLogin }) {
                 ⚠️ Este estado não possui cidades cadastradas. Por favor, selecione outro estado.
               </p>
             )}
+          </div>
+
+          {/* Divisor - Etapa 3: Jogos */}
+          <div className="form-section-divider">
+            <span className="form-section-badge">3</span>
+            <span className="form-section-title">Jogos Favoritos</span>
           </div>
 
           {/* Seleção de Jogos */}

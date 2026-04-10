@@ -311,6 +311,110 @@
 }
 
 /* ========================================
+   MODAL DE CONFIRMAÇÃO DE LOGOUT
+   ======================================== */
+
+.logout-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.logout-confirm-modal {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  padding: 2.5rem 2rem 2rem;
+  max-width: 360px;
+  width: 90%;
+  text-align: center;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.logout-confirm-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.logout-confirm-modal h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.logout-confirm-modal p {
+  margin: 0 0 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.logout-confirm-modal p strong {
+  color: var(--mystic-purple);
+}
+
+.logout-confirm-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.logout-confirm-cancel {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-confirm-cancel:hover {
+  border-color: var(--mystic-purple);
+  color: var(--mystic-purple);
+}
+
+.logout-confirm-yes {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  background: var(--gradient-mystic);
+  border: none;
+  border-radius: var(--radius-md);
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px var(--shadow-mystic);
+}
+
+.logout-confirm-yes:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px var(--shadow-mystic);
+}
+
+/* ========================================
    APLICAÇÃO GLOBAL DOS TEMAS
    ======================================== */
 
@@ -321,8 +425,8 @@
 }
 
 .dashboard.theme-serene_moon .dashboard-header {
-  background: linear-gradient(135deg, var(--theme-primary, #E6D48A) 0%, var(--theme-hover, #DCCB78) 100%);
-  color: var(--theme-text, #4B4637);
+  background: linear-gradient(135deg, #C9B84E 0%, #B8A73D 100%);
+  color: #1E1B0E;
 }
 
 .dashboard.theme-serene_moon .dashboard-nav {
@@ -350,29 +454,30 @@
 .dashboard.theme-serene_moon .user-name,
 .dashboard.theme-serene_moon .user-pronoun,
 .dashboard.theme-serene_moon .user-points {
-  color: var(--theme-text, #4B4637);
+  color: #1E1B0E;
   font-weight: 600;
 }
 
 /* Logo e botões do header - contraste adequado */
 .dashboard.theme-serene_moon .logo-light .logo-text {
-  color: var(--theme-text, #4B4637) !important;
-  -webkit-text-fill-color: var(--theme-text, #4B4637) !important;
+  color: #1E1B0E !important;
+  -webkit-text-fill-color: #1E1B0E !important;
   background: none !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .dashboard.theme-serene_moon .faq-button-header,
 .dashboard.theme-serene_moon .logout-button {
-  background: rgba(75, 70, 55, 0.2) !important;
-  color: var(--theme-text, #4B4637) !important;
-  border-color: rgba(75, 70, 55, 0.4) !important;
+  background: rgba(30, 27, 14, 0.18) !important;
+  color: #1E1B0E !important;
+  border-color: rgba(30, 27, 14, 0.5) !important;
+  font-weight: 700;
 }
 
 .dashboard.theme-serene_moon .faq-button-header:hover:not(:disabled),
 .dashboard.theme-serene_moon .logout-button:hover:not(:disabled) {
-  background: rgba(75, 70, 55, 0.3) !important;
-  border-color: rgba(75, 70, 55, 0.6) !important;
+  background: rgba(30, 27, 14, 0.28) !important;
+  border-color: rgba(30, 27, 14, 0.7) !important;
 }
 
 /* Barra de essências mantém cores fixas - não herda cores do tema */

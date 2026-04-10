@@ -40,6 +40,7 @@ function Dashboard({ user, onLogout }) {
   const [notifications, setNotifications] = useState([])
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [showFAQ, setShowFAQ] = useState(false)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const previousEssenceRef = useRef(user.essence || user.points || 0)
   const processedMilestonesRef = useRef(new Set([Math.floor((user.essence || user.points || 0) / 50)]))
   const dailyLimitNotificationRef = useRef(false)
@@ -68,9 +69,13 @@ function Dashboard({ user, onLogout }) {
     setNotificationCallback((message, type, duration) => {
       const id = Date.now().toString()
       const newNotification = { id, message, type, duration }
-      
-      setNotifications(prev => [...prev, newNotification])
-      
+
+      setNotifications(prev => {
+        // Limita a no máximo 3 notificações visíveis simultaneamente
+        const updated = [...prev, newNotification]
+        return updated.slice(-3)
+      })
+
       // Remove automaticamente após a duração especificada
       if (duration > 0) {
         setTimeout(() => {
@@ -157,14 +162,16 @@ function Dashboard({ user, onLogout }) {
     previousEssenceRef.current = currentEssence
   }, [currentUser.essence, currentUser.points])
 
-  // Função para fazer logout com loading
-  const handleLogout = async () => {
+  // Abre o modal de confirmação de logout
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true)
+  }
+
+  // Confirma o logout
+  const handleLogoutConfirm = async () => {
+    setShowLogoutConfirm(false)
     setIsLoggingOut(true)
-    
-    // Simula um delay de processamento antes de fazer logout
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // Faz o logout
+    await new Promise(resolve => setTimeout(resolve, 800))
     onLogout()
   }
 
@@ -191,6 +198,31 @@ function Dashboard({ user, onLogout }) {
       {/* FAQ Modal */}
       <FAQ isOpen={showFAQ} onClose={() => setShowFAQ(false)} />
 
+      {/* Modal de confirmação de logout */}
+      {showLogoutConfirm && (
+        <div className="logout-confirm-overlay" onClick={() => setShowLogoutConfirm(false)}>
+          <div className="logout-confirm-modal" onClick={e => e.stopPropagation()}>
+            <div className="logout-confirm-icon">👋</div>
+            <h3>Deseja sair?</h3>
+            <p>Sua sessão será encerrada. Até logo, <strong>{currentUser.name}</strong>!</p>
+            <div className="logout-confirm-actions">
+              <button
+                className="logout-confirm-cancel"
+                onClick={() => setShowLogoutConfirm(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="logout-confirm-yes"
+                onClick={handleLogoutConfirm}
+              >
+                Sim, sair
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="dashboard-header">
         <div className="header-content">
@@ -215,18 +247,16 @@ function Dashboard({ user, onLogout }) {
             >
               ❓ FAQ
             </button>
-            <button 
-              onClick={handleLogout} 
+            <button
+              onClick={handleLogoutClick}
               className="logout-button"
               disabled={isLoggingOut}
             >
               {isLoggingOut ? (
-                <>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <LoadingSpinner size="small" text="" />
-                    <span>Saindo...</span>
-                  </div>
-                </>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <LoadingSpinner size="small" text="" />
+                  <span>Saindo...</span>
+                </div>
               ) : (
                 'Sair'
               )}
