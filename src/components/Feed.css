@@ -69,123 +69,106 @@
 }
 
 /* Aplicação de temas no Feed */
+/* 🌙 Tema: Lua Serena */
 .theme-serene_moon .feed-header h2 {
-  color: #4B4637;
+  color: var(--theme-text, #5A6B7A);
 }
 
 .theme-serene_moon .create-post-button {
-  background: #E6D48A;
-  color: #4B4637;
+  background: linear-gradient(135deg, var(--theme-primary, #E6D48A) 0%, var(--theme-secondary, #F0F2F5) 100%);
+  color: var(--theme-text, #5A6B7A);
   box-shadow: 0 4px 15px rgba(230, 212, 138, 0.3);
 }
 
-.theme-serene_moon .create-post-button:hover {
-  background: #DCCB78;
-}
-
 .theme-serene_moon .empty-state {
-  background: #FAF8F2;
-  border-color: rgba(230, 212, 138, 0.4);
-  color: #4B4637;
+  background: var(--theme-secondary, #F0F2F5);
+  border-color: var(--theme-primary, #E6D48A);
+  color: var(--theme-text, #5A6B7A);
 }
 
+/* ✨ Tema: Aura Rosa */
 .theme-pink_aura .feed-header h2 {
-  color: #7A2E4D;
+  color: var(--theme-text, #7A2E4D);
 }
 
 .theme-pink_aura .create-post-button {
-  background: #F0A6C1;
-  color: #7A2E4D;
+  background: linear-gradient(135deg, var(--theme-primary, #F0A6C1) 0%, var(--theme-secondary, #FDECF3) 100%);
+  color: var(--theme-text, #7A2E4D);
   box-shadow: 0 4px 15px rgba(240, 166, 193, 0.4);
 }
 
-.theme-pink_aura .create-post-button:hover {
-  background: #E894B3;
-}
-
 .theme-pink_aura .empty-state {
-  background: #FDECF3;
-  border-color: rgba(240, 166, 193, 0.4);
-  color: #7A2E4D;
+  background: var(--theme-secondary, #FDECF3);
+  border-color: var(--theme-primary, #F0A6C1);
+  color: var(--theme-text, #7A2E4D);
 }
 
+/* ☁️ Tema: Céu Suave */
 .theme-soft_sky .feed-header h2 {
-  color: #6B9AC4;
+  color: var(--theme-text, #6B9AC4);
 }
 
 .theme-soft_sky .create-post-button {
-  background: linear-gradient(135deg, #B8D4E8 0%, #E6F3FF 100%);
-  color: #6B9AC4;
+  background: linear-gradient(135deg, var(--theme-primary, #B8D4E8) 0%, var(--theme-secondary, #E6F3FF) 100%);
+  color: var(--theme-text, #6B9AC4);
   box-shadow: 0 4px 15px rgba(196, 213, 232, 0.3);
 }
 
 .theme-soft_sky .empty-state {
-  background: #F0F5FA;
-  border-color: #B8D4E8;
-  color: #6B9AC4;
+  background: var(--theme-secondary, #E6F3FF);
+  border-color: var(--theme-primary, #B8D4E8);
+  color: var(--theme-text, #6B9AC4);
 }
 
-/* 🌿 Tema: Bruma Rosada - Verde sálvia */
+/* 🌿 Tema: Bruma Rosada */
 .theme-pink_mist .feed-header h2 {
-  color: #3E5E54;
+  color: var(--theme-text, #5A6B5F);
 }
 
 .theme-pink_mist .create-post-button {
-  background: #C8DED4;
-  color: #3E5E54;
+  background: linear-gradient(135deg, var(--theme-primary, #E6C9D6) 0%, var(--theme-secondary, #F3F8F5) 100%);
+  color: var(--theme-text, #5A6B5F);
   box-shadow: 0 4px 15px rgba(200, 222, 212, 0.3);
 }
 
-.theme-pink_mist .create-post-button:hover {
-  background: #B5D2C5;
-}
-
 .theme-pink_mist .empty-state {
-  background: #F3F8F5;
-  border-color: rgba(200, 222, 212, 0.4);
-  color: #3E5E54;
+  background: var(--theme-secondary, #F3F8F5);
+  border-color: var(--theme-primary, #E6C9D6);
+  color: var(--theme-text, #5A6B5F);
 }
 
 /* 🌅 Tema: Amanhecer Lilás */
 .theme-lilac_dawn .feed-header h2 {
-  color: #4B3F72;
+  color: var(--theme-text, #6B5B8A);
 }
 
 .theme-lilac_dawn .create-post-button {
-  background: #C2B4E8;
-  color: #4B3F72;
+  background: linear-gradient(135deg, var(--theme-primary, #B19CD9) 0%, var(--theme-secondary, #F2EEFA) 100%);
+  color: var(--theme-text, #6B5B8A);
   box-shadow: 0 4px 15px rgba(194, 180, 232, 0.3);
 }
 
-.theme-lilac_dawn .create-post-button:hover {
-  background: #B1A2DE;
-}
-
 .theme-lilac_dawn .empty-state {
-  background: #F2EEFA;
-  border-color: rgba(194, 180, 232, 0.4);
-  color: #4B3F72;
+  background: var(--theme-secondary, #F2EEFA);
+  border-color: var(--theme-primary, #B19CD9);
+  color: var(--theme-text, #6B5B8A);
 }
 
 /* 🌸 Tema: Pétala Rosa */
 .theme-petal .feed-header h2 {
-  color: #7C3A55;
+  color: var(--theme-text, #8B4A5F);
 }
 
 .theme-petal .create-post-button {
-  background: #E5A1BC;
-  color: #7C3A55;
-  box-shadow: 0 4px 15px rgba(229, 161, 188, 0.3);
-}
-
-.theme-petal .create-post-button:hover {
-  background: #DC8FAF;
+  background: linear-gradient(135deg, var(--theme-primary, #FF8FA3) 0%, var(--theme-secondary, #FFF8FB) 100%);
+  color: var(--theme-text, #8B4A5F);
+  box-shadow: 0 4px 15px rgba(255, 192, 203, 0.3);
 }
 
 .theme-petal .empty-state {
-  background: #FFF0F6;
-  border-color: rgba(229, 161, 188, 0.4);
-  color: #7C3A55;
+  background: var(--theme-secondary, #FFF8FB);
+  border-color: var(--theme-primary, #FF8FA3);
+  color: var(--theme-text, #8B4A5F);
 }
 
 @media (max-width: 640px) {

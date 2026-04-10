@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback, memo } from 'react'
 import LoadingSpinner from './LoadingSpinner'
 import SuccessModal from './SuccessModal'
 import { notifyError, notifyEssenceGained } from '../utils/notifications'
@@ -10,131 +10,205 @@ import AvatarFrameSelector from './AvatarFrameSelector'
 import MysticTitleSelector from './MysticTitleSelector'
 import './EditProfile.css'
 
-function EditProfile({ user, onSave, onCancel }) {
-  // Refs para preservar foco e scroll
-  const scrollPositionRef = useRef(0)
-  const focusedElementRef = useRef(null)
-  const containerRef = useRef(null)
-  // Verifica se user existe, se não, mostra loading
-  if (!user) {
-    return (
-      <div className="edit-profile">
-        <LoadingSpinner text="Carregando perfil..." />
-      </div>
-    )
+// Componente AccordionSection movido para fora para evitar recriação
+// Mantém conteúdo sempre montado para evitar perda de foco
+const AccordionSection = memo(({ id, icon, title, children, isOpen, hasError = false, warning = false, onToggle }) => {
+  const handleToggle = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onToggle(id)
+    // Remove o foco do botão após o clique para evitar outline visual indesejado
+    if (e.currentTarget) {
+      e.currentTarget.blur()
+    }
   }
-
-  // Estado para rastrear o usuário atualizado em tempo real (recompensas)
-  const [currentUser, setCurrentUser] = useState(user || {})
   
-  // Obtém tema ativo e suas cores (simplificado)
-  let activeTheme = null
-  const themeId = (currentUser && currentUser.activeTheme) || (user && user.activeTheme)
-  if (themeId && THEMES) {
-    const themeKey = Object.keys(THEMES).find(key => THEMES[key] && THEMES[key].id === themeId)
-    if (themeKey) {
-      activeTheme = THEMES[themeKey]
+  return (
+    <div className={`accordion-section ${isOpen ? 'open' : ''} ${hasError ? 'has-error' : ''} ${warning ? 'has-warning' : ''}`}>
+      <button
+        type="button"
+        className="accordion-header"
+        onClick={handleToggle}
+        aria-expanded={isOpen}
+        aria-controls={`accordion-content-${id}`}
+        id={`accordion-header-${id}`}
+      >
+        <div className="accordion-header-content">
+          <span className="accordion-icon">{icon || ''}</span>
+          <span className="accordion-title">{title || ''}</span>
+        </div>
+        <span className={`accordion-arrow ${isOpen ? 'open' : ''}`}>▼</span>
+      </button>
+      {/* Sempre renderiza o conteúdo, mas usa CSS para esconder/mostrar */}
+      {/* Usa max-height e opacity para esconder, mantendo no DOM para evitar perda de foco */}
+      <div 
+        id={`accordion-content-${id}`}
+        className="accordion-content"
+        role="region"
+        aria-labelledby={`accordion-header-${id}`}
+        style={{ 
+          maxHeight: isOpen ? '5000px' : '0',
+          opacity: isOpen ? 1 : 0,
+          overflow: 'hidden',
+          paddingTop: isOpen ? '0' : '0',
+          paddingBottom: isOpen ? 'var(--spacing-lg)' : '0',
+          transition: 'max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease'
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  )
+})
+
+AccordionSection.displayName = 'AccordionSection'
+
+function EditProfile({ user, onSave, onCancel }) {
+  // Snapshot imutável do usuário capturado na montagem inicial
+  // Este snapshot NÃO muda durante a edição, garantindo estabilidade
+  const userSnapshotRef = useRef(null)
+  
+  // Inicializa o snapshot apenas uma vez na montagem
+  if (userSnapshotRef.current === null) {
+    if (user) {
+      // Cria uma cópia profunda imutável do usuário
+      userSnapshotRef.current = JSON.parse(JSON.stringify(user))
     }
   }
 
-  // Estilos do tema aplicados dinamicamente (simplificado)
-  const themeStyles = activeTheme ? {
-    '--theme-primary': activeTheme.colors?.primary || '',
-    '--theme-background': activeTheme.colors?.background || '',
-    '--theme-secondary': activeTheme.colors?.secondary || '',
-    '--theme-text': activeTheme.colors?.text || activeTheme.colors?.textPrimary || '',
-    '--theme-textSecondary': activeTheme.colors?.textSecondary || activeTheme.colors?.text || '',
-    '--theme-textDisabled': activeTheme.colors?.textDisabled || activeTheme.colors?.textSecondary || '',
-    '--theme-accent': activeTheme.colors?.accent || '',
-    '--theme-links': activeTheme.colors?.links || activeTheme.colors?.primary || '',
-    '--theme-glow': activeTheme.colors?.glow || '',
-    '--theme-hover': activeTheme.colors?.hover || activeTheme.colors?.primary || '',
-    '--theme-disabled': activeTheme.colors?.disabled || activeTheme.colors?.secondary || ''
-  } : {}
-  const safeUser = user || {}
-  const safeCurrentUser = currentUser || {}
+  // Se não há snapshot e não há user, mostra loading
+  // Mas NUNCA desmonta o componente se já foi montado
+  const userSnapshot = userSnapshotRef.current || {}
   
-  const [formData, setFormData] = useState({
-    name: safeUser.name || '',
-    pronoun: safeUser.pronoun && !['Ela/Dela', 'Ele/Dele', 'Elu/Delu', 'Ela/Ele'].includes(safeUser.pronoun) ? 'Outro' : (safeUser.pronoun || ''),
-    email: safeUser.email || '',
-    password: '',
-    confirmPassword: '',
-    bio: safeUser.bio || '',
-    games: safeUser.games || [],
-    city: safeUser.city || '',
-    state: safeUser.state || '',
-    socialMedia: {
-      instagram: safeUser.socialMedia?.instagram || '',
-      twitter: safeUser.socialMedia?.twitter || '',
-      discord: safeUser.socialMedia?.discord || '',
-      twitch: safeUser.socialMedia?.twitch || '',
-      youtube: safeUser.socialMedia?.youtube || ''
-    },
-    platforms: {
-      steam: safeUser.platforms?.steam || '',
-      epic: safeUser.platforms?.epic || '',
-      xbox: safeUser.platforms?.xbox || '',
-      playstation: safeUser.platforms?.playstation || '',
-      nintendo: safeUser.platforms?.nintendo || '',
-      riot: safeUser.platforms?.riot || ''
-    },
-    avatar: safeUser.avatar || safeUser.picture || ''
+  // Estado para rastrear o usuário atualizado em tempo real (apenas recompensas durante edição)
+  // Inicializado com o snapshot, não com a prop user
+  const [currentUser, setCurrentUser] = useState(() => {
+    if (userSnapshotRef.current) {
+      return JSON.parse(JSON.stringify(userSnapshotRef.current))
+    }
+    return {}
   })
-  const [avatarPreview, setAvatarPreview] = useState(safeUser.avatar || safeUser.picture || '')
+  
+  // Obtém tema ativo e suas cores baseado apenas no currentUser (recompensas locais)
+  // NÃO depende mais da prop user
+  const activeTheme = useMemo(() => {
+    const themeId = currentUser?.activeTheme
+    if (themeId && THEMES) {
+      const themeKey = Object.keys(THEMES).find(key => THEMES[key] && THEMES[key].id === themeId)
+      if (themeKey) {
+        return THEMES[themeKey]
+      }
+    }
+    return null
+  }, [currentUser?.activeTheme])
+
+  // Estilos do tema aplicados dinamicamente
+  const themeStyles = useMemo(() => {
+    if (!activeTheme) return {}
+    return {
+      '--theme-primary': activeTheme.colors?.primary || '',
+      '--theme-background': activeTheme.colors?.background || '',
+      '--theme-secondary': activeTheme.colors?.secondary || '',
+      '--theme-text': activeTheme.colors?.text || activeTheme.colors?.textPrimary || '',
+      '--theme-textSecondary': activeTheme.colors?.textSecondary || activeTheme.colors?.text || '',
+      '--theme-textDisabled': activeTheme.colors?.textDisabled || activeTheme.colors?.textSecondary || '',
+      '--theme-accent': activeTheme.colors?.accent || '',
+      '--theme-links': activeTheme.colors?.links || activeTheme.colors?.primary || '',
+      '--theme-glow': activeTheme.colors?.glow || '',
+      '--theme-hover': activeTheme.colors?.hover || activeTheme.colors?.primary || '',
+      '--theme-disabled': activeTheme.colors?.disabled || activeTheme.colors?.secondary || ''
+    }
+  }, [activeTheme])
+  
+  // Usa apenas o snapshot para inicializar formData
+  // NÃO depende mais da prop user
+  const [formData, setFormData] = useState(() => {
+    const snapshot = userSnapshotRef.current || {}
+    return {
+      name: snapshot.name || '',
+      pronoun: snapshot.pronoun && !['Ela/Dela', 'Ele/Dele', 'Elu/Delu', 'Ela/Ele'].includes(snapshot.pronoun) ? 'Outro' : (snapshot.pronoun || ''),
+      email: snapshot.email || '',
+      password: '',
+      confirmPassword: '',
+      bio: snapshot.bio || '',
+      games: snapshot.games ? [...snapshot.games] : [],
+      city: snapshot.city || '',
+      state: snapshot.state || '',
+      socialMedia: {
+        instagram: snapshot.socialMedia?.instagram || '',
+        twitter: snapshot.socialMedia?.twitter || '',
+        discord: snapshot.socialMedia?.discord || '',
+        twitch: snapshot.socialMedia?.twitch || '',
+        youtube: snapshot.socialMedia?.youtube || ''
+      },
+      platforms: {
+        steam: snapshot.platforms?.steam || '',
+        epic: snapshot.platforms?.epic || '',
+        xbox: snapshot.platforms?.xbox || '',
+        playstation: snapshot.platforms?.playstation || '',
+        nintendo: snapshot.platforms?.nintendo || '',
+        riot: snapshot.platforms?.riot || ''
+      },
+      avatar: snapshot.avatar || snapshot.picture || ''
+    }
+  })
+  
+  const [avatarPreview, setAvatarPreview] = useState(() => {
+    const snapshot = userSnapshotRef.current || {}
+    return snapshot.avatar || snapshot.picture || ''
+  })
   const [loading, setLoading] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [customGame, setCustomGame] = useState('')
-  const [customPronoun, setCustomPronoun] = useState(safeUser.pronoun && !['Ela/Dela', 'Ele/Dele', 'Elu/Delu', 'Ela/Ele'].includes(safeUser.pronoun) ? safeUser.pronoun : '')
+  const [customPronoun, setCustomPronoun] = useState(() => {
+    const snapshot = userSnapshotRef.current || {}
+    return snapshot.pronoun && !['Ela/Dela', 'Ele/Dele', 'Elu/Delu', 'Ela/Ele'].includes(snapshot.pronoun) ? snapshot.pronoun : ''
+  })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   
   // Estado para controlar accordion (apenas uma seção aberta por vez)
-  const [openSection, setOpenSection] = useState(null)
+  // Foto de Perfil abre por padrão
+  const [openSection, setOpenSection] = useState('avatar')
   const [lastErrorSection, setLastErrorSection] = useState(null)
   
-  // Estado para rastrear se houve alterações (simplificado)
+  // Estado para rastrear se houve alterações
   const [hasChanges, setHasChanges] = useState(false)
   
-  // Dados iniciais para comparação (simplificado)
-  const initialFormData = {
-    name: safeUser.name || '',
-    pronoun: safeUser.pronoun && !['Ela/Dela', 'Ele/Dele', 'Elu/Delu', 'Ela/Ele'].includes(safeUser.pronoun) ? 'Outro' : (safeUser.pronoun || ''),
-    email: safeUser.email || '',
-    password: '',
-    confirmPassword: '',
-    bio: safeUser.bio || '',
-    games: safeUser.games || [],
-    city: safeUser.city || '',
-    state: safeUser.state || '',
-    socialMedia: {
-      instagram: safeUser.socialMedia?.instagram || '',
-      twitter: safeUser.socialMedia?.twitter || '',
-      discord: safeUser.socialMedia?.discord || '',
-      twitch: safeUser.socialMedia?.twitch || '',
-      youtube: safeUser.socialMedia?.youtube || ''
-    },
-    platforms: {
-      steam: safeUser.platforms?.steam || '',
-      epic: safeUser.platforms?.epic || '',
-      xbox: safeUser.platforms?.xbox || '',
-      playstation: safeUser.platforms?.playstation || '',
-      nintendo: safeUser.platforms?.nintendo || '',
-      riot: safeUser.platforms?.riot || ''
-    },
-    avatar: safeUser.avatar || safeUser.picture || ''
-  }
-  
-  // Previne scroll automático ao montar/atualizar
-  useEffect(() => {
-    // Garante que não há scroll automático ao carregar
-    const preventAutoScroll = () => {
-      // Não faz nada - apenas previne scroll automático
+  // Dados iniciais para comparação - baseado apenas no snapshot
+  const initialFormData = useMemo(() => {
+    const snapshot = userSnapshotRef.current || {}
+    return {
+      name: snapshot.name || '',
+      pronoun: snapshot.pronoun && !['Ela/Dela', 'Ele/Dele', 'Elu/Delu', 'Ela/Ele'].includes(snapshot.pronoun) ? 'Outro' : (snapshot.pronoun || ''),
+      email: snapshot.email || '',
+      password: '',
+      confirmPassword: '',
+      bio: snapshot.bio || '',
+      games: snapshot.games ? [...snapshot.games] : [],
+      city: snapshot.city || '',
+      state: snapshot.state || '',
+      socialMedia: {
+        instagram: snapshot.socialMedia?.instagram || '',
+        twitter: snapshot.socialMedia?.twitter || '',
+        discord: snapshot.socialMedia?.discord || '',
+        twitch: snapshot.socialMedia?.twitch || '',
+        youtube: snapshot.socialMedia?.youtube || ''
+      },
+      platforms: {
+        steam: snapshot.platforms?.steam || '',
+        epic: snapshot.platforms?.epic || '',
+        xbox: snapshot.platforms?.xbox || '',
+        playstation: snapshot.platforms?.playstation || '',
+        nintendo: snapshot.platforms?.nintendo || '',
+        riot: snapshot.platforms?.riot || ''
+      },
+      avatar: snapshot.avatar || snapshot.picture || ''
     }
-    return preventAutoScroll
-  }, [])
-
-  // Detecta alterações comparando com dados iniciais (simplificado, com preservação de scroll)
+  }, []) // Array vazio - calculado apenas uma vez na montagem
+  
+  // Detecta alterações comparando com dados iniciais
+  // Usa apenas o snapshot inicial, não depende da prop user
   useEffect(() => {
     const formDataToCompare = { ...formData }
     if (!formDataToCompare.password) {
@@ -147,43 +221,79 @@ function EditProfile({ user, onSave, onCancel }) {
     delete initialToCompare.password
     delete initialToCompare.confirmPassword
     
+    // Compara com o snapshot inicial, não com a prop user
+    const snapshot = userSnapshotRef.current || {}
     const hasFormChanges = JSON.stringify(formDataToCompare) !== JSON.stringify(initialToCompare) ||
       JSON.stringify({
-        activeTheme: safeCurrentUser.activeTheme,
-        activeAvatarFrame: safeCurrentUser.activeAvatarFrame,
-        activeMysticTitle: safeCurrentUser.activeMysticTitle
+        activeTheme: currentUser?.activeTheme,
+        activeAvatarFrame: currentUser?.activeAvatarFrame,
+        activeMysticTitle: currentUser?.activeMysticTitle
       }) !== JSON.stringify({
-        activeTheme: safeUser.activeTheme,
-        activeAvatarFrame: safeUser.activeAvatarFrame,
-        activeMysticTitle: safeUser.activeMysticTitle
+        activeTheme: snapshot.activeTheme,
+        activeAvatarFrame: snapshot.activeAvatarFrame,
+        activeMysticTitle: snapshot.activeMysticTitle
       })
     setHasChanges(hasFormChanges)
-  }, [formData, currentUser])
-  
-  // Função para alternar seção do accordion - preserva scroll
-  const toggleSection = (sectionId) => {
-    // Preserva posição do scroll antes de abrir/fechar seção
-    scrollPositionRef.current = window.scrollY || document.documentElement.scrollTop
-    focusedElementRef.current = document.activeElement
-    
-    setOpenSection(openSection === sectionId ? null : sectionId)
-    
-    // Garante que scroll não mude após abrir/fechar seção
-    requestAnimationFrame(() => {
-      // Restaura posição do scroll se necessário
-      const currentScroll = window.scrollY || document.documentElement.scrollTop
-      if (Math.abs(currentScroll - scrollPositionRef.current) > 5) {
-        window.scrollTo(0, scrollPositionRef.current)
-      }
-    })
-  }
+  }, [formData, currentUser, initialFormData])
 
-  // Atualiza currentUser quando user prop mudar
-  useEffect(() => {
-    if (user && user.id !== (currentUser && currentUser.id)) {
-      setCurrentUser(user)
+  // Ref para preservar posição de scroll ao abrir abas específicas
+  const scrollPositionRef = useRef(null)
+  const isRestoringScrollRef = useRef(false)
+  
+  // Função toggleSection estável usando useCallback
+  // Preserva a posição de scroll ao abrir abas específicas
+  const toggleSection = useCallback((sectionId) => {
+    // Abas que devem preservar o scroll ao abrir
+    const tabsToPreserveScroll = ['social-media', 'platforms', 'rewards']
+    
+    // Se está abrindo uma das abas especificadas, salva a posição de scroll
+    const isOpening = openSection !== sectionId
+    const shouldPreserveScroll = isOpening && tabsToPreserveScroll.includes(sectionId)
+    
+    if (shouldPreserveScroll) {
+      // Salva a posição atual de scroll antes de atualizar o estado
+      scrollPositionRef.current = window.pageYOffset || document.documentElement.scrollTop
+      isRestoringScrollRef.current = true
     }
-  }, [user])
+    
+    // Atualiza o estado
+    setOpenSection(prev => prev === sectionId ? null : sectionId)
+  }, [openSection])
+  
+  // Efeito para restaurar a posição de scroll após abertura de abas específicas
+  useEffect(() => {
+    // Abas que devem preservar o scroll
+    const tabsToPreserveScroll = ['social-media', 'platforms', 'rewards']
+    
+    // Verifica se uma das abas foi aberta e há uma posição de scroll salva
+    if (isRestoringScrollRef.current && scrollPositionRef.current !== null && tabsToPreserveScroll.includes(openSection)) {
+      // Usa requestAnimationFrame duplo para garantir que o DOM foi atualizado
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          // Restaura a posição de scroll preservada
+          if (scrollPositionRef.current !== null && isRestoringScrollRef.current) {
+            const savedPosition = scrollPositionRef.current
+            const currentPosition = window.pageYOffset || document.documentElement.scrollTop
+            
+            // Só restaura se a posição mudou significativamente (mais de 10px)
+            if (Math.abs(currentPosition - savedPosition) > 10) {
+              // IMPORTANTE: Usa scrollTo apenas para restaurar a posição salva do usuário,
+              // NÃO para ir ao topo (0,0). Isso é diferente de window.scrollTo(0, 0) que foi proibido.
+              // Estamos preservando a posição atual do scroll, não forçando uma nova posição.
+              window.scrollTo({
+                top: savedPosition,
+                behavior: 'instant'
+              })
+            }
+            
+            // Limpa as refs após restaurar
+            scrollPositionRef.current = null
+            isRestoringScrollRef.current = false
+          }
+        })
+      })
+    }
+  }, [openSection])
 
   // Se houver erro em uma seção, abre automaticamente
   useEffect(() => {
@@ -282,15 +392,14 @@ function EditProfile({ user, onSave, onCancel }) {
     'TO': ['Palmas', 'Araguaína', 'Gurupi', 'Porto Nacional', 'Paraíso do Tocantins', 'Colinas do Tocantins', 'Guaraí', 'Formoso do Araguaia', 'Dianópolis', 'Taguatinga']
   }
 
-  const availableCities = formData.state ? (citiesByState[formData.state] || []) : []
+  // Memoiza availableCities para evitar recálculo desnecessário
+  const availableCities = useMemo(() => {
+    return formData.state ? (citiesByState[formData.state] || []) : []
+  }, [formData.state])
 
-  // Manipula mudanças nos campos (simplificado) - preserva foco durante digitação
+  // Manipula mudanças nos campos (simplificado)
   const handleChange = (e) => {
     const { name, value } = e.target
-    
-    // Preserva posição do cursor antes da atualização
-    const inputElement = e.target
-    const cursorPosition = inputElement.selectionStart !== null ? inputElement.selectionStart : value.length
     
     if (name.startsWith('socialMedia.')) {
       const field = name.split('.')[1]
@@ -330,25 +439,6 @@ function EditProfile({ user, onSave, onCancel }) {
         }
       })
     }
-    
-    // Restaura foco e posição do cursor após atualização
-    requestAnimationFrame(() => {
-      if (inputElement && document.contains(inputElement)) {
-        try {
-          // Mantém foco no input
-          if (document.activeElement !== inputElement) {
-            inputElement.focus()
-          }
-          // Restaura posição do cursor
-          if (inputElement.setSelectionRange) {
-            const newCursorPos = Math.min(cursorPosition, inputElement.value.length)
-            inputElement.setSelectionRange(newCursorPos, newCursorPos)
-          }
-        } catch (e) {
-          // Ignora erros de foco/seleção
-        }
-      }
-    })
   }
 
   // Manipula upload de foto
@@ -380,46 +470,20 @@ function EditProfile({ user, onSave, onCancel }) {
     }
   }
 
-  // Manipula seleção de jogos (simplificado) - preserva scroll e foco
+  // Manipula seleção de jogos (simplificado)
   const handleGameToggle = (game) => {
-    // Preserva scroll antes de atualizar
-    const savedScroll = window.scrollY || document.documentElement.scrollTop
-    const savedFocused = document.activeElement
-    
     setFormData(prev => ({
       ...prev,
       games: prev.games.includes(game)
         ? prev.games.filter(g => g !== game)
         : [...prev.games, game]
     }))
-    
-    // Restaura scroll e foco após atualização
-    requestAnimationFrame(() => {
-      // Restaura scroll se mudou
-      const currentScroll = window.scrollY || document.documentElement.scrollTop
-      if (Math.abs(currentScroll - savedScroll) > 5) {
-        window.scrollTo({ top: savedScroll, behavior: 'instant' })
-      }
-      
-      // Restaura foco se ainda existe no DOM
-      if (savedFocused && document.contains(savedFocused) && savedFocused !== document.body) {
-        try {
-          savedFocused.focus()
-        } catch (e) {
-          // Ignora erros de foco
-        }
-      }
-    })
   }
 
-  // Adiciona jogo customizado (simplificado) - preserva scroll e foco
+  // Adiciona jogo customizado (simplificado)
   const handleAddCustomGame = (e) => {
     e.preventDefault()
     e.stopPropagation()
-    
-    // Preserva scroll antes de atualizar
-    const savedScroll = window.scrollY || document.documentElement.scrollTop
-    const activeElement = e.target.closest('.custom-game-input-group')?.querySelector('input') || document.activeElement
     
     const gameName = customGame.trim()
     if (gameName && !formData.games.includes(gameName)) {
@@ -428,55 +492,15 @@ function EditProfile({ user, onSave, onCancel }) {
         games: [...prev.games, gameName]
       }))
       setCustomGame('')
-      
-      // Restaura scroll e foco no input customizado após atualização
-      requestAnimationFrame(() => {
-        // Restaura scroll se mudou
-        const currentScroll = window.scrollY || document.documentElement.scrollTop
-        if (Math.abs(currentScroll - savedScroll) > 5) {
-          window.scrollTo({ top: savedScroll, behavior: 'instant' })
-        }
-        
-        // Restaura foco no input customizado
-        if (activeElement && document.contains(activeElement)) {
-          try {
-            activeElement.focus()
-          } catch (e) {
-            // Ignora erros de foco
-          }
-        }
-      })
     }
   }
 
-  // Remove jogo (simplificado) - preserva scroll e foco
+  // Remove jogo (simplificado)
   const handleRemoveGame = (gameToRemove) => {
-    // Preserva scroll antes de atualizar
-    const savedScroll = window.scrollY || document.documentElement.scrollTop
-    const savedFocused = document.activeElement
-    
     setFormData(prev => ({
       ...prev,
       games: prev.games.filter(g => g !== gameToRemove)
     }))
-    
-    // Restaura scroll e foco após atualização
-    requestAnimationFrame(() => {
-      // Restaura scroll se mudou
-      const currentScroll = window.scrollY || document.documentElement.scrollTop
-      if (Math.abs(currentScroll - savedScroll) > 5) {
-        window.scrollTo({ top: savedScroll, behavior: 'instant' })
-      }
-      
-      // Restaura foco se ainda existe no DOM
-      if (savedFocused && document.contains(savedFocused) && savedFocused !== document.body) {
-        try {
-          savedFocused.focus()
-        } catch (e) {
-          // Ignora erros de foco
-        }
-      }
-    })
   }
 
   // Salva as alterações
@@ -484,6 +508,9 @@ function EditProfile({ user, onSave, onCancel }) {
     e.preventDefault()
     setLoading(true)
     setLastErrorSection(null) // Limpa erro anterior
+
+    // Obtém o snapshot uma única vez no início da função
+    const snapshot = userSnapshotRef.current || {}
 
     try {
       // Valida nome
@@ -513,10 +540,11 @@ function EditProfile({ user, onSave, onCancel }) {
       }
 
       // Verifica se o e-mail já está cadastrado (apenas se mudou)
-      if (formData.email.toLowerCase().trim() !== safeUser.email?.toLowerCase().trim()) {
+      // Usa o snapshot, não a prop user
+      if (formData.email.toLowerCase().trim() !== snapshot.email?.toLowerCase().trim()) {
         const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
         const emailExists = savedUsers.some(u => 
-          (safeUser.id && u.id !== safeUser.id && u.email !== safeUser.email) && 
+          (snapshot.id && u.id !== snapshot.id && u.email !== snapshot.email) && 
           u.email && u.email.toLowerCase().trim() === formData.email.toLowerCase().trim()
         )
         
@@ -559,9 +587,11 @@ function EditProfile({ user, onSave, onCancel }) {
       // Simula delay de requisição
       await new Promise(resolve => setTimeout(resolve, 500))
 
+      // Usa currentUser (que inclui recompensas selecionadas durante edição) e o snapshot inicial
       let updatedUser = {
-        ...safeCurrentUser, // Usa currentUser para incluir recompensas já selecionadas
-        ...formData,
+        ...snapshot, // Base no snapshot inicial
+        ...currentUser, // Inclui recompensas selecionadas durante edição
+        ...formData, // Inclui dados do formulário
         pronoun: formData.pronoun === 'Outro' ? customPronoun.trim() : formData.pronoun,
         picture: formData.avatar, // Garante que picture também seja salvo
         updatedAt: new Date().toISOString()
@@ -572,8 +602,9 @@ function EditProfile({ user, onSave, onCancel }) {
       delete updatedUser.confirmPassword
 
       // Verifica se perfil foi completado (pronome + bio) para conceder Essência Revelada
-      const hadPronoun = safeUser.pronoun
-      const hadBio = safeUser.bio && safeUser.bio.trim().length > 0
+      // Compara com o snapshot inicial, não com a prop user
+      const hadPronoun = snapshot.pronoun
+      const hadBio = snapshot.bio && snapshot.bio.trim().length > 0
       const nowHasPronoun = formData.pronoun
       const nowHasBio = formData.bio && formData.bio.trim().length > 0
       
@@ -604,15 +635,16 @@ function EditProfile({ user, onSave, onCancel }) {
       }
 
       // Busca a senha atual do usuário no localStorage antes de atualizar
+      // Usa o snapshot, não a prop user
       const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-      const currentUserData = savedUsers.find(u => (safeUser.id && u.id === safeUser.id) || (safeUser.email && u.email === safeUser.email))
+      const currentUserData = savedUsers.find(u => (snapshot.id && u.id === snapshot.id) || (snapshot.email && u.email === snapshot.email))
       const currentPassword = currentUserData?.password || ''
       
       // Salva no localStorage para persistir
       localStorage.setItem('inclusivchat_user', JSON.stringify(updatedUser))
       
       // Atualiza também na lista de usuários se existir
-      const userIndex = savedUsers.findIndex(u => (safeUser.id && u.id === safeUser.id) || (safeUser.email && u.email === safeUser.email))
+      const userIndex = savedUsers.findIndex(u => (snapshot.id && u.id === snapshot.id) || (snapshot.email && u.email === snapshot.email))
       if (userIndex !== -1) {
         savedUsers[userIndex] = { ...savedUsers[userIndex], ...updatedUser }
         // Se uma nova senha foi fornecida, atualiza a senha
@@ -644,23 +676,32 @@ function EditProfile({ user, onSave, onCancel }) {
     onCancel()
   }
 
-  // Handlers para recompensas (temas, molduras, títulos) - simplificado - preserva scroll e foco
+  // Handlers para recompensas (temas, molduras, títulos)
+  // Atualizam apenas o estado local currentUser, não dependem da prop user
   const handleThemeSelect = (themeId, updatedUser) => {
     if (!updatedUser) return
     
-    // Preserva scroll antes de atualizar
-    const savedScroll = window.scrollY || document.documentElement.scrollTop
-    const savedFocused = document.activeElement
+    // Se themeId for null, remove o tema ativo (retorna ao padrão)
+    let userWithTheme
+    if (themeId === null || themeId === undefined) {
+      userWithTheme = {
+        ...updatedUser,
+        activeTheme: null
+      }
+    } else {
+      // Aplica o tema ao usuário atualizado
+      userWithTheme = applyTheme(updatedUser, themeId)
+    }
     
-    // Aplica o tema ao usuário atualizado
-    const userWithTheme = applyTheme(updatedUser, themeId)
     setCurrentUser(userWithTheme)
     
     // Atualiza também o localStorage para persistir
+    // Usa o snapshot para encontrar o usuário
     try {
+      const snapshot = userSnapshotRef.current || {}
       localStorage.setItem('inclusivchat_user', JSON.stringify(userWithTheme))
       const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-      const userIndex = savedUsers.findIndex(u => (safeUser.id && u.id === safeUser.id) || (safeUser.email && u.email === safeUser.email))
+      const userIndex = savedUsers.findIndex(u => (snapshot.id && u.id === snapshot.id) || (snapshot.email && u.email === snapshot.email))
       if (userIndex !== -1) {
         savedUsers[userIndex] = { ...savedUsers[userIndex], ...userWithTheme }
         localStorage.setItem('inclusivchat_users', JSON.stringify(savedUsers))
@@ -668,40 +709,20 @@ function EditProfile({ user, onSave, onCancel }) {
     } catch (error) {
       console.error('Erro ao salvar tema:', error)
     }
-    
-    // Restaura scroll e foco após atualização (sem forçar scroll automático)
-    requestAnimationFrame(() => {
-      // Restaura scroll se mudou
-      const currentScroll = window.scrollY || document.documentElement.scrollTop
-      if (Math.abs(currentScroll - savedScroll) > 5) {
-        window.scrollTo({ top: savedScroll, behavior: 'instant' })
-      }
-      
-      // Restaura foco se ainda existe no DOM
-      if (savedFocused && document.contains(savedFocused) && savedFocused !== document.body) {
-        try {
-          savedFocused.focus()
-        } catch (e) {
-          // Ignora erros de foco
-        }
-      }
-    })
   }
 
   const handleFrameSelect = (frameId, updatedUser) => {
     if (!updatedUser) return
     
-    // Preserva scroll antes de atualizar
-    const savedScroll = window.scrollY || document.documentElement.scrollTop
-    const savedFocused = document.activeElement
-    
     setCurrentUser(updatedUser)
     
     // Atualiza também o localStorage para persistir
+    // Usa o snapshot para encontrar o usuário
     try {
+      const snapshot = userSnapshotRef.current || {}
       localStorage.setItem('inclusivchat_user', JSON.stringify(updatedUser))
       const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-      const userIndex = savedUsers.findIndex(u => (safeUser.id && u.id === safeUser.id) || (safeUser.email && u.email === safeUser.email))
+      const userIndex = savedUsers.findIndex(u => (snapshot.id && u.id === snapshot.id) || (snapshot.email && u.email === snapshot.email))
       if (userIndex !== -1) {
         savedUsers[userIndex] = { ...savedUsers[userIndex], ...updatedUser }
         localStorage.setItem('inclusivchat_users', JSON.stringify(savedUsers))
@@ -709,40 +730,20 @@ function EditProfile({ user, onSave, onCancel }) {
     } catch (error) {
       console.error('Erro ao salvar moldura:', error)
     }
-    
-    // Restaura scroll e foco após atualização (sem forçar scroll automático)
-    requestAnimationFrame(() => {
-      // Restaura scroll se mudou
-      const currentScroll = window.scrollY || document.documentElement.scrollTop
-      if (Math.abs(currentScroll - savedScroll) > 5) {
-        window.scrollTo({ top: savedScroll, behavior: 'instant' })
-      }
-      
-      // Restaura foco se ainda existe no DOM
-      if (savedFocused && document.contains(savedFocused) && savedFocused !== document.body) {
-        try {
-          savedFocused.focus()
-        } catch (e) {
-          // Ignora erros de foco
-        }
-      }
-    })
   }
 
   const handleTitleSelect = (titleId, updatedUser) => {
     if (!updatedUser) return
     
-    // Preserva scroll antes de atualizar
-    const savedScroll = window.scrollY || document.documentElement.scrollTop
-    const savedFocused = document.activeElement
-    
     setCurrentUser(updatedUser)
     
     // Atualiza também o localStorage para persistir
+    // Usa o snapshot para encontrar o usuário
     try {
+      const snapshot = userSnapshotRef.current || {}
       localStorage.setItem('inclusivchat_user', JSON.stringify(updatedUser))
       const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-      const userIndex = savedUsers.findIndex(u => (safeUser.id && u.id === safeUser.id) || (safeUser.email && u.email === safeUser.email))
+      const userIndex = savedUsers.findIndex(u => (snapshot.id && u.id === snapshot.id) || (snapshot.email && u.email === snapshot.email))
       if (userIndex !== -1) {
         savedUsers[userIndex] = { ...savedUsers[userIndex], ...updatedUser }
         localStorage.setItem('inclusivchat_users', JSON.stringify(savedUsers))
@@ -750,64 +751,19 @@ function EditProfile({ user, onSave, onCancel }) {
     } catch (error) {
       console.error('Erro ao salvar título:', error)
     }
-    
-    // Restaura scroll e foco após atualização (sem forçar scroll automático)
-    requestAnimationFrame(() => {
-      // Restaura scroll se mudou
-      const currentScroll = window.scrollY || document.documentElement.scrollTop
-      if (Math.abs(currentScroll - savedScroll) > 5) {
-        window.scrollTo({ top: savedScroll, behavior: 'instant' })
-      }
-      
-      // Restaura foco se ainda existe no DOM
-      if (savedFocused && document.contains(savedFocused) && savedFocused !== document.body) {
-        try {
-          savedFocused.focus()
-        } catch (e) {
-          // Ignora erros de foco
-        }
-      }
-    })
   }
 
-  // Componente AccordionSection (simplificado, sem memo)
-  const AccordionSection = ({ id, icon, title, children, hasError = false, warning = false }) => {
-    const isOpen = openSection === id
-    const shouldBeOpen = isOpen || (hasError && lastErrorSection === id)
-
+  // Se não há snapshot ainda, mostra loading mas mantém o componente montado
+  if (!userSnapshotRef.current) {
     return (
-      <div className={`accordion-section ${shouldBeOpen ? 'open' : ''} ${hasError ? 'has-error' : ''} ${warning ? 'has-warning' : ''}`}>
-        <button
-          type="button"
-          className="accordion-header"
-          onClick={() => toggleSection(id)}
-          aria-expanded={shouldBeOpen}
-          aria-controls={`accordion-content-${id}`}
-          id={`accordion-header-${id}`}
-        >
-          <div className="accordion-header-content">
-            <span className="accordion-icon">{icon || ''}</span>
-            <span className="accordion-title">{title || ''}</span>
-          </div>
-          <span className={`accordion-arrow ${shouldBeOpen ? 'open' : ''}`}>▼</span>
-        </button>
-        {shouldBeOpen && (
-          <div 
-            id={`accordion-content-${id}`}
-            className="accordion-content"
-            role="region"
-            aria-labelledby={`accordion-header-${id}`}
-          >
-            {children}
-          </div>
-        )}
+      <div className="edit-profile">
+        <LoadingSpinner text="Carregando perfil..." />
       </div>
     )
   }
 
   return (
     <div 
-      ref={containerRef}
       className={`edit-profile ${activeTheme ? `theme-${activeTheme.id}` : ''}`}
       style={themeStyles}
     >
@@ -835,7 +791,13 @@ function EditProfile({ user, onSave, onCancel }) {
         className="edit-profile-form"
       >
         {/* Foto de Perfil */}
-        <AccordionSection id="avatar" icon="📸" title="Foto de Perfil">
+        <AccordionSection 
+          id="avatar" 
+          icon="📸" 
+          title="Foto de Perfil"
+          isOpen={openSection === 'avatar'}
+          onToggle={toggleSection}
+        >
           <div className="avatar-upload-container">
             <div className="avatar-preview-wrapper">
               {avatarPreview ? (
@@ -870,8 +832,10 @@ function EditProfile({ user, onSave, onCancel }) {
           id="account-data" 
           icon="🔐" 
           title="Dados da Conta"
+          isOpen={openSection === 'account-data' || (lastErrorSection === 'account-data')}
           hasError={lastErrorSection === 'account-data'}
           warning={true}
+          onToggle={toggleSection}
         >
           <div className="account-data-warning" style={{ 
             background: 'rgba(255, 193, 7, 0.1)', 
@@ -986,7 +950,9 @@ function EditProfile({ user, onSave, onCancel }) {
           id="public-info" 
           icon="🧾" 
           title="Informações Públicas"
+          isOpen={openSection === 'public-info' || (lastErrorSection === 'public-info')}
           hasError={lastErrorSection === 'public-info'}
+          onToggle={toggleSection}
         >
           <div className="form-group">
             <label htmlFor="name" className="form-label">
@@ -1196,7 +1162,13 @@ function EditProfile({ user, onSave, onCancel }) {
         </AccordionSection>
 
         {/* Redes Sociais */}
-        <AccordionSection id="social-media" icon="🌐" title="Redes Sociais">
+        <AccordionSection 
+          id="social-media" 
+          icon="🌐" 
+          title="Redes Sociais"
+          isOpen={openSection === 'social-media'}
+          onToggle={toggleSection}
+        >
           <div className="form-group">
             <label htmlFor="instagram" className="form-label">
               Instagram
@@ -1279,7 +1251,13 @@ function EditProfile({ user, onSave, onCancel }) {
         </AccordionSection>
 
         {/* Plataformas de Jogo - dentro de Redes Sociais */}
-        <AccordionSection id="platforms" icon="🎮" title="Plataformas de Jogo">
+        <AccordionSection 
+          id="platforms" 
+          icon="🎮" 
+          title="Plataformas de Jogo"
+          isOpen={openSection === 'platforms'}
+          onToggle={toggleSection}
+        >
           <div className="form-group">
             <label htmlFor="steam" className="form-label">
               Steam
@@ -1378,23 +1356,29 @@ function EditProfile({ user, onSave, onCancel }) {
         </AccordionSection>
 
         {/* Recompensas */}
-        <AccordionSection id="rewards" icon="🎨" title="Recompensas">
+        <AccordionSection 
+          id="rewards" 
+          icon="🎨" 
+          title="Recompensas"
+          isOpen={openSection === 'rewards'}
+          onToggle={toggleSection}
+        >
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: 'var(--spacing-md)' }}>
             Personalize seu perfil com temas, molduras e títulos desbloqueados com Essências
           </p>
           
           <ThemeSelector 
-            user={safeCurrentUser} 
+            user={currentUser || userSnapshotRef.current || {}} 
             onThemeSelect={handleThemeSelect}
           />
           
           <AvatarFrameSelector 
-            user={safeCurrentUser} 
+            user={currentUser || userSnapshotRef.current || {}} 
             onFrameSelect={handleFrameSelect}
           />
           
           <MysticTitleSelector 
-            user={safeCurrentUser} 
+            user={currentUser || userSnapshotRef.current || {}} 
             onTitleSelect={handleTitleSelect}
           />
         </AccordionSection>

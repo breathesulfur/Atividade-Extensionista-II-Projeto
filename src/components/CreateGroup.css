@@ -107,56 +107,96 @@
 }
 
 /* Aplicação de temas no CreateGroup */
+/* 🌙 Tema: Lua Serena */
 .theme-serene_moon .create-group-card {
-  background: #FAF8F2;
-  border-color: rgba(230, 212, 138, 0.4);
+  background: var(--theme-background, #E0E4E8);
+  border-color: var(--theme-primary, #E6D48A);
 }
 
-.theme-serene_moon .create-group-card h3 {
-  color: #4B4637;
+.theme-serene_moon .create-group-card h3,
+.theme-serene_moon .form-label {
+  color: var(--theme-text, #5A6B7A);
+  font-weight: 700;
 }
 
 .theme-serene_moon .form-input,
 .theme-serene_moon .form-select,
 .theme-serene_moon .form-textarea {
-  background: #FAF8F2;
-  border-color: rgba(230, 212, 138, 0.5);
-  color: #4B4637;
+  background: var(--theme-secondary, #F0F2F5);
+  border-color: var(--theme-primary, #E6D48A);
+  color: var(--theme-text, #5A6B7A);
+}
+
+.theme-serene_moon .form-input::placeholder,
+.theme-serene_moon .form-textarea::placeholder {
+  color: var(--theme-text, #5A6B7A);
+  opacity: 0.6;
+}
+
+.theme-serene_moon .form-input:focus,
+.theme-serene_moon .form-select:focus,
+.theme-serene_moon .form-textarea:focus {
+  border-color: var(--theme-accent, #E6D48A);
+  box-shadow: 0 0 0 3px rgba(230, 212, 138, 0.2);
+  background: var(--theme-secondary, #F0F2F5);
+}
+
+.theme-serene_moon .char-count {
+  color: var(--theme-text, #5A6B7A);
+  opacity: 0.8;
 }
 
 .theme-serene_moon .submit-button {
-  background: #E6D48A;
-  color: #4B4637;
+  background: linear-gradient(135deg, var(--theme-primary, #E6D48A) 0%, var(--theme-accent, #E6D48A) 100%);
+  color: var(--theme-text, #5A6B7A);
+  border: 1px solid var(--theme-primary, #E6D48A);
+  box-shadow: 0 2px 8px rgba(230, 212, 138, 0.3);
 }
 
-.theme-serene_moon .submit-button:hover:not(:disabled) {
-  background: #DCCB78;
-}
-
+/* ✨ Tema: Aura Rosa */
 .theme-pink_aura .create-group-card {
-  background: #FDECF3;
-  border-color: rgba(240, 166, 193, 0.4);
+  background: var(--theme-background, #F6C1D6);
+  border-color: var(--theme-primary, #F0A6C1);
 }
 
-.theme-pink_aura .create-group-card h3 {
-  color: #7A2E4D;
+.theme-pink_aura .create-group-card h3,
+.theme-pink_aura .form-label {
+  color: var(--theme-text, #7A2E4D);
+  font-weight: 700;
 }
 
 .theme-pink_aura .form-input,
 .theme-pink_aura .form-select,
 .theme-pink_aura .form-textarea {
-  background: #FDECF3;
-  border-color: rgba(240, 166, 193, 0.5);
-  color: #7A2E4D;
+  background: var(--theme-secondary, #FDECF3);
+  border-color: var(--theme-primary, #F0A6C1);
+  color: var(--theme-text, #7A2E4D);
+}
+
+.theme-pink_aura .form-input::placeholder,
+.theme-pink_aura .form-textarea::placeholder {
+  color: var(--theme-text, #7A2E4D);
+  opacity: 0.6;
+}
+
+.theme-pink_aura .form-input:focus,
+.theme-pink_aura .form-select:focus,
+.theme-pink_aura .form-textarea:focus {
+  border-color: var(--theme-accent, #F0A6C1);
+  box-shadow: 0 0 0 3px rgba(240, 166, 193, 0.2);
+  background: var(--theme-secondary, #FDECF3);
+}
+
+.theme-pink_aura .char-count {
+  color: var(--theme-text, #7A2E4D);
+  opacity: 0.8;
 }
 
 .theme-pink_aura .submit-button {
-  background: #F0A6C1;
-  color: #7A2E4D;
-}
-
-.theme-pink_aura .submit-button:hover:not(:disabled) {
-  background: #E894B3;
+  background: linear-gradient(135deg, var(--theme-primary, #F0A6C1) 0%, var(--theme-accent, #F0A6C1) 100%);
+  color: var(--theme-text, #7A2E4D);
+  border: 1px solid var(--theme-primary, #F0A6C1);
+  box-shadow: 0 2px 8px rgba(240, 166, 193, 0.3);
 }
 
 .theme-soft_sky .create-group-card {
@@ -199,90 +239,147 @@
 
 .theme-soft_sky .submit-button {
   background: linear-gradient(135deg, var(--theme-primary, #B8D4E8) 0%, var(--theme-accent, #A8D0E8) 100%);
-  color: var(--theme-background, #F0F8FF);
+  color: var(--theme-text, #6B9AC4);
   border: 1px solid var(--theme-primary, #B8D4E8);
   box-shadow: 0 2px 8px rgba(184, 212, 232, 0.3);
 }
 
-/* 🌿 Tema: Bruma Rosada - Verde sálvia */
+/* 🌿 Tema: Bruma Rosada */
 .theme-pink_mist .create-group-card {
-  background: #F3F8F5;
-  border-color: rgba(200, 222, 212, 0.4);
+  background: var(--theme-background, #D8E4DC);
+  border-color: var(--theme-primary, #E6C9D6);
 }
 
-.theme-pink_mist .create-group-card h3 {
-  color: #3E5E54;
+.theme-pink_mist .create-group-card h3,
+.theme-pink_mist .form-label {
+  color: var(--theme-text, #5A6B5F);
+  font-weight: 700;
 }
 
 .theme-pink_mist .form-input,
 .theme-pink_mist .form-select,
 .theme-pink_mist .form-textarea {
-  background: #F3F8F5;
-  border-color: rgba(200, 222, 212, 0.5);
-  color: #3E5E54;
+  background: var(--theme-secondary, #F3F8F5);
+  border-color: var(--theme-primary, #E6C9D6);
+  color: var(--theme-text, #5A6B5F);
+}
+
+.theme-pink_mist .form-input::placeholder,
+.theme-pink_mist .form-textarea::placeholder {
+  color: var(--theme-text, #5A6B5F);
+  opacity: 0.6;
+}
+
+.theme-pink_mist .form-input:focus,
+.theme-pink_mist .form-select:focus,
+.theme-pink_mist .form-textarea:focus {
+  border-color: var(--theme-accent, #E6C9D6);
+  box-shadow: 0 0 0 3px rgba(200, 222, 212, 0.2);
+  background: var(--theme-secondary, #F3F8F5);
+}
+
+.theme-pink_mist .char-count {
+  color: var(--theme-text, #5A6B5F);
+  opacity: 0.8;
 }
 
 .theme-pink_mist .submit-button {
-  background: #C8DED4;
-  color: #3E5E54;
-}
-
-.theme-pink_mist .submit-button:hover:not(:disabled) {
-  background: #B5D2C5;
+  background: linear-gradient(135deg, var(--theme-primary, #E6C9D6) 0%, var(--theme-accent, #E6C9D6) 100%);
+  color: var(--theme-text, #5A6B5F);
+  border: 1px solid var(--theme-primary, #E6C9D6);
+  box-shadow: 0 2px 8px rgba(200, 222, 212, 0.3);
 }
 
 /* 🌅 Tema: Amanhecer Lilás */
 .theme-lilac_dawn .create-group-card {
-  background: #F2EEFA;
-  border-color: rgba(194, 180, 232, 0.4);
+  background: var(--theme-background, #E6D9F0);
+  border-color: var(--theme-primary, #B19CD9);
 }
 
-.theme-lilac_dawn .create-group-card h3 {
-  color: #4B3F72;
+.theme-lilac_dawn .create-group-card h3,
+.theme-lilac_dawn .form-label {
+  color: var(--theme-text, #6B5B8A);
+  font-weight: 700;
 }
 
 .theme-lilac_dawn .form-input,
 .theme-lilac_dawn .form-select,
 .theme-lilac_dawn .form-textarea {
-  background: #F2EEFA;
-  border-color: rgba(194, 180, 232, 0.5);
-  color: #4B3F72;
+  background: var(--theme-secondary, #F2EEFA);
+  border-color: var(--theme-primary, #B19CD9);
+  color: var(--theme-text, #6B5B8A);
+}
+
+.theme-lilac_dawn .form-input::placeholder,
+.theme-lilac_dawn .form-textarea::placeholder {
+  color: var(--theme-text, #6B5B8A);
+  opacity: 0.6;
+}
+
+.theme-lilac_dawn .form-input:focus,
+.theme-lilac_dawn .form-select:focus,
+.theme-lilac_dawn .form-textarea:focus {
+  border-color: var(--theme-accent, #B19CD9);
+  box-shadow: 0 0 0 3px rgba(194, 180, 232, 0.2);
+  background: var(--theme-secondary, #F2EEFA);
+}
+
+.theme-lilac_dawn .char-count {
+  color: var(--theme-text, #6B5B8A);
+  opacity: 0.8;
 }
 
 .theme-lilac_dawn .submit-button {
-  background: #C2B4E8;
-  color: #4B3F72;
-}
-
-.theme-lilac_dawn .submit-button:hover:not(:disabled) {
-  background: #B1A2DE;
+  background: linear-gradient(135deg, var(--theme-primary, #B19CD9) 0%, var(--theme-accent, #B19CD9) 100%);
+  color: var(--theme-text, #6B5B8A);
+  border: 1px solid var(--theme-primary, #B19CD9);
+  box-shadow: 0 2px 8px rgba(194, 180, 232, 0.3);
 }
 
 /* 🌸 Tema: Pétala Rosa */
 .theme-petal .create-group-card {
-  background: #FFF0F6;
-  border-color: rgba(229, 161, 188, 0.4);
+  background: var(--theme-background, #FFF0F6);
+  border-color: var(--theme-primary, #FF8FA3);
 }
 
-.theme-petal .create-group-card h3 {
-  color: #7C3A55;
+.theme-petal .create-group-card h3,
+.theme-petal .form-label {
+  color: var(--theme-text, #8B4A5F);
+  font-weight: 700;
 }
 
 .theme-petal .form-input,
 .theme-petal .form-select,
 .theme-petal .form-textarea {
-  background: #FFF0F6;
-  border-color: rgba(229, 161, 188, 0.5);
-  color: #7C3A55;
+  background: var(--theme-secondary, #FFF8FB);
+  border-color: var(--theme-primary, #FF8FA3);
+  color: var(--theme-text, #8B4A5F);
+}
+
+.theme-petal .form-input::placeholder,
+.theme-petal .form-textarea::placeholder {
+  color: var(--theme-text, #8B4A5F);
+  opacity: 0.6;
+}
+
+.theme-petal .form-input:focus,
+.theme-petal .form-select:focus,
+.theme-petal .form-textarea:focus {
+  border-color: var(--theme-accent, #FF8FA3);
+  box-shadow: 0 0 0 3px rgba(255, 192, 203, 0.2);
+  background: var(--theme-secondary, #FFF8FB);
+}
+
+.theme-petal .char-count {
+  color: var(--theme-text, #8B4A5F);
+  opacity: 0.8;
 }
 
 .theme-petal .submit-button {
-  background: #E5A1BC;
-  color: #7C3A55;
-}
-
-.theme-petal .submit-button:hover:not(:disabled) {
-  background: #DC8FAF;
+  background: linear-gradient(135deg, var(--theme-primary, #FF8FA3) 0%, var(--theme-accent, #FF8FA3) 100%);
+  color: var(--theme-text, #8B4A5F);
+  border: 1px solid var(--theme-primary, #FF8FA3);
+  box-shadow: 0 2px 8px rgba(255, 192, 203, 0.3);
 }
 
 @media (max-width: 640px) {

@@ -455,10 +455,10 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
               ref={emojiButtonRef}
               onClick={() => handleOpenEmojiPicker('post')}
               className="action-button reaction-button"
-              aria-label="Adicionar reação"
-              title="Adicionar reação"
+              aria-label="Reagir à postagem"
+              title="Reagir à postagem"
             >
-              😊
+              😊 <span className="reaction-button-label">Reagir</span>
             </button>
             {showEmojiPicker && emojiPickerFor === 'post' && createPortal(
               <div 
@@ -538,14 +538,19 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
           </div>
 
           <form onSubmit={handleComment} className="comment-form">
-            <input
-              type="text"
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Escreva um comentário..."
-              className="comment-input"
-              maxLength="200"
-            />
+            <div className="comment-input-wrapper">
+              <input
+                type="text"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Escreva um comentário..."
+                className="comment-input"
+                maxLength="200"
+              />
+              <span className={`comment-char-count ${commentText.length >= 180 ? 'warning' : ''} ${commentText.length >= 200 ? 'limit' : ''}`}>
+                {commentText.length}/200
+              </span>
+            </div>
             <button type="submit" className="comment-submit">
               Enviar
             </button>

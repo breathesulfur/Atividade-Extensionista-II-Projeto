@@ -56,11 +56,10 @@ function MysticTitleSelector({ user, onTitleSelect }) {
                 <div className="title-lock-overlay">
                   <div className="lock-icon">🔒</div>
                   <div className="lock-text">
-                    {canUnlock ? (
-                      <span>Clique para desbloquear</span>
-                    ) : (
-                      <span>Desbloqueie com {title.requiredEssence} Essências</span>
-                    )}
+                    {canUnlock ? 'Clique para desbloquear' : 'Bloqueado'}
+                  </div>
+                  <div className="lock-cost">
+                    🔮 {title.requiredEssence} Essências
                   </div>
                 </div>
               )}

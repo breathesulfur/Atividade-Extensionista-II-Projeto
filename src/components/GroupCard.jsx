@@ -72,18 +72,18 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
 
     setMessages([...messages, message])
     setNewMessage('')
-    
+
     // Verifica badges após enviar mensagem (com delay para garantir que a mensagem foi salva)
     setTimeout(() => {
       const posts = getPosts()
       const groups = getGroups()
       const allMessages = { [group.id]: [...messages, message] }
       const newBadges = checkBadges(user, posts, groups, allMessages)
-      
+
       // Filtra apenas badges realmente novos
       const userBadges = user.badges || []
       const trulyNewBadges = newBadges.filter(badge => !userBadges.includes(badge.id))
-      
+
       // Se houver novos badges, adiciona ao usuário
       if (trulyNewBadges.length > 0) {
         const finalUser = {
@@ -91,7 +91,7 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
           badges: [...userBadges, ...trulyNewBadges.map(b => b.id)]
         }
         onUserUpdate(finalUser)
-        
+
         // Mostra notificação de novos badges (exceto REVEALED_ESSENCE que deve aparecer apenas ao completar perfil)
         const badgesToNotify = trulyNewBadges.filter(badge => badge.id !== BADGES.REVEALED_ESSENCE.id)
         badgesToNotify.forEach((badge, index) => {
@@ -139,7 +139,10 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
         </button>
         <div className="chat-header-info">
           <h2>{group.name}</h2>
-          <span className="chat-game">{group.game}</span>
+          <div className="chat-header-meta">
+            <span className="chat-game">{group.game}</span>
+            <span className="chat-members">👥 {group.members?.length || 0} membro{(group.members?.length || 0) !== 1 ? 's' : ''}</span>
+          </div>
         </div>
       </div>
 

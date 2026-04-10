@@ -80,7 +80,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--gradient-mystic);
+  background: var(--game-color, var(--gradient-mystic));
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -97,21 +97,45 @@
 
 .group-item-header {
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.group-game-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  opacity: 0.92;
+}
+
+.group-item-title {
+  display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: 2px;
+  min-width: 0;
 }
 
 .group-item-header h4 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: var(--text-primary);
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .group-game {
-  font-size: 0.9rem;
-  color: var(--mystic-purple);
+  font-size: 0.82rem;
   font-weight: 600;
+  /* cor injetada via style prop para cada jogo */
 }
 
 .group-description {
@@ -261,84 +285,116 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Botão de excluir grupo (apenas para criadores) */
+.delete-group-button {
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--danger);
+  background: transparent;
+  color: var(--danger);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-group-button:hover {
+  background: var(--danger);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.delete-group-button:active {
+  transform: translateY(0);
+}
+
 /* ========================================
    APLICAÇÃO DE TEMAS NOS BOTÕES
    ======================================== */
 
 /* 🌙 TEMA: Lua Serena */
 .theme-serene_moon .view-group-button {
-  background: #C7B9E2;
-  color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(199, 185, 226, 0.3);
+  background: var(--theme-primary, #E6D48A);
+  color: var(--theme-text, #5A6B7A);
+  box-shadow: 0 2px 8px var(--theme-glow, rgba(230, 212, 138, 0.3));
+  font-weight: 700;
 }
 
 .theme-serene_moon .view-group-button:hover {
-  background: #B6A7D8;
+  background: var(--theme-accent, #DCCB78);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(199, 185, 226, 0.4);
+  box-shadow: 0 4px 12px var(--theme-glow, rgba(230, 212, 138, 0.4));
 }
 
 /* Botão ENTRAR - usa cores do tema */
 .theme-serene_moon .join-group-button:not(.joined) {
-  background: #C7B9E2;
-  color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(199, 185, 226, 0.3);
+  background: var(--theme-primary, #E6D48A);
+  color: var(--theme-text, #5A6B7A);
+  box-shadow: 0 2px 8px var(--theme-glow, rgba(230, 212, 138, 0.3));
+  font-weight: 700;
 }
 
 .theme-serene_moon .join-group-button:not(.joined):hover {
-  background: #B6A7D8;
+  background: var(--theme-accent, #DCCB78);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(199, 185, 226, 0.4);
+  box-shadow: 0 4px 12px var(--theme-glow, rgba(230, 212, 138, 0.4));
 }
 
 /* Botão SAIR - neutro, sem cores do tema */
 .theme-serene_moon .join-group-button.joined {
-  border-color: #DADAE3;
-  color: #6B5B8A;
+  border-color: var(--theme-primary, #E6D48A);
+  color: var(--theme-text, #5A6B7A);
   background: transparent;
 }
 
 .theme-serene_moon .join-group-button.joined:hover {
-  background: rgba(218, 218, 227, 0.1);
-  border-color: #DADAE3;
+  background: var(--theme-glow, rgba(230, 212, 138, 0.1));
+  border-color: var(--theme-primary, #E6D48A);
 }
 
 /* ✨ TEMA: Aura Rosa */
 .theme-pink_aura .view-group-button {
-  background: #F3A6C8;
-  color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(243, 166, 200, 0.3);
+  background: var(--theme-primary, #F0A6C1);
+  color: var(--theme-text, #7A2E4D);
+  box-shadow: 0 2px 8px var(--theme-glow, rgba(240, 166, 193, 0.4));
+  font-weight: 700;
 }
 
 .theme-pink_aura .view-group-button:hover {
-  background: #E88AB6;
+  background: var(--theme-accent, #E894B3);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(243, 166, 200, 0.4);
+  box-shadow: 0 4px 12px var(--theme-glow, rgba(240, 166, 193, 0.5));
 }
 
 /* Botão ENTRAR - usa cores do tema */
 .theme-pink_aura .join-group-button:not(.joined) {
-  background: #F3A6C8;
-  color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(243, 166, 200, 0.3);
+  background: var(--theme-primary, #F0A6C1);
+  color: var(--theme-text, #7A2E4D);
+  box-shadow: 0 2px 8px var(--theme-glow, rgba(240, 166, 193, 0.4));
+  font-weight: 700;
 }
 
 .theme-pink_aura .join-group-button:not(.joined):hover {
-  background: #E88AB6;
+  background: var(--theme-accent, #E894B3);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(243, 166, 200, 0.4);
+  box-shadow: 0 4px 12px var(--theme-glow, rgba(240, 166, 193, 0.5));
 }
 
 /* Botão SAIR - neutro, sem cores do tema */
 .theme-pink_aura .join-group-button.joined {
-  border-color: #F2C4D8;
-  color: #8A3D5E;
+  border-color: var(--theme-primary, #F0A6C1);
+  color: var(--theme-text, #7A2E4D);
   background: transparent;
 }
 
 .theme-pink_aura .join-group-button.joined:hover {
-  background: rgba(242, 196, 216, 0.1);
-  border-color: #F2C4D8;
+  background: var(--theme-glow, rgba(240, 166, 193, 0.1));
+  border-color: var(--theme-primary, #F0A6C1);
 }
 
 /* ☁️ TEMA: Céu Suave - Tons de azul claro */
@@ -394,79 +450,104 @@
 }
 
 /* Aplicação de temas no Groups */
+/* 🌙 Tema: Lua Serena */
 .theme-serene_moon .groups-header h2,
 .theme-serene_moon .section-title {
-  color: #4B4637;
+  color: var(--theme-text, #5A6B7A);
+  font-weight: 700;
 }
 
 .theme-serene_moon .create-group-button {
-  background: #E6D48A;
-  color: #4B4637;
+  background: linear-gradient(135deg, var(--theme-primary, #E6D48A) 0%, var(--theme-accent, #E6D48A) 100%);
+  color: var(--theme-text, #5A6B7A);
   box-shadow: 0 4px 15px rgba(230, 212, 138, 0.3);
-}
-
-.theme-serene_moon .create-group-button:hover {
-  background: #DCCB78;
+  border: 1px solid var(--theme-primary, #E6D48A);
+  font-weight: 700;
 }
 
 .theme-serene_moon .group-item {
-  background: #F4F1FA;
-  border-color: #DADAE3;
+  background: var(--theme-background, #E0E4E8);
+  border-color: var(--theme-primary, #E6D48A);
+  color: var(--theme-text, #5A6B7A);
+  font-weight: 600;
 }
 
-.theme-serene_moon .group-item h4,
-.theme-serene_moon .group-description,
+.theme-serene_moon .group-item h4 {
+  color: var(--theme-text, #5A6B7A);
+  font-weight: 700;
+}
+
+.theme-serene_moon .group-description {
+  color: var(--theme-text, #5A6B7A);
+  font-weight: 500;
+  opacity: 0.9;
+}
+
 .theme-serene_moon .group-meta {
-  color: #6B5B8A;
+  color: var(--theme-text, #5A6B7A);
+  opacity: 0.8;
 }
 
 .theme-serene_moon .group-game {
-  color: #6B5B8A;
+  color: var(--theme-accent, #E6D48A);
+  font-weight: 600;
 }
 
 .theme-serene_moon .empty-state {
-  background: #F4F1FA;
-  border-color: #DADAE3;
-  color: #6B5B8A;
+  background: var(--theme-background, #E0E4E8);
+  border-color: var(--theme-primary, #E6D48A);
+  color: var(--theme-text, #5A6B7A);
+  opacity: 0.9;
 }
 
+/* ✨ Tema: Aura Rosa */
 .theme-pink_aura .groups-header h2,
 .theme-pink_aura .section-title {
-  background: linear-gradient(135deg, #8A3D5E 0%, #F3A6C8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--theme-text, #7A2E4D);
+  font-weight: 700;
 }
 
 .theme-pink_aura .create-group-button {
-  background: #F0A6C1;
-  color: #7A2E4D;
+  background: linear-gradient(135deg, var(--theme-primary, #F0A6C1) 0%, var(--theme-accent, #F0A6C1) 100%);
+  color: var(--theme-text, #7A2E4D);
   box-shadow: 0 4px 15px rgba(240, 166, 193, 0.4);
-}
-
-.theme-pink_aura .create-group-button:hover {
-  background: #E894B3;
+  border: 1px solid var(--theme-primary, #F0A6C1);
+  font-weight: 700;
 }
 
 .theme-pink_aura .group-item {
-  background: #FDECF3;
-  border-color: rgba(240, 166, 193, 0.4);
+  background: var(--theme-background, #F6C1D6);
+  border-color: var(--theme-primary, #F0A6C1);
+  color: var(--theme-text, #7A2E4D);
+  font-weight: 600;
 }
 
-.theme-pink_aura .group-item h4,
-.theme-pink_aura .group-description,
+.theme-pink_aura .group-item h4 {
+  color: var(--theme-text, #7A2E4D);
+  font-weight: 700;
+}
+
+.theme-pink_aura .group-description {
+  color: var(--theme-text, #7A2E4D);
+  font-weight: 500;
+  opacity: 0.9;
+}
+
 .theme-pink_aura .group-meta {
-  color: #7A2E4D;
+  color: var(--theme-text, #7A2E4D);
+  opacity: 0.8;
 }
 
 .theme-pink_aura .group-game {
-  color: #7A2E4D;
+  color: var(--theme-accent, #F0A6C1);
+  font-weight: 600;
 }
 
 .theme-pink_aura .empty-state {
-  background: #FDECF3;
-  border-color: rgba(240, 166, 193, 0.4);
-  color: #7A2E4D;
+  background: var(--theme-background, #F6C1D6);
+  border-color: var(--theme-primary, #F0A6C1);
+  color: var(--theme-text, #7A2E4D);
+  opacity: 0.9;
 }
 
 .theme-soft_sky .groups-header h2,
@@ -518,115 +599,268 @@
   opacity: 0.9;
 }
 
-/* 🌿 Tema: Bruma Rosada - Verde sálvia */
+/* 🌿 TEMA: Bruma Rosada - botões */
+.theme-pink_mist .view-group-button {
+  background: var(--theme-primary, #E6C9D6);
+  color: var(--theme-text, #5A6B5F);
+  box-shadow: 0 2px 8px var(--theme-glow, rgba(200, 222, 212, 0.3));
+  font-weight: 700;
+}
+
+.theme-pink_mist .view-group-button:hover {
+  background: var(--theme-accent, #D8B8C8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--theme-glow, rgba(200, 222, 212, 0.4));
+}
+
+.theme-pink_mist .join-group-button:not(.joined) {
+  background: var(--theme-primary, #E6C9D6);
+  color: var(--theme-text, #5A6B5F);
+  box-shadow: 0 2px 8px var(--theme-glow, rgba(200, 222, 212, 0.3));
+  font-weight: 700;
+}
+
+.theme-pink_mist .join-group-button:not(.joined):hover {
+  background: var(--theme-accent, #D8B8C8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--theme-glow, rgba(200, 222, 212, 0.4));
+}
+
+.theme-pink_mist .join-group-button.joined {
+  border-color: var(--theme-primary, #E6C9D6);
+  color: var(--theme-text, #5A6B5F);
+  background: transparent;
+}
+
+.theme-pink_mist .join-group-button.joined:hover {
+  background: var(--theme-glow, rgba(200, 222, 212, 0.1));
+  border-color: var(--theme-primary, #E6C9D6);
+}
+
+/* 🌿 Tema: Bruma Rosada */
 .theme-pink_mist .groups-header h2,
 .theme-pink_mist .section-title {
-  color: #3E5E54;
+  color: var(--theme-text, #5A6B5F);
+  font-weight: 700;
 }
 
 .theme-pink_mist .create-group-button {
-  background: #C8DED4;
-  color: #3E5E54;
+  background: linear-gradient(135deg, var(--theme-primary, #E6C9D6) 0%, var(--theme-accent, #E6C9D6) 100%);
+  color: var(--theme-text, #5A6B5F);
   box-shadow: 0 4px 15px rgba(200, 222, 212, 0.3);
-}
-
-.theme-pink_mist .create-group-button:hover {
-  background: #B5D2C5;
+  border: 1px solid var(--theme-primary, #E6C9D6);
+  font-weight: 700;
 }
 
 .theme-pink_mist .group-item {
-  background: #F3F8F5;
-  border-color: rgba(200, 222, 212, 0.4);
+  background: var(--theme-background, #D8E4DC);
+  border-color: var(--theme-primary, #E6C9D6);
+  color: var(--theme-text, #5A6B5F);
+  font-weight: 600;
 }
 
-.theme-pink_mist .group-item h4,
-.theme-pink_mist .group-description,
+.theme-pink_mist .group-item h4 {
+  color: var(--theme-text, #5A6B5F);
+  font-weight: 700;
+}
+
+.theme-pink_mist .group-description {
+  color: var(--theme-text, #5A6B5F);
+  font-weight: 500;
+  opacity: 0.9;
+}
+
 .theme-pink_mist .group-meta {
-  color: #3E5E54;
+  color: var(--theme-text, #5A6B5F);
+  opacity: 0.8;
 }
 
 .theme-pink_mist .group-game {
-  color: #3E5E54;
+  color: var(--theme-accent, #E6C9D6);
+  font-weight: 600;
 }
 
 .theme-pink_mist .empty-state {
-  background: #F3F8F5;
-  border-color: rgba(200, 222, 212, 0.4);
-  color: #3E5E54;
+  background: var(--theme-background, #D8E4DC);
+  border-color: var(--theme-primary, #E6C9D6);
+  color: var(--theme-text, #5A6B5F);
+  opacity: 0.9;
+}
+
+/* 🌅 TEMA: Amanhecer Lilás - botões */
+.theme-lilac_dawn .view-group-button {
+  background: var(--theme-primary, #B19CD9);
+  color: var(--theme-text, #6B5B8A);
+  box-shadow: 0 2px 8px var(--theme-glow, rgba(194, 180, 232, 0.3));
+  font-weight: 700;
+}
+
+.theme-lilac_dawn .view-group-button:hover {
+  background: var(--theme-accent, #A08BC8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--theme-glow, rgba(194, 180, 232, 0.4));
+}
+
+.theme-lilac_dawn .join-group-button:not(.joined) {
+  background: var(--theme-primary, #B19CD9);
+  color: var(--theme-text, #6B5B8A);
+  box-shadow: 0 2px 8px var(--theme-glow, rgba(194, 180, 232, 0.3));
+  font-weight: 700;
+}
+
+.theme-lilac_dawn .join-group-button:not(.joined):hover {
+  background: var(--theme-accent, #A08BC8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--theme-glow, rgba(194, 180, 232, 0.4));
+}
+
+.theme-lilac_dawn .join-group-button.joined {
+  border-color: var(--theme-primary, #B19CD9);
+  color: var(--theme-text, #6B5B8A);
+  background: transparent;
+}
+
+.theme-lilac_dawn .join-group-button.joined:hover {
+  background: var(--theme-glow, rgba(194, 180, 232, 0.1));
+  border-color: var(--theme-primary, #B19CD9);
 }
 
 /* 🌅 Tema: Amanhecer Lilás */
 .theme-lilac_dawn .groups-header h2,
 .theme-lilac_dawn .section-title {
-  color: #4B3F72;
+  color: var(--theme-text, #6B5B8A);
+  font-weight: 700;
 }
 
 .theme-lilac_dawn .create-group-button {
-  background: #C2B4E8;
-  color: #4B3F72;
+  background: linear-gradient(135deg, var(--theme-primary, #B19CD9) 0%, var(--theme-accent, #B19CD9) 100%);
+  color: var(--theme-text, #6B5B8A);
   box-shadow: 0 4px 15px rgba(194, 180, 232, 0.3);
-}
-
-.theme-lilac_dawn .create-group-button:hover {
-  background: #B1A2DE;
+  border: 1px solid var(--theme-primary, #B19CD9);
+  font-weight: 700;
 }
 
 .theme-lilac_dawn .group-item {
-  background: #F2EEFA;
-  border-color: rgba(194, 180, 232, 0.4);
+  background: var(--theme-background, #E6D9F0);
+  border-color: var(--theme-primary, #B19CD9);
+  color: var(--theme-text, #6B5B8A);
+  font-weight: 600;
 }
 
-.theme-lilac_dawn .group-item h4,
-.theme-lilac_dawn .group-description,
+.theme-lilac_dawn .group-item h4 {
+  color: var(--theme-text, #6B5B8A);
+  font-weight: 700;
+}
+
+.theme-lilac_dawn .group-description {
+  color: var(--theme-text, #6B5B8A);
+  font-weight: 500;
+  opacity: 0.9;
+}
+
 .theme-lilac_dawn .group-meta {
-  color: #4B3F72;
+  color: var(--theme-text, #6B5B8A);
+  opacity: 0.8;
 }
 
 .theme-lilac_dawn .group-game {
-  color: #4B3F72;
+  color: var(--theme-accent, #B19CD9);
+  font-weight: 600;
 }
 
 .theme-lilac_dawn .empty-state {
-  background: #F2EEFA;
-  border-color: rgba(194, 180, 232, 0.4);
-  color: #4B3F72;
+  background: var(--theme-background, #E6D9F0);
+  border-color: var(--theme-primary, #B19CD9);
+  color: var(--theme-text, #6B5B8A);
+  opacity: 0.9;
+}
+
+/* 🌸 TEMA: Pétala Rosa - botões */
+.theme-petal .view-group-button {
+  background: var(--theme-primary, #FF8FA3);
+  color: var(--theme-text, #8B4A5F);
+  box-shadow: 0 2px 8px var(--theme-glow, rgba(255, 192, 203, 0.3));
+  font-weight: 700;
+}
+
+.theme-petal .view-group-button:hover {
+  background: var(--theme-accent, #F07A90);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--theme-glow, rgba(255, 192, 203, 0.4));
+}
+
+.theme-petal .join-group-button:not(.joined) {
+  background: var(--theme-primary, #FF8FA3);
+  color: var(--theme-text, #8B4A5F);
+  box-shadow: 0 2px 8px var(--theme-glow, rgba(255, 192, 203, 0.3));
+  font-weight: 700;
+}
+
+.theme-petal .join-group-button:not(.joined):hover {
+  background: var(--theme-accent, #F07A90);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--theme-glow, rgba(255, 192, 203, 0.4));
+}
+
+.theme-petal .join-group-button.joined {
+  border-color: var(--theme-primary, #FF8FA3);
+  color: var(--theme-text, #8B4A5F);
+  background: transparent;
+}
+
+.theme-petal .join-group-button.joined:hover {
+  background: var(--theme-glow, rgba(255, 192, 203, 0.1));
+  border-color: var(--theme-primary, #FF8FA3);
 }
 
 /* 🌸 Tema: Pétala Rosa */
 .theme-petal .groups-header h2,
 .theme-petal .section-title {
-  color: #7C3A55;
+  color: var(--theme-text, #8B4A5F);
+  font-weight: 700;
 }
 
 .theme-petal .create-group-button {
-  background: #E5A1BC;
-  color: #7C3A55;
-  box-shadow: 0 4px 15px rgba(229, 161, 188, 0.3);
-}
-
-.theme-petal .create-group-button:hover {
-  background: #DC8FAF;
+  background: linear-gradient(135deg, var(--theme-primary, #FF8FA3) 0%, var(--theme-accent, #FF8FA3) 100%);
+  color: var(--theme-text, #8B4A5F);
+  box-shadow: 0 4px 15px rgba(255, 192, 203, 0.3);
+  border: 1px solid var(--theme-primary, #FF8FA3);
+  font-weight: 700;
 }
 
 .theme-petal .group-item {
-  background: #FFF0F6;
-  border-color: rgba(229, 161, 188, 0.4);
+  background: var(--theme-background, #FFF0F6);
+  border-color: var(--theme-primary, #FF8FA3);
+  color: var(--theme-text, #8B4A5F);
+  font-weight: 600;
 }
 
-.theme-petal .group-item h4,
-.theme-petal .group-description,
+.theme-petal .group-item h4 {
+  color: var(--theme-text, #8B4A5F);
+  font-weight: 700;
+}
+
+.theme-petal .group-description {
+  color: var(--theme-text, #8B4A5F);
+  font-weight: 500;
+  opacity: 0.9;
+}
+
 .theme-petal .group-meta {
-  color: #7C3A55;
+  color: var(--theme-text, #8B4A5F);
+  opacity: 0.8;
 }
 
 .theme-petal .group-game {
-  color: #7C3A55;
+  color: var(--theme-accent, #FF8FA3);
+  font-weight: 600;
 }
 
 .theme-petal .empty-state {
-  background: #FFF0F6;
-  border-color: rgba(229, 161, 188, 0.4);
-  color: #7C3A55;
+  background: var(--theme-background, #FFF0F6);
+  border-color: var(--theme-primary, #FF8FA3);
+  color: var(--theme-text, #8B4A5F);
+  opacity: 0.9;
 }
 
 @media (max-width: 640px) {

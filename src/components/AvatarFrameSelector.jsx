@@ -65,11 +65,10 @@ function AvatarFrameSelector({ user, onFrameSelect }) {
                 <div className="frame-lock-overlay">
                   <div className="lock-icon">🔒</div>
                   <div className="lock-text">
-                    {canUnlock ? (
-                      <span>Clique para desbloquear</span>
-                    ) : (
-                      <span>Desbloqueie com {frame.requiredEssence} Essências</span>
-                    )}
+                    {canUnlock ? 'Clique para desbloquear' : 'Bloqueado'}
+                  </div>
+                  <div className="lock-cost">
+                    🔮 {frame.requiredEssence} Essências
                   </div>
                 </div>
               )}

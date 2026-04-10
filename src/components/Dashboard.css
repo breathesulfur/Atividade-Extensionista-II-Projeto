@@ -88,33 +88,37 @@
   opacity: 0.9;
 }
 
-/* Barra compacta de progresso diário */
+/* Barra compacta de progresso diário - Cores fixas para contraste consistente */
 .daily-essence-bar-compact {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
   font-size: 0.75rem;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .daily-essence-text {
   font-weight: 600;
   white-space: nowrap;
+  /* Cor fixa para contraste consistente - não herda cores do tema */
+  color: rgba(139, 92, 246, 0.9) !important;
 }
 
 .daily-essence-bar-compact-container {
   width: 60px;
   height: 8px;
-  background: rgba(255, 255, 255, 0.2);
+  /* Fundo fixo com boa visibilidade */
+  background: rgba(139, 92, 246, 0.15) !important;
   border-radius: var(--radius-full);
   overflow: hidden;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3) !important;
 }
 
 .daily-essence-bar-compact-fill {
   height: 100%;
-  background: rgba(255, 255, 255, 0.6);
+  /* Cor fixa do gradiente místico para preenchimento */
+  background: linear-gradient(90deg, #a78bfa 0%, #8b5cf6 100%) !important;
   border-radius: var(--radius-full);
   transition: width 0.4s ease-out;
   position: relative;
@@ -122,16 +126,17 @@
   align-items: center;
   justify-content: flex-end;
   padding-right: 2px;
+  box-shadow: 0 1px 3px rgba(139, 92, 246, 0.3);
 }
 
 .daily-essence-bar-compact-fill.complete {
-  background: linear-gradient(90deg, rgba(255, 215, 0, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%) !important;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6) !important;
 }
 
 .daily-essence-check {
   font-size: 0.6rem;
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(0, 0, 0, 0.8) !important;
   font-weight: bold;
   line-height: 1;
 }
@@ -306,280 +311,544 @@
 }
 
 /* ========================================
+   MODAL DE CONFIRMAÇÃO DE LOGOUT
+   ======================================== */
+
+.logout-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.logout-confirm-modal {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  padding: 2.5rem 2rem 2rem;
+  max-width: 360px;
+  width: 90%;
+  text-align: center;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.logout-confirm-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.logout-confirm-modal h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.logout-confirm-modal p {
+  margin: 0 0 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.logout-confirm-modal p strong {
+  color: var(--mystic-purple);
+}
+
+.logout-confirm-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.logout-confirm-cancel {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-confirm-cancel:hover {
+  border-color: var(--mystic-purple);
+  color: var(--mystic-purple);
+}
+
+.logout-confirm-yes {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  background: var(--gradient-mystic);
+  border: none;
+  border-radius: var(--radius-md);
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px var(--shadow-mystic);
+}
+
+.logout-confirm-yes:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px var(--shadow-mystic);
+}
+
+/* ========================================
    APLICAÇÃO GLOBAL DOS TEMAS
    ======================================== */
 
 /* 🌙 Tema: Lua Serena - Amarelo lunar claro */
 .dashboard.theme-serene_moon,
 .dashboard-content.theme-serene_moon {
-  background-color: #F5F1E6 !important;
+  background-color: var(--theme-background, #F5F1E6) !important;
 }
 
 .dashboard.theme-serene_moon .dashboard-header {
-  background: linear-gradient(135deg, #E6D48A 0%, #DCCB78 100%);
-  color: #4B4637;
+  background: linear-gradient(135deg, #C9B84E 0%, #B8A73D 100%);
+  color: #1E1B0E;
 }
 
 .dashboard.theme-serene_moon .dashboard-nav {
-  background: #F5F1E6;
-  border-bottom-color: rgba(230, 212, 138, 0.4);
+  background: var(--theme-background, #F5F1E6);
+  border-bottom-color: var(--theme-primary, #E6D48A);
 }
 
 .dashboard.theme-serene_moon .nav-button {
-  border-color: rgba(230, 212, 138, 0.5);
-  color: #4B4637;
+  border-color: var(--theme-primary, #E6D48A);
+  color: var(--theme-text, #4B4637);
 }
 
 .dashboard.theme-serene_moon .nav-button:hover {
   background: rgba(230, 212, 138, 0.2);
-  border-color: #E6D48A;
-  color: #4B4637;
+  border-color: var(--theme-accent, #E6D48A);
+  color: var(--theme-text, #4B4637);
 }
 
 .dashboard.theme-serene_moon .nav-button.active {
-  background: #E6D48A;
-  color: #4B4637;
+  background: linear-gradient(135deg, var(--theme-primary, #E6D48A) 0%, var(--theme-secondary, #FAF8F2) 100%);
+  color: var(--theme-text, #4B4637);
   box-shadow: 0 4px 15px rgba(230, 212, 138, 0.3);
 }
 
 .dashboard.theme-serene_moon .user-name,
 .dashboard.theme-serene_moon .user-pronoun,
-.dashboard.theme-serene_moon .user-points,
+.dashboard.theme-serene_moon .user-points {
+  color: #1E1B0E;
+  font-weight: 600;
+}
+
+/* Logo e botões do header - contraste adequado */
+.dashboard.theme-serene_moon .logo-light .logo-text {
+  color: #1E1B0E !important;
+  -webkit-text-fill-color: #1E1B0E !important;
+  background: none !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.dashboard.theme-serene_moon .faq-button-header,
+.dashboard.theme-serene_moon .logout-button {
+  background: rgba(30, 27, 14, 0.18) !important;
+  color: #1E1B0E !important;
+  border-color: rgba(30, 27, 14, 0.5) !important;
+  font-weight: 700;
+}
+
+.dashboard.theme-serene_moon .faq-button-header:hover:not(:disabled),
+.dashboard.theme-serene_moon .logout-button:hover:not(:disabled) {
+  background: rgba(30, 27, 14, 0.28) !important;
+  border-color: rgba(30, 27, 14, 0.7) !important;
+}
+
+/* Barra de essências mantém cores fixas - não herda cores do tema */
 .dashboard.theme-serene_moon .daily-essence-text {
-  color: #4B4637;
+  color: rgba(139, 92, 246, 0.9) !important;
 }
 
-.dashboard.theme-serene_moon .daily-essence-bar-compact-container {
-  background: rgba(230, 212, 138, 0.2);
-  border-color: rgba(230, 212, 138, 0.4);
-}
-
-.dashboard.theme-serene_moon .daily-essence-bar-compact-fill {
-  background: #E6D48A;
+.dashboard.theme-serene_moon .daily-essence-bar-compact-container,
+.dashboard.theme-serene_moon .daily-essence-bar-compact-fill,
+.dashboard.theme-serene_moon .daily-essence-bar-compact-fill.complete {
+  /* Cores fixas já aplicadas com !important */
 }
 
 /* ✨ Tema: Aura Rosa - Rosa luminoso */
 .dashboard.theme-pink_aura,
 .dashboard-content.theme-pink_aura {
-  background-color: #F6C1D6 !important;
+  background-color: var(--theme-background, #F6C1D6) !important;
 }
 
 .dashboard.theme-pink_aura .dashboard-header {
-  background: linear-gradient(135deg, #F0A6C1 0%, #E894B3 100%);
-  color: #7A2E4D;
+  background: linear-gradient(135deg, var(--theme-primary, #F0A6C1) 0%, var(--theme-hover, #E894B3) 100%);
+  color: var(--theme-text, #7A2E4D);
 }
 
 .dashboard.theme-pink_aura .dashboard-nav {
-  background: #F6C1D6;
-  border-bottom-color: rgba(240, 166, 193, 0.4);
+  background: var(--theme-background, #F6C1D6);
+  border-bottom-color: var(--theme-primary, #F0A6C1);
 }
 
 .dashboard.theme-pink_aura .nav-button {
-  border-color: rgba(240, 166, 193, 0.5);
-  color: #7A2E4D;
+  border-color: var(--theme-primary, #F0A6C1);
+  color: var(--theme-text, #7A2E4D);
 }
 
 .dashboard.theme-pink_aura .nav-button:hover {
   background: rgba(240, 166, 193, 0.2);
-  border-color: #F0A6C1;
-  color: #7A2E4D;
+  border-color: var(--theme-accent, #F0A6C1);
+  color: var(--theme-text, #7A2E4D);
 }
 
 .dashboard.theme-pink_aura .nav-button.active {
-  background: #F0A6C1;
-  color: #7A2E4D;
+  background: linear-gradient(135deg, var(--theme-primary, #F0A6C1) 0%, var(--theme-secondary, #FDECF3) 100%);
+  color: var(--theme-text, #7A2E4D);
   box-shadow: 0 4px 15px rgba(240, 166, 193, 0.4);
 }
 
 .dashboard.theme-pink_aura .user-name,
 .dashboard.theme-pink_aura .user-pronoun,
-.dashboard.theme-pink_aura .user-points,
+.dashboard.theme-pink_aura .user-points {
+  color: var(--theme-text, #7A2E4D);
+  font-weight: 600;
+}
+
+/* Logo e botões do header - contraste adequado */
+.dashboard.theme-pink_aura .logo-light .logo-text {
+  color: var(--theme-text, #7A2E4D) !important;
+  -webkit-text-fill-color: var(--theme-text, #7A2E4D) !important;
+  background: none !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard.theme-pink_aura .faq-button-header,
+.dashboard.theme-pink_aura .logout-button {
+  background: rgba(122, 46, 77, 0.2) !important;
+  color: var(--theme-text, #7A2E4D) !important;
+  border-color: rgba(122, 46, 77, 0.4) !important;
+}
+
+.dashboard.theme-pink_aura .faq-button-header:hover:not(:disabled),
+.dashboard.theme-pink_aura .logout-button:hover:not(:disabled) {
+  background: rgba(122, 46, 77, 0.3) !important;
+  border-color: rgba(122, 46, 77, 0.6) !important;
+}
+
+/* Barra de essências mantém cores fixas - não herda cores do tema */
 .dashboard.theme-pink_aura .daily-essence-text {
-  color: #7A2E4D;
+  color: rgba(139, 92, 246, 0.9) !important;
 }
 
-.dashboard.theme-pink_aura .daily-essence-bar-compact-container {
-  background: rgba(240, 166, 193, 0.2);
-  border-color: rgba(240, 166, 193, 0.4);
-}
-
-.dashboard.theme-pink_aura .daily-essence-bar-compact-fill {
-  background: #F0A6C1;
+.dashboard.theme-pink_aura .daily-essence-bar-compact-container,
+.dashboard.theme-pink_aura .daily-essence-bar-compact-fill,
+.dashboard.theme-pink_aura .daily-essence-bar-compact-fill.complete {
+  /* Cores fixas já aplicadas com !important */
 }
 
 /* ☁️ Tema: Céu Suave - Aplicado em toda a página */
 .dashboard.theme-soft_sky,
 .dashboard-content.theme-soft_sky {
-  background-color: #F0F8FF !important;
+  background-color: var(--theme-background, #F0F8FF) !important;
+}
+
+.dashboard.theme-soft_sky .dashboard-header {
+  background: linear-gradient(135deg, var(--theme-primary, #B8D4E8) 0%, var(--theme-accent, #A8D0E8) 100%);
+  color: var(--theme-text, #6B9AC4);
 }
 
 .dashboard.theme-soft_sky .dashboard-nav {
-  background: #F0F8FF;
-  border-bottom-color: #B8D4E8;
+  background: var(--theme-background, #F0F8FF);
+  border-bottom-color: var(--theme-primary, #B8D4E8);
 }
 
 .dashboard.theme-soft_sky .nav-button {
-  border-color: #B8D4E8;
-  color: #6B9AC4;
+  border-color: var(--theme-primary, #B8D4E8);
+  color: var(--theme-text, #6B9AC4);
 }
 
 .dashboard.theme-soft_sky .nav-button:hover {
   background: rgba(184, 212, 232, 0.2);
-  border-color: #A8D0E8;
-  color: #6B9AC4;
+  border-color: var(--theme-accent, #A8D0E8);
+  color: var(--theme-text, #6B9AC4);
 }
 
 .dashboard.theme-soft_sky .nav-button.active {
-  background: linear-gradient(135deg, #B8D4E8 0%, #E6F3FF 100%);
-  color: #6B9AC4;
+  background: linear-gradient(135deg, var(--theme-primary, #B8D4E8) 0%, var(--theme-secondary, #E6F3FF) 100%);
+  color: var(--theme-text, #6B9AC4);
   box-shadow: 0 4px 15px rgba(184, 212, 232, 0.3);
+}
+
+.dashboard.theme-soft_sky .user-name,
+.dashboard.theme-soft_sky .user-pronoun,
+.dashboard.theme-soft_sky .user-points {
+  color: var(--theme-text, #6B9AC4);
+  font-weight: 600;
+}
+
+/* Logo e botões do header - contraste adequado */
+.dashboard.theme-soft_sky .logo-light .logo-text {
+  color: var(--theme-text, #6B9AC4) !important;
+  -webkit-text-fill-color: var(--theme-text, #6B9AC4) !important;
+  background: none !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard.theme-soft_sky .faq-button-header,
+.dashboard.theme-soft_sky .logout-button {
+  background: rgba(107, 154, 196, 0.2) !important;
+  color: var(--theme-text, #6B9AC4) !important;
+  border-color: rgba(107, 154, 196, 0.4) !important;
+}
+
+.dashboard.theme-soft_sky .faq-button-header:hover:not(:disabled),
+.dashboard.theme-soft_sky .logout-button:hover:not(:disabled) {
+  background: rgba(107, 154, 196, 0.3) !important;
+  border-color: rgba(107, 154, 196, 0.6) !important;
+}
+
+/* Barra de essências mantém cores fixas - não herda cores do tema */
+.dashboard.theme-soft_sky .daily-essence-text {
+  color: rgba(139, 92, 246, 0.9) !important;
+}
+
+.dashboard.theme-soft_sky .daily-essence-bar-compact-container,
+.dashboard.theme-soft_sky .daily-essence-bar-compact-fill,
+.dashboard.theme-soft_sky .daily-essence-bar-compact-fill.complete {
+  /* Cores fixas já aplicadas com !important */
 }
 
 /* 🌿 Tema: Bruma Rosada - Verde sálvia com rosa sutil */
 .dashboard.theme-pink_mist,
 .dashboard-content.theme-pink_mist {
-  background-color: #DDEBE3 !important;
+  background-color: var(--theme-background, #DDEBE3) !important;
 }
 
 .dashboard.theme-pink_mist .dashboard-header {
-  background: linear-gradient(135deg, #C8DED4 0%, #B5D2C5 100%);
-  color: #3E5E54;
+  background: linear-gradient(135deg, var(--theme-primary, #C8DED4) 0%, var(--theme-hover, #B5D2C5) 100%);
+  color: var(--theme-text, #3E5E54);
 }
 
 .dashboard.theme-pink_mist .dashboard-nav {
-  background: #DDEBE3;
-  border-bottom-color: rgba(200, 222, 212, 0.4);
+  background: var(--theme-background, #DDEBE3);
+  border-bottom-color: var(--theme-primary, #C8DED4);
 }
 
 .dashboard.theme-pink_mist .nav-button {
-  border-color: rgba(200, 222, 212, 0.5);
-  color: #3E5E54;
+  border-color: var(--theme-primary, #C8DED4);
+  color: var(--theme-text, #3E5E54);
 }
 
 .dashboard.theme-pink_mist .nav-button:hover {
   background: rgba(200, 222, 212, 0.2);
-  border-color: #C8DED4;
-  color: #3E5E54;
+  border-color: var(--theme-accent, #E6C9D6);
+  color: var(--theme-text, #3E5E54);
 }
 
 .dashboard.theme-pink_mist .nav-button.active {
-  background: #C8DED4;
-  color: #3E5E54;
+  background: linear-gradient(135deg, var(--theme-primary, #C8DED4) 0%, var(--theme-secondary, #F3F8F5) 100%);
+  color: var(--theme-text, #3E5E54);
   box-shadow: 0 4px 15px rgba(200, 222, 212, 0.3);
 }
 
 .dashboard.theme-pink_mist .user-name,
 .dashboard.theme-pink_mist .user-pronoun,
-.dashboard.theme-pink_mist .user-points,
+.dashboard.theme-pink_mist .user-points {
+  color: var(--theme-text, #3E5E54);
+  font-weight: 600;
+}
+
+/* Logo e botões do header - contraste adequado */
+.dashboard.theme-pink_mist .logo-light .logo-text {
+  color: var(--theme-text, #3E5E54) !important;
+  -webkit-text-fill-color: var(--theme-text, #3E5E54) !important;
+  background: none !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard.theme-pink_mist .faq-button-header,
+.dashboard.theme-pink_mist .logout-button {
+  background: rgba(62, 94, 84, 0.2) !important;
+  color: var(--theme-text, #3E5E54) !important;
+  border-color: rgba(62, 94, 84, 0.4) !important;
+}
+
+.dashboard.theme-pink_mist .faq-button-header:hover:not(:disabled),
+.dashboard.theme-pink_mist .logout-button:hover:not(:disabled) {
+  background: rgba(62, 94, 84, 0.3) !important;
+  border-color: rgba(62, 94, 84, 0.6) !important;
+}
+
+/* Barra de essências mantém cores fixas - não herda cores do tema */
 .dashboard.theme-pink_mist .daily-essence-text {
-  color: #3E5E54;
+  color: rgba(139, 92, 246, 0.9) !important;
 }
 
-.dashboard.theme-pink_mist .daily-essence-bar-compact-container {
-  background: rgba(200, 222, 212, 0.2);
-  border-color: rgba(200, 222, 212, 0.4);
-}
-
-.dashboard.theme-pink_mist .daily-essence-bar-compact-fill {
-  background: #C8DED4;
+.dashboard.theme-pink_mist .daily-essence-bar-compact-container,
+.dashboard.theme-pink_mist .daily-essence-bar-compact-fill,
+.dashboard.theme-pink_mist .daily-essence-bar-compact-fill.complete {
+  /* Cores fixas já aplicadas com !important */
 }
 
 /* 🌅 Tema: Amanhecer Lilás - Lilás claro com calor suave */
 .dashboard.theme-lilac_dawn,
 .dashboard-content.theme-lilac_dawn {
-  background-color: #D6C9F0 !important;
+  background-color: var(--theme-background, #D6C9F0) !important;
 }
 
 .dashboard.theme-lilac_dawn .dashboard-header {
-  background: linear-gradient(135deg, #C2B4E8 0%, #B1A2DE 100%);
-  color: #4B3F72;
+  background: linear-gradient(135deg, var(--theme-primary, #C2B4E8) 0%, var(--theme-hover, #B1A2DE) 100%);
+  color: var(--theme-text, #4B3F72);
 }
 
 .dashboard.theme-lilac_dawn .dashboard-nav {
-  background: #D6C9F0;
-  border-bottom-color: rgba(194, 180, 232, 0.4);
+  background: var(--theme-background, #D6C9F0);
+  border-bottom-color: var(--theme-primary, #C2B4E8);
 }
 
 .dashboard.theme-lilac_dawn .nav-button {
-  border-color: rgba(194, 180, 232, 0.5);
-  color: #4B3F72;
+  border-color: var(--theme-primary, #C2B4E8);
+  color: var(--theme-text, #4B3F72);
 }
 
 .dashboard.theme-lilac_dawn .nav-button:hover {
   background: rgba(194, 180, 232, 0.2);
-  border-color: #C2B4E8;
-  color: #4B3F72;
+  border-color: var(--theme-accent, #C2B4E8);
+  color: var(--theme-text, #4B3F72);
 }
 
 .dashboard.theme-lilac_dawn .nav-button.active {
-  background: #C2B4E8;
-  color: #4B3F72;
+  background: linear-gradient(135deg, var(--theme-primary, #C2B4E8) 0%, var(--theme-secondary, #F2EEFA) 100%);
+  color: var(--theme-text, #4B3F72);
   box-shadow: 0 4px 15px rgba(194, 180, 232, 0.3);
 }
 
 .dashboard.theme-lilac_dawn .user-name,
 .dashboard.theme-lilac_dawn .user-pronoun,
-.dashboard.theme-lilac_dawn .user-points,
+.dashboard.theme-lilac_dawn .user-points {
+  color: var(--theme-text, #4B3F72);
+  font-weight: 600;
+}
+
+/* Logo e botões do header - contraste adequado */
+.dashboard.theme-lilac_dawn .logo-light .logo-text {
+  color: var(--theme-text, #4B3F72) !important;
+  -webkit-text-fill-color: var(--theme-text, #4B3F72) !important;
+  background: none !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard.theme-lilac_dawn .faq-button-header,
+.dashboard.theme-lilac_dawn .logout-button {
+  background: rgba(75, 63, 114, 0.2) !important;
+  color: var(--theme-text, #4B3F72) !important;
+  border-color: rgba(75, 63, 114, 0.4) !important;
+}
+
+.dashboard.theme-lilac_dawn .faq-button-header:hover:not(:disabled),
+.dashboard.theme-lilac_dawn .logout-button:hover:not(:disabled) {
+  background: rgba(75, 63, 114, 0.3) !important;
+  border-color: rgba(75, 63, 114, 0.6) !important;
+}
+
+/* Barra de essências mantém cores fixas - não herda cores do tema */
 .dashboard.theme-lilac_dawn .daily-essence-text {
-  color: #4B3F72;
+  color: rgba(139, 92, 246, 0.9) !important;
 }
 
-.dashboard.theme-lilac_dawn .daily-essence-bar-compact-container {
-  background: rgba(194, 180, 232, 0.2);
-  border-color: rgba(194, 180, 232, 0.4);
-}
-
-.dashboard.theme-lilac_dawn .daily-essence-bar-compact-fill {
-  background: #C2B4E8;
+.dashboard.theme-lilac_dawn .daily-essence-bar-compact-container,
+.dashboard.theme-lilac_dawn .daily-essence-bar-compact-fill,
+.dashboard.theme-lilac_dawn .daily-essence-bar-compact-fill.complete {
+  /* Cores fixas já aplicadas com !important */
 }
 
 /* 🌸 Tema: Pétala Rosa - Rosa floral suave */
 .dashboard.theme-petal,
 .dashboard-content.theme-petal {
-  background-color: #F7C6D9 !important;
+  background-color: var(--theme-background, #F7C6D9) !important;
 }
 
 .dashboard.theme-petal .dashboard-header {
-  background: linear-gradient(135deg, #E5A1BC 0%, #DC8FAF 100%);
-  color: #7C3A55;
+  background: linear-gradient(135deg, var(--theme-primary, #E5A1BC) 0%, var(--theme-hover, #DC8FAF) 100%);
+  color: var(--theme-text, #7C3A55);
 }
 
 .dashboard.theme-petal .dashboard-nav {
-  background: #F7C6D9;
-  border-bottom-color: rgba(229, 161, 188, 0.4);
+  background: var(--theme-background, #F7C6D9);
+  border-bottom-color: var(--theme-primary, #E5A1BC);
 }
 
 .dashboard.theme-petal .nav-button {
-  border-color: rgba(229, 161, 188, 0.5);
-  color: #7C3A55;
+  border-color: var(--theme-primary, #E5A1BC);
+  color: var(--theme-text, #7C3A55);
 }
 
 .dashboard.theme-petal .nav-button:hover {
   background: rgba(229, 161, 188, 0.2);
-  border-color: #E5A1BC;
-  color: #7C3A55;
+  border-color: var(--theme-accent, #E5A1BC);
+  color: var(--theme-text, #7C3A55);
 }
 
 .dashboard.theme-petal .nav-button.active {
-  background: #E5A1BC;
-  color: #7C3A55;
+  background: linear-gradient(135deg, var(--theme-primary, #E5A1BC) 0%, var(--theme-secondary, #FFF0F6) 100%);
+  color: var(--theme-text, #7C3A55);
   box-shadow: 0 4px 15px rgba(229, 161, 188, 0.3);
 }
 
 .dashboard.theme-petal .user-name,
 .dashboard.theme-petal .user-pronoun,
-.dashboard.theme-petal .user-points,
+.dashboard.theme-petal .user-points {
+  color: var(--theme-text, #7C3A55);
+  font-weight: 600;
+}
+
+/* Logo e botões do header - contraste adequado */
+.dashboard.theme-petal .logo-light .logo-text {
+  color: var(--theme-text, #7C3A55) !important;
+  -webkit-text-fill-color: var(--theme-text, #7C3A55) !important;
+  background: none !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard.theme-petal .faq-button-header,
+.dashboard.theme-petal .logout-button {
+  background: rgba(124, 58, 85, 0.2) !important;
+  color: var(--theme-text, #7C3A55) !important;
+  border-color: rgba(124, 58, 85, 0.4) !important;
+}
+
+.dashboard.theme-petal .faq-button-header:hover:not(:disabled),
+.dashboard.theme-petal .logout-button:hover:not(:disabled) {
+  background: rgba(124, 58, 85, 0.3) !important;
+  border-color: rgba(124, 58, 85, 0.6) !important;
+}
+
+/* Barra de essências mantém cores fixas - não herda cores do tema */
 .dashboard.theme-petal .daily-essence-text {
-  color: #7C3A55;
+  color: rgba(139, 92, 246, 0.9) !important;
 }
 
-.dashboard.theme-petal .daily-essence-bar-compact-container {
-  background: rgba(229, 161, 188, 0.2);
-  border-color: rgba(229, 161, 188, 0.4);
-}
-
-.dashboard.theme-petal .daily-essence-bar-compact-fill {
-  background: #E5A1BC;
+.dashboard.theme-petal .daily-essence-bar-compact-container,
+.dashboard.theme-petal .daily-essence-bar-compact-fill,
+.dashboard.theme-petal .daily-essence-bar-compact-fill.complete {
+  /* Cores fixas já aplicadas com !important */
 }
 
 /* Aplicação de temas em inputs e elementos de formulário globalmente */
