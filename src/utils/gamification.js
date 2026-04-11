@@ -188,13 +188,18 @@ export const DAILY_ESSENCE_LIMIT = 50
  * Cooldowns em minutos para cada tipo de ação
  */
 export const ACTION_COOLDOWNS = {
-  CREATE_POST: 5,          // 5 minutos entre postagens
-  SUPPORTIVE_COMMENT: 2,   // 2 minutos entre comentários
+  CREATE_POST: 30,         // 30 minutos entre postagens
+  SUPPORTIVE_COMMENT: 10,  // 10 minutos entre comentários
   REPORT_CONTENT: 60,      // 1 hora entre denúncias válidas
   JOIN_GROUP: 0,           // Sem cooldown (mas apenas primeira vez dá Essência)
   COMPLETE_PROFILE: 0,     // Sem cooldown (ação única)
   DAILY_LOGIN: 0           // Sem cooldown (verificado por sistema de dias consecutivos)
 }
+
+/**
+ * Mínimo de caracteres para que um comentário gere Essência
+ */
+export const MIN_COMMENT_LENGTH_FOR_ESSENCE = 10
 
 /**
  * Adiciona Essência ao usuário

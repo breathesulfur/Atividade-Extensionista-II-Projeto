@@ -8,7 +8,7 @@ import LoadingSpinner from './LoadingSpinner'
 import FAQ from './FAQ'
 import { updateUser } from '../utils/storage'
 import { setNotificationCallback, notifyEssenceGained, notifyAchievement } from '../utils/notifications'
-import { addEssence, DAILY_ESSENCE_LIMIT, THEMES } from '../utils/gamification'
+import { addEssence, DAILY_ESSENCE_LIMIT, THEMES, MYSTIC_TITLES, canUnlockMysticTitle, unlockMysticTitle } from '../utils/gamification'
 import './Dashboard.css'
 
 // Componente de barra de progresso diária compacta
@@ -161,6 +161,32 @@ function Dashboard({ user, onLogout }) {
     // Atualiza a referência da essência anterior
     previousEssenceRef.current = currentEssence
   }, [currentUser.essence, currentUser.points])
+
+  // Verifica e concede títulos místicos automaticamente quando essências totais aumentam
+  useEffect(() => {
+    const newTitles = Object.values(MYSTIC_TITLES).filter(title =>
+      canUnlockMysticTitle(currentUser, title.id)
+    )
+    if (newTitles.length === 0) return
+
+    let updatedUser = currentUser
+    newTitles.forEach(title => {
+      updatedUser = unlockMysticTitle(updatedUser, title.id)
+    })
+
+    updateUser(updatedUser)
+    setCurrentUser(updatedUser)
+
+    newTitles.forEach((title, index) => {
+      setTimeout(() => {
+        notifyAchievement(
+          `${title.icon} Título desbloqueado: ${title.name}`,
+          title.description,
+          6000
+        )
+      }, 300 + index * 600)
+    })
+  }, [currentUser.essencias_totais])
 
   // Abre o modal de confirmação de logout
   const handleLogoutClick = () => {

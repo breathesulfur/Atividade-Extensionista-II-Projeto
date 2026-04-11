@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { filterProfanity } from '../utils/profanityFilter'
-import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES } from '../utils/gamification'
+import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES, MIN_COMMENT_LENGTH_FOR_ESSENCE } from '../utils/gamification'
 import { getStorage, getPosts, getGroups } from '../utils/storage'
 import { notifyError, notifyAchievement, notifySuccess, notifyEssenceGained } from '../utils/notifications'
 import EmojiPicker from './EmojiPicker'
@@ -329,12 +329,13 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
       comments: [...(post.comments || []), newComment]
     }
 
-    // Adiciona Essência ao usuário
-    let updatedUser = addEssence(currentUser, ESSENCE.SUPPORTIVE_COMMENT)
+    // Adiciona Essência ao usuário (apenas se o comentário tiver tamanho mínimo)
+    let updatedUser = currentUser
+    if (filteredComment.length >= MIN_COMMENT_LENGTH_FOR_ESSENCE) {
+      updatedUser = addEssence(currentUser, ESSENCE.SUPPORTIVE_COMMENT)
+      notifyEssenceGained(ESSENCE.SUPPORTIVE_COMMENT, 'Fazer comentário de apoio')
+    }
     onUserUpdate(updatedUser)
-    
-    // Notifica sobre essências ganhas
-    notifyEssenceGained(ESSENCE.SUPPORTIVE_COMMENT, 'Fazer comentário de apoio')
 
     onUpdate(post.id, updatedPost)
     
