@@ -171,6 +171,113 @@
   color: var(--theme-text, #8B4A5F);
 }
 
+/* ── Modal de boas-vindas ── */
+.welcome-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: wmFadeIn 0.2s ease;
+}
+
+@keyframes wmFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.welcome-modal-content {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  padding: 2.5rem 2rem 2rem;
+  max-width: 420px;
+  width: 92%;
+  max-height: 88vh;
+  overflow-y: auto;
+  text-align: center;
+  animation: wmSlideUp 0.25s ease;
+}
+
+@keyframes wmSlideUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.welcome-modal-icon {
+  font-size: 3.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.welcome-modal-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.4rem;
+  color: var(--text-primary);
+}
+
+.welcome-modal-title span {
+  color: var(--mystic-purple);
+}
+
+.welcome-modal-message {
+  margin: 0 0 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.welcome-modal-message strong {
+  color: var(--mystic-purple);
+}
+
+.welcome-modal-tips {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.75rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.welcome-modal-tips li {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  padding: 0.4rem 0.75rem;
+  background: var(--surface-alt, rgba(139, 92, 246, 0.05));
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--mystic-purple-light, rgba(167, 139, 250, 0.4));
+}
+
+.welcome-modal-tips li strong {
+  color: var(--text-primary);
+}
+
+.welcome-modal-button {
+  padding: 0.7rem 2rem;
+  background: var(--gradient-mystic);
+  border: none;
+  border-radius: var(--radius-md);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px var(--shadow-mystic);
+  font-family: inherit;
+}
+
+.welcome-modal-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px var(--shadow-mystic);
+}
+
 @media (max-width: 640px) {
   .feed-header {
     flex-direction: column;
@@ -179,5 +286,9 @@
 
   .create-post-button {
     width: 100%;
+  }
+
+  .welcome-modal-content {
+    padding: 2rem 1.25rem 1.5rem;
   }
 }
