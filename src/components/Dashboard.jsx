@@ -18,17 +18,26 @@ function DailyEssenceProgressBar({ user }) {
   const todayEssence = dailyEssence[today] || 0
   const progressPercentage = Math.min(100, (todayEssence / DAILY_ESSENCE_LIMIT) * 100)
   const isComplete = todayEssence >= DAILY_ESSENCE_LIMIT
+  const isWarning = !isComplete && progressPercentage >= 80
+
+  if (isComplete) {
+    return (
+      <div className="daily-essence-complete-badge" title="Limite diário atingido!">
+        ✨ {DAILY_ESSENCE_LIMIT}/{DAILY_ESSENCE_LIMIT} hoje
+      </div>
+    )
+  }
 
   return (
-    <div className="daily-essence-bar-compact">
-      <span className="daily-essence-text">{todayEssence} / {DAILY_ESSENCE_LIMIT}</span>
+    <div className="daily-essence-bar-compact" title={`${todayEssence} de ${DAILY_ESSENCE_LIMIT} Essências hoje`}>
+      <span className={`daily-essence-text ${isWarning ? 'warning' : ''}`}>
+        {todayEssence}<span className="daily-essence-limit">/{DAILY_ESSENCE_LIMIT}</span>
+      </span>
       <div className="daily-essence-bar-compact-container">
-        <div 
-          className={`daily-essence-bar-compact-fill ${isComplete ? 'complete' : ''}`}
+        <div
+          className={`daily-essence-bar-compact-fill ${isWarning ? 'warning' : ''}`}
           style={{ width: `${progressPercentage}%` }}
-        >
-          {isComplete && <span className="daily-essence-check">✔</span>}
-        </div>
+        />
       </div>
     </div>
   )

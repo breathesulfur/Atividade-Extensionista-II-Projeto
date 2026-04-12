@@ -98,16 +98,25 @@
 }
 
 .daily-essence-text {
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
-  /* Cor fixa para contraste consistente - não herda cores do tema */
   color: rgba(139, 92, 246, 0.9) !important;
+  transition: color 0.3s;
+}
+
+.daily-essence-text.warning {
+  color: #f59e0b !important;
+  text-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
+}
+
+.daily-essence-limit {
+  font-weight: 400;
+  opacity: 0.65;
 }
 
 .daily-essence-bar-compact-container {
   width: 60px;
   height: 8px;
-  /* Fundo fixo com boa visibilidade */
   background: rgba(139, 92, 246, 0.15) !important;
   border-radius: var(--radius-full);
   overflow: hidden;
@@ -117,28 +126,37 @@
 
 .daily-essence-bar-compact-fill {
   height: 100%;
-  /* Cor fixa do gradiente místico para preenchimento */
   background: linear-gradient(90deg, #a78bfa 0%, #8b5cf6 100%) !important;
   border-radius: var(--radius-full);
-  transition: width 0.4s ease-out;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 2px;
+  transition: width 0.4s ease-out, background 0.3s;
   box-shadow: 0 1px 3px rgba(139, 92, 246, 0.3);
 }
 
-.daily-essence-bar-compact-fill.complete {
-  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%) !important;
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6) !important;
+.daily-essence-bar-compact-fill.warning {
+  background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%) !important;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.5) !important;
 }
 
-.daily-essence-check {
-  font-size: 0.6rem;
-  color: rgba(0, 0, 0, 0.8) !important;
-  font-weight: bold;
-  line-height: 1;
+/* Badge dourado quando limite diário é atingido */
+.daily-essence-complete-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+  color: #5a3a00 !important;
+  font-size: 0.7rem;
+  font-weight: 800;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  box-shadow: 0 0 10px rgba(255, 200, 0, 0.6), 0 2px 6px rgba(255, 165, 0, 0.4);
+  animation: essencePulse 2s ease-in-out infinite;
+  letter-spacing: 0.01em;
+}
+
+@keyframes essencePulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 200, 0, 0.5), 0 2px 6px rgba(255, 165, 0, 0.3); }
+  50%       { box-shadow: 0 0 16px rgba(255, 200, 0, 0.9), 0 2px 10px rgba(255, 165, 0, 0.6); }
 }
 
 .user-points {
