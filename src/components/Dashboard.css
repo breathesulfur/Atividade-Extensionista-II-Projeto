@@ -433,495 +433,441 @@
 }
 
 /* ========================================
-   APLICAÇÃO GLOBAL DOS TEMAS
+   APLICAÇÃO GLOBAL DOS TEMAS — Design Moderno
+   Header: gradiente rico + texto branco
+   Nav: glassmorphism
+   Aba ativa: accent sólido + texto branco
+   Background: ultra-leve com tint sutil
    ======================================== */
 
-/* 🌙 Tema: Lua Serena - Amarelo lunar claro */
+/* Mixin reutilizável para header glassmorphism */
+[class*="theme-"] .dashboard-header::after {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+}
+
+/* ── 🌙 Lua Serena — âmbar dourado ── */
 .dashboard.theme-serene_moon,
 .dashboard-content.theme-serene_moon {
-  background-color: var(--theme-background, #F5F1E6) !important;
+  background: linear-gradient(150deg, #FEFBF0 0%, #FFF8E6 60%, #FFFFF8 100%) !important;
 }
 
 .dashboard.theme-serene_moon .dashboard-header {
-  background: linear-gradient(135deg, #C9B84E 0%, #B8A73D 100%);
-  color: #1E1B0E;
+  background: linear-gradient(135deg, #A07808 0%, #C49820 100%);
+  color: white;
+  box-shadow: 0 4px 24px rgba(160, 120, 8, 0.45);
 }
 
 .dashboard.theme-serene_moon .dashboard-nav {
-  background: var(--theme-background, #F5F1E6);
-  border-bottom-color: var(--theme-primary, #E6D48A);
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(160, 120, 8, 0.14);
+  box-shadow: 0 2px 16px rgba(160, 120, 8, 0.07);
 }
 
 .dashboard.theme-serene_moon .nav-button {
-  border-color: var(--theme-primary, #E6D48A);
-  color: var(--theme-text, #4B4637);
+  color: #5C4A1E;
+  border-color: rgba(160, 120, 8, 0.22);
 }
 
 .dashboard.theme-serene_moon .nav-button:hover {
-  background: rgba(230, 212, 138, 0.2);
-  border-color: var(--theme-accent, #E6D48A);
-  color: var(--theme-text, #4B4637);
+  background: rgba(160, 120, 8, 0.08);
+  border-color: #B8910E;
+  color: #8A6808;
+  box-shadow: 0 2px 8px rgba(160, 120, 8, 0.15);
 }
 
 .dashboard.theme-serene_moon .nav-button.active {
-  background: linear-gradient(135deg, var(--theme-primary, #E6D48A) 0%, var(--theme-secondary, #FAF8F2) 100%);
-  color: var(--theme-text, #4B4637);
-  box-shadow: 0 4px 15px rgba(230, 212, 138, 0.3);
+  background: #B8910E;
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(160, 120, 8, 0.42);
 }
 
 .dashboard.theme-serene_moon .user-name,
 .dashboard.theme-serene_moon .user-pronoun,
-.dashboard.theme-serene_moon .user-points {
-  color: #1E1B0E;
-  font-weight: 600;
-}
+.dashboard.theme-serene_moon .user-points { color: white; }
 
-/* Logo e botões do header - contraste adequado */
 .dashboard.theme-serene_moon .logo-light .logo-text {
-  color: #1E1B0E !important;
-  -webkit-text-fill-color: #1E1B0E !important;
+  color: white !important;
+  -webkit-text-fill-color: white !important;
   background: none !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .dashboard.theme-serene_moon .faq-button-header,
 .dashboard.theme-serene_moon .logout-button {
-  background: rgba(30, 27, 14, 0.18) !important;
-  color: #1E1B0E !important;
-  border-color: rgba(30, 27, 14, 0.5) !important;
-  font-weight: 700;
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
 }
 
 .dashboard.theme-serene_moon .faq-button-header:hover:not(:disabled),
 .dashboard.theme-serene_moon .logout-button:hover:not(:disabled) {
-  background: rgba(30, 27, 14, 0.28) !important;
-  border-color: rgba(30, 27, 14, 0.7) !important;
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
 }
 
-/* Barra de essências mantém cores fixas - não herda cores do tema */
-.dashboard.theme-serene_moon .daily-essence-text {
-  color: rgba(139, 92, 246, 0.9) !important;
+.theme-serene_moon input,
+.theme-serene_moon textarea,
+.theme-serene_moon select {
+  background-color: #FFFDF6 !important;
+  border-color: rgba(160, 120, 8, 0.28) !important;
+  color: #5C4A1E !important;
 }
 
-.dashboard.theme-serene_moon .daily-essence-bar-compact-container,
-.dashboard.theme-serene_moon .daily-essence-bar-compact-fill,
-.dashboard.theme-serene_moon .daily-essence-bar-compact-fill.complete {
-  /* Cores fixas já aplicadas com !important */
-}
 
-/* ✨ Tema: Aura Rosa - Rosa luminoso */
+/* ── ✨ Aura Rosa — rosa profundo ── */
 .dashboard.theme-pink_aura,
 .dashboard-content.theme-pink_aura {
-  background-color: var(--theme-background, #F6C1D6) !important;
+  background: linear-gradient(150deg, #FFF8FB 0%, #FFF2F7 60%, #FFFCFE 100%) !important;
 }
 
 .dashboard.theme-pink_aura .dashboard-header {
-  background: linear-gradient(135deg, var(--theme-primary, #F0A6C1) 0%, var(--theme-hover, #E894B3) 100%);
-  color: var(--theme-text, #7A2E4D);
+  background: linear-gradient(135deg, #A83060 0%, #CC4878 100%);
+  color: white;
+  box-shadow: 0 4px 24px rgba(168, 48, 96, 0.45);
 }
 
 .dashboard.theme-pink_aura .dashboard-nav {
-  background: var(--theme-background, #F6C1D6);
-  border-bottom-color: var(--theme-primary, #F0A6C1);
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(168, 48, 96, 0.14);
+  box-shadow: 0 2px 16px rgba(168, 48, 96, 0.07);
 }
 
 .dashboard.theme-pink_aura .nav-button {
-  border-color: var(--theme-primary, #F0A6C1);
-  color: var(--theme-text, #7A2E4D);
+  color: #6E1E42;
+  border-color: rgba(168, 48, 96, 0.22);
 }
 
 .dashboard.theme-pink_aura .nav-button:hover {
-  background: rgba(240, 166, 193, 0.2);
-  border-color: var(--theme-accent, #F0A6C1);
-  color: var(--theme-text, #7A2E4D);
+  background: rgba(168, 48, 96, 0.08);
+  border-color: #C03870;
+  color: #9A2850;
+  box-shadow: 0 2px 8px rgba(168, 48, 96, 0.15);
 }
 
 .dashboard.theme-pink_aura .nav-button.active {
-  background: linear-gradient(135deg, var(--theme-primary, #F0A6C1) 0%, var(--theme-secondary, #FDECF3) 100%);
-  color: var(--theme-text, #7A2E4D);
-  box-shadow: 0 4px 15px rgba(240, 166, 193, 0.4);
+  background: #C03870;
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(168, 48, 96, 0.42);
 }
 
 .dashboard.theme-pink_aura .user-name,
 .dashboard.theme-pink_aura .user-pronoun,
-.dashboard.theme-pink_aura .user-points {
-  color: var(--theme-text, #7A2E4D);
-  font-weight: 600;
-}
+.dashboard.theme-pink_aura .user-points { color: white; }
 
-/* Logo e botões do header - contraste adequado */
 .dashboard.theme-pink_aura .logo-light .logo-text {
-  color: var(--theme-text, #7A2E4D) !important;
-  -webkit-text-fill-color: var(--theme-text, #7A2E4D) !important;
+  color: white !important;
+  -webkit-text-fill-color: white !important;
   background: none !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard.theme-pink_aura .faq-button-header,
 .dashboard.theme-pink_aura .logout-button {
-  background: rgba(122, 46, 77, 0.2) !important;
-  color: var(--theme-text, #7A2E4D) !important;
-  border-color: rgba(122, 46, 77, 0.4) !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
 }
 
 .dashboard.theme-pink_aura .faq-button-header:hover:not(:disabled),
 .dashboard.theme-pink_aura .logout-button:hover:not(:disabled) {
-  background: rgba(122, 46, 77, 0.3) !important;
-  border-color: rgba(122, 46, 77, 0.6) !important;
-}
-
-/* Barra de essências mantém cores fixas - não herda cores do tema */
-.dashboard.theme-pink_aura .daily-essence-text {
-  color: rgba(139, 92, 246, 0.9) !important;
-}
-
-.dashboard.theme-pink_aura .daily-essence-bar-compact-container,
-.dashboard.theme-pink_aura .daily-essence-bar-compact-fill,
-.dashboard.theme-pink_aura .daily-essence-bar-compact-fill.complete {
-  /* Cores fixas já aplicadas com !important */
-}
-
-/* ☁️ Tema: Céu Suave - Aplicado em toda a página */
-.dashboard.theme-soft_sky,
-.dashboard-content.theme-soft_sky {
-  background-color: var(--theme-background, #F0F8FF) !important;
-}
-
-.dashboard.theme-soft_sky .dashboard-header {
-  background: linear-gradient(135deg, var(--theme-primary, #B8D4E8) 0%, var(--theme-accent, #A8D0E8) 100%);
-  color: var(--theme-text, #6B9AC4);
-}
-
-.dashboard.theme-soft_sky .dashboard-nav {
-  background: var(--theme-background, #F0F8FF);
-  border-bottom-color: var(--theme-primary, #B8D4E8);
-}
-
-.dashboard.theme-soft_sky .nav-button {
-  border-color: var(--theme-primary, #B8D4E8);
-  color: var(--theme-text, #6B9AC4);
-}
-
-.dashboard.theme-soft_sky .nav-button:hover {
-  background: rgba(184, 212, 232, 0.2);
-  border-color: var(--theme-accent, #A8D0E8);
-  color: var(--theme-text, #6B9AC4);
-}
-
-.dashboard.theme-soft_sky .nav-button.active {
-  background: linear-gradient(135deg, var(--theme-primary, #B8D4E8) 0%, var(--theme-secondary, #E6F3FF) 100%);
-  color: var(--theme-text, #6B9AC4);
-  box-shadow: 0 4px 15px rgba(184, 212, 232, 0.3);
-}
-
-.dashboard.theme-soft_sky .user-name,
-.dashboard.theme-soft_sky .user-pronoun,
-.dashboard.theme-soft_sky .user-points {
-  color: var(--theme-text, #6B9AC4);
-  font-weight: 600;
-}
-
-/* Logo e botões do header - contraste adequado */
-.dashboard.theme-soft_sky .logo-light .logo-text {
-  color: var(--theme-text, #6B9AC4) !important;
-  -webkit-text-fill-color: var(--theme-text, #6B9AC4) !important;
-  background: none !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard.theme-soft_sky .faq-button-header,
-.dashboard.theme-soft_sky .logout-button {
-  background: rgba(107, 154, 196, 0.2) !important;
-  color: var(--theme-text, #6B9AC4) !important;
-  border-color: rgba(107, 154, 196, 0.4) !important;
-}
-
-.dashboard.theme-soft_sky .faq-button-header:hover:not(:disabled),
-.dashboard.theme-soft_sky .logout-button:hover:not(:disabled) {
-  background: rgba(107, 154, 196, 0.3) !important;
-  border-color: rgba(107, 154, 196, 0.6) !important;
-}
-
-/* Barra de essências mantém cores fixas - não herda cores do tema */
-.dashboard.theme-soft_sky .daily-essence-text {
-  color: rgba(139, 92, 246, 0.9) !important;
-}
-
-.dashboard.theme-soft_sky .daily-essence-bar-compact-container,
-.dashboard.theme-soft_sky .daily-essence-bar-compact-fill,
-.dashboard.theme-soft_sky .daily-essence-bar-compact-fill.complete {
-  /* Cores fixas já aplicadas com !important */
-}
-
-/* 🌿 Tema: Bruma Rosada - Verde sálvia com rosa sutil */
-.dashboard.theme-pink_mist,
-.dashboard-content.theme-pink_mist {
-  background-color: var(--theme-background, #DDEBE3) !important;
-}
-
-.dashboard.theme-pink_mist .dashboard-header {
-  background: linear-gradient(135deg, var(--theme-primary, #C8DED4) 0%, var(--theme-hover, #B5D2C5) 100%);
-  color: var(--theme-text, #3E5E54);
-}
-
-.dashboard.theme-pink_mist .dashboard-nav {
-  background: var(--theme-background, #DDEBE3);
-  border-bottom-color: var(--theme-primary, #C8DED4);
-}
-
-.dashboard.theme-pink_mist .nav-button {
-  border-color: var(--theme-primary, #C8DED4);
-  color: var(--theme-text, #3E5E54);
-}
-
-.dashboard.theme-pink_mist .nav-button:hover {
-  background: rgba(200, 222, 212, 0.2);
-  border-color: var(--theme-accent, #E6C9D6);
-  color: var(--theme-text, #3E5E54);
-}
-
-.dashboard.theme-pink_mist .nav-button.active {
-  background: linear-gradient(135deg, var(--theme-primary, #C8DED4) 0%, var(--theme-secondary, #F3F8F5) 100%);
-  color: var(--theme-text, #3E5E54);
-  box-shadow: 0 4px 15px rgba(200, 222, 212, 0.3);
-}
-
-.dashboard.theme-pink_mist .user-name,
-.dashboard.theme-pink_mist .user-pronoun,
-.dashboard.theme-pink_mist .user-points {
-  color: var(--theme-text, #3E5E54);
-  font-weight: 600;
-}
-
-/* Logo e botões do header - contraste adequado */
-.dashboard.theme-pink_mist .logo-light .logo-text {
-  color: var(--theme-text, #3E5E54) !important;
-  -webkit-text-fill-color: var(--theme-text, #3E5E54) !important;
-  background: none !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard.theme-pink_mist .faq-button-header,
-.dashboard.theme-pink_mist .logout-button {
-  background: rgba(62, 94, 84, 0.2) !important;
-  color: var(--theme-text, #3E5E54) !important;
-  border-color: rgba(62, 94, 84, 0.4) !important;
-}
-
-.dashboard.theme-pink_mist .faq-button-header:hover:not(:disabled),
-.dashboard.theme-pink_mist .logout-button:hover:not(:disabled) {
-  background: rgba(62, 94, 84, 0.3) !important;
-  border-color: rgba(62, 94, 84, 0.6) !important;
-}
-
-/* Barra de essências mantém cores fixas - não herda cores do tema */
-.dashboard.theme-pink_mist .daily-essence-text {
-  color: rgba(139, 92, 246, 0.9) !important;
-}
-
-.dashboard.theme-pink_mist .daily-essence-bar-compact-container,
-.dashboard.theme-pink_mist .daily-essence-bar-compact-fill,
-.dashboard.theme-pink_mist .daily-essence-bar-compact-fill.complete {
-  /* Cores fixas já aplicadas com !important */
-}
-
-/* 🌅 Tema: Amanhecer Lilás - Lilás claro com calor suave */
-.dashboard.theme-lilac_dawn,
-.dashboard-content.theme-lilac_dawn {
-  background-color: var(--theme-background, #D6C9F0) !important;
-}
-
-.dashboard.theme-lilac_dawn .dashboard-header {
-  background: linear-gradient(135deg, var(--theme-primary, #C2B4E8) 0%, var(--theme-hover, #B1A2DE) 100%);
-  color: var(--theme-text, #4B3F72);
-}
-
-.dashboard.theme-lilac_dawn .dashboard-nav {
-  background: var(--theme-background, #D6C9F0);
-  border-bottom-color: var(--theme-primary, #C2B4E8);
-}
-
-.dashboard.theme-lilac_dawn .nav-button {
-  border-color: var(--theme-primary, #C2B4E8);
-  color: var(--theme-text, #4B3F72);
-}
-
-.dashboard.theme-lilac_dawn .nav-button:hover {
-  background: rgba(194, 180, 232, 0.2);
-  border-color: var(--theme-accent, #C2B4E8);
-  color: var(--theme-text, #4B3F72);
-}
-
-.dashboard.theme-lilac_dawn .nav-button.active {
-  background: linear-gradient(135deg, var(--theme-primary, #C2B4E8) 0%, var(--theme-secondary, #F2EEFA) 100%);
-  color: var(--theme-text, #4B3F72);
-  box-shadow: 0 4px 15px rgba(194, 180, 232, 0.3);
-}
-
-.dashboard.theme-lilac_dawn .user-name,
-.dashboard.theme-lilac_dawn .user-pronoun,
-.dashboard.theme-lilac_dawn .user-points {
-  color: var(--theme-text, #4B3F72);
-  font-weight: 600;
-}
-
-/* Logo e botões do header - contraste adequado */
-.dashboard.theme-lilac_dawn .logo-light .logo-text {
-  color: var(--theme-text, #4B3F72) !important;
-  -webkit-text-fill-color: var(--theme-text, #4B3F72) !important;
-  background: none !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard.theme-lilac_dawn .faq-button-header,
-.dashboard.theme-lilac_dawn .logout-button {
-  background: rgba(75, 63, 114, 0.2) !important;
-  color: var(--theme-text, #4B3F72) !important;
-  border-color: rgba(75, 63, 114, 0.4) !important;
-}
-
-.dashboard.theme-lilac_dawn .faq-button-header:hover:not(:disabled),
-.dashboard.theme-lilac_dawn .logout-button:hover:not(:disabled) {
-  background: rgba(75, 63, 114, 0.3) !important;
-  border-color: rgba(75, 63, 114, 0.6) !important;
-}
-
-/* Barra de essências mantém cores fixas - não herda cores do tema */
-.dashboard.theme-lilac_dawn .daily-essence-text {
-  color: rgba(139, 92, 246, 0.9) !important;
-}
-
-.dashboard.theme-lilac_dawn .daily-essence-bar-compact-container,
-.dashboard.theme-lilac_dawn .daily-essence-bar-compact-fill,
-.dashboard.theme-lilac_dawn .daily-essence-bar-compact-fill.complete {
-  /* Cores fixas já aplicadas com !important */
-}
-
-/* 🌸 Tema: Pétala Rosa - Rosa floral suave */
-.dashboard.theme-petal,
-.dashboard-content.theme-petal {
-  background-color: var(--theme-background, #F7C6D9) !important;
-}
-
-.dashboard.theme-petal .dashboard-header {
-  background: linear-gradient(135deg, var(--theme-primary, #E5A1BC) 0%, var(--theme-hover, #DC8FAF) 100%);
-  color: var(--theme-text, #7C3A55);
-}
-
-.dashboard.theme-petal .dashboard-nav {
-  background: var(--theme-background, #F7C6D9);
-  border-bottom-color: var(--theme-primary, #E5A1BC);
-}
-
-.dashboard.theme-petal .nav-button {
-  border-color: var(--theme-primary, #E5A1BC);
-  color: var(--theme-text, #7C3A55);
-}
-
-.dashboard.theme-petal .nav-button:hover {
-  background: rgba(229, 161, 188, 0.2);
-  border-color: var(--theme-accent, #E5A1BC);
-  color: var(--theme-text, #7C3A55);
-}
-
-.dashboard.theme-petal .nav-button.active {
-  background: linear-gradient(135deg, var(--theme-primary, #E5A1BC) 0%, var(--theme-secondary, #FFF0F6) 100%);
-  color: var(--theme-text, #7C3A55);
-  box-shadow: 0 4px 15px rgba(229, 161, 188, 0.3);
-}
-
-.dashboard.theme-petal .user-name,
-.dashboard.theme-petal .user-pronoun,
-.dashboard.theme-petal .user-points {
-  color: var(--theme-text, #7C3A55);
-  font-weight: 600;
-}
-
-/* Logo e botões do header - contraste adequado */
-.dashboard.theme-petal .logo-light .logo-text {
-  color: var(--theme-text, #7C3A55) !important;
-  -webkit-text-fill-color: var(--theme-text, #7C3A55) !important;
-  background: none !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard.theme-petal .faq-button-header,
-.dashboard.theme-petal .logout-button {
-  background: rgba(124, 58, 85, 0.2) !important;
-  color: var(--theme-text, #7C3A55) !important;
-  border-color: rgba(124, 58, 85, 0.4) !important;
-}
-
-.dashboard.theme-petal .faq-button-header:hover:not(:disabled),
-.dashboard.theme-petal .logout-button:hover:not(:disabled) {
-  background: rgba(124, 58, 85, 0.3) !important;
-  border-color: rgba(124, 58, 85, 0.6) !important;
-}
-
-/* Barra de essências mantém cores fixas - não herda cores do tema */
-.dashboard.theme-petal .daily-essence-text {
-  color: rgba(139, 92, 246, 0.9) !important;
-}
-
-.dashboard.theme-petal .daily-essence-bar-compact-container,
-.dashboard.theme-petal .daily-essence-bar-compact-fill,
-.dashboard.theme-petal .daily-essence-bar-compact-fill.complete {
-  /* Cores fixas já aplicadas com !important */
-}
-
-/* Aplicação de temas em inputs e elementos de formulário globalmente */
-.theme-serene_moon input,
-.theme-serene_moon textarea,
-.theme-serene_moon select {
-  background-color: #FAF8F2 !important;
-  border-color: rgba(230, 212, 138, 0.5) !important;
-  color: #4B4637 !important;
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
 }
 
 .theme-pink_aura input,
 .theme-pink_aura textarea,
 .theme-pink_aura select {
-  background-color: #FDECF3 !important;
-  border-color: rgba(240, 166, 193, 0.5) !important;
-  color: #7A2E4D !important;
+  background-color: #FFFCFE !important;
+  border-color: rgba(168, 48, 96, 0.25) !important;
+  color: #6E1E42 !important;
+}
+
+
+/* ── ☁️ Céu Suave — azul profundo ── */
+.dashboard.theme-soft_sky,
+.dashboard-content.theme-soft_sky {
+  background: linear-gradient(150deg, #F5FBFF 0%, #EEF7FF 60%, #FAFEFF 100%) !important;
+}
+
+.dashboard.theme-soft_sky .dashboard-header {
+  background: linear-gradient(135deg, #26628A 0%, #3E82A8 100%);
+  color: white;
+  box-shadow: 0 4px 24px rgba(38, 98, 138, 0.45);
+}
+
+.dashboard.theme-soft_sky .dashboard-nav {
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(38, 98, 138, 0.14);
+  box-shadow: 0 2px 16px rgba(38, 98, 138, 0.07);
+}
+
+.dashboard.theme-soft_sky .nav-button {
+  color: #1A4A64;
+  border-color: rgba(38, 98, 138, 0.22);
+}
+
+.dashboard.theme-soft_sky .nav-button:hover {
+  background: rgba(38, 98, 138, 0.08);
+  border-color: #2E7898;
+  color: #1A5875;
+  box-shadow: 0 2px 8px rgba(38, 98, 138, 0.15);
+}
+
+.dashboard.theme-soft_sky .nav-button.active {
+  background: #2E7898;
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(38, 98, 138, 0.42);
+}
+
+.dashboard.theme-soft_sky .user-name,
+.dashboard.theme-soft_sky .user-pronoun,
+.dashboard.theme-soft_sky .user-points { color: white; }
+
+.dashboard.theme-soft_sky .logo-light .logo-text {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+  background: none !important;
+}
+
+.dashboard.theme-soft_sky .faq-button-header,
+.dashboard.theme-soft_sky .logout-button {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.dashboard.theme-soft_sky .faq-button-header:hover:not(:disabled),
+.dashboard.theme-soft_sky .logout-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
 }
 
 .theme-soft_sky input,
 .theme-soft_sky textarea,
 .theme-soft_sky select {
   background-color: #F0F8FF !important;
-  border-color: #B8D4E8 !important;
-  color: #6B9AC4 !important;
+  border-color: rgba(38, 98, 138, 0.25) !important;
+  color: #1A4A64 !important;
+}
+
+
+/* ── 🌿 Bruma Rosada — verde sálvia ── */
+.dashboard.theme-pink_mist,
+.dashboard-content.theme-pink_mist {
+  background: linear-gradient(150deg, #F5FAF7 0%, #EEF7F2 60%, #FAFCFB 100%) !important;
+}
+
+.dashboard.theme-pink_mist .dashboard-header {
+  background: linear-gradient(135deg, #285848 0%, #3E7860 100%);
+  color: white;
+  box-shadow: 0 4px 24px rgba(40, 88, 72, 0.45);
+}
+
+.dashboard.theme-pink_mist .dashboard-nav {
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(40, 88, 72, 0.14);
+  box-shadow: 0 2px 16px rgba(40, 88, 72, 0.07);
+}
+
+.dashboard.theme-pink_mist .nav-button {
+  color: #1A3D32;
+  border-color: rgba(40, 88, 72, 0.22);
+}
+
+.dashboard.theme-pink_mist .nav-button:hover {
+  background: rgba(40, 88, 72, 0.08);
+  border-color: #306858;
+  color: #1E5040;
+  box-shadow: 0 2px 8px rgba(40, 88, 72, 0.15);
+}
+
+.dashboard.theme-pink_mist .nav-button.active {
+  background: #306858;
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(40, 88, 72, 0.42);
+}
+
+.dashboard.theme-pink_mist .user-name,
+.dashboard.theme-pink_mist .user-pronoun,
+.dashboard.theme-pink_mist .user-points { color: white; }
+
+.dashboard.theme-pink_mist .logo-light .logo-text {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+  background: none !important;
+}
+
+.dashboard.theme-pink_mist .faq-button-header,
+.dashboard.theme-pink_mist .logout-button {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.dashboard.theme-pink_mist .faq-button-header:hover:not(:disabled),
+.dashboard.theme-pink_mist .logout-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
 }
 
 .theme-pink_mist input,
 .theme-pink_mist textarea,
 .theme-pink_mist select {
-  background-color: #F3F8F5 !important;
-  border-color: rgba(200, 222, 212, 0.5) !important;
-  color: #3E5E54 !important;
+  background-color: #F5FAF7 !important;
+  border-color: rgba(40, 88, 72, 0.25) !important;
+  color: #1A3D32 !important;
+}
+
+
+/* ── 🌅 Amanhecer Lilás — roxo médio ── */
+.dashboard.theme-lilac_dawn,
+.dashboard-content.theme-lilac_dawn {
+  background: linear-gradient(150deg, #FAF8FF 0%, #F4F0FF 60%, #FDFCFF 100%) !important;
+}
+
+.dashboard.theme-lilac_dawn .dashboard-header {
+  background: linear-gradient(135deg, #4A28A0 0%, #6848C0 100%);
+  color: white;
+  box-shadow: 0 4px 24px rgba(74, 40, 160, 0.45);
+}
+
+.dashboard.theme-lilac_dawn .dashboard-nav {
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(74, 40, 160, 0.14);
+  box-shadow: 0 2px 16px rgba(74, 40, 160, 0.07);
+}
+
+.dashboard.theme-lilac_dawn .nav-button {
+  color: #3A2070;
+  border-color: rgba(74, 40, 160, 0.22);
+}
+
+.dashboard.theme-lilac_dawn .nav-button:hover {
+  background: rgba(74, 40, 160, 0.08);
+  border-color: #5A3AA8;
+  color: #4A2888;
+  box-shadow: 0 2px 8px rgba(74, 40, 160, 0.15);
+}
+
+.dashboard.theme-lilac_dawn .nav-button.active {
+  background: #5A3AA8;
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(74, 40, 160, 0.42);
+}
+
+.dashboard.theme-lilac_dawn .user-name,
+.dashboard.theme-lilac_dawn .user-pronoun,
+.dashboard.theme-lilac_dawn .user-points { color: white; }
+
+.dashboard.theme-lilac_dawn .logo-light .logo-text {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+  background: none !important;
+}
+
+.dashboard.theme-lilac_dawn .faq-button-header,
+.dashboard.theme-lilac_dawn .logout-button {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.dashboard.theme-lilac_dawn .faq-button-header:hover:not(:disabled),
+.dashboard.theme-lilac_dawn .logout-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
 }
 
 .theme-lilac_dawn input,
 .theme-lilac_dawn textarea,
 .theme-lilac_dawn select {
-  background-color: #F2EEFA !important;
-  border-color: rgba(194, 180, 232, 0.5) !important;
-  color: #4B3F72 !important;
+  background-color: #F8F5FF !important;
+  border-color: rgba(74, 40, 160, 0.25) !important;
+  color: #3A2070 !important;
+}
+
+
+/* ── 🌸 Pétala Rosa — coral profundo ── */
+.dashboard.theme-petal,
+.dashboard-content.theme-petal {
+  background: linear-gradient(150deg, #FFF6F9 0%, #FFF0F5 60%, #FFFAFC 100%) !important;
+}
+
+.dashboard.theme-petal .dashboard-header {
+  background: linear-gradient(135deg, #961838 0%, #B83258 100%);
+  color: white;
+  box-shadow: 0 4px 24px rgba(150, 24, 56, 0.45);
+}
+
+.dashboard.theme-petal .dashboard-nav {
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(150, 24, 56, 0.14);
+  box-shadow: 0 2px 16px rgba(150, 24, 56, 0.07);
+}
+
+.dashboard.theme-petal .nav-button {
+  color: #6A1830;
+  border-color: rgba(150, 24, 56, 0.22);
+}
+
+.dashboard.theme-petal .nav-button:hover {
+  background: rgba(150, 24, 56, 0.08);
+  border-color: #B02848;
+  color: #881838;
+  box-shadow: 0 2px 8px rgba(150, 24, 56, 0.15);
+}
+
+.dashboard.theme-petal .nav-button.active {
+  background: #B02848;
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(150, 24, 56, 0.42);
+}
+
+.dashboard.theme-petal .user-name,
+.dashboard.theme-petal .user-pronoun,
+.dashboard.theme-petal .user-points { color: white; }
+
+.dashboard.theme-petal .logo-light .logo-text {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+  background: none !important;
+}
+
+.dashboard.theme-petal .faq-button-header,
+.dashboard.theme-petal .logout-button {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.dashboard.theme-petal .faq-button-header:hover:not(:disabled),
+.dashboard.theme-petal .logout-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
 }
 
 .theme-petal input,
 .theme-petal textarea,
 .theme-petal select {
-  background-color: #FFF0F6 !important;
-  border-color: rgba(229, 161, 188, 0.5) !important;
-  color: #7C3A55 !important;
-}
-
-.theme-mystic_portal input::placeholder,
-.theme-mystic_portal textarea::placeholder {
-  color: #B88FE6 !important;
-  opacity: 0.7 !important;
+  background-color: #FFF8FA !important;
+  border-color: rgba(150, 24, 56, 0.25) !important;
+  color: #6A1830 !important;
 }
 
 @media (max-width: 640px) {
