@@ -74,12 +74,12 @@ export const THEMES = {
     icon: '🌙',
     description: 'Calma, introspecção e acolhimento.',
     colors: {
-      primary: '#E6D48A',      // Destaque - Amarelo lunar suave
-      background: '#E0E4E8',   // Base - Azul acinzentado claro
-      secondary: '#F0F2F5',    // Base mais claro - Azul acinzentado muito claro
-      text: '#5A6B7A',         // Texto - Azul acinzentado escuro
-      accent: '#E6D48A',       // Destaque - Amarelo lunar suave
-      glow: 'rgba(230, 212, 138, 0.3)' // Glow - Dourado translúcido
+      primary: '#B8910E',      // Âmbar dourado rico
+      background: '#FEFBF0',   // Creme quase branco
+      secondary: '#FFFDF6',    // Branco quente
+      text: '#5C4A1E',         // Marrom dourado escuro
+      accent: '#C9A227',       // Ouro accent
+      glow: 'rgba(184, 145, 14, 0.28)'
     },
     requiredEssence: 50,
     theme: 'light'
@@ -90,12 +90,12 @@ export const THEMES = {
     icon: '✨',
     description: 'Empatia, afeto e presença.',
     colors: {
-      primary: '#F0A6C1',      // Destaque - Rosa vibrante
-      background: '#F6C1D6',   // Base - Rosa claro
-      secondary: '#FDECF3',    // Base mais claro - Rosa quase branco
-      text: '#7A2E4D',         // Texto - Rosa escuro
-      accent: '#F0A6C1',       // Destaque - Rosa vibrante
-      glow: 'rgba(240, 166, 193, 0.4)' // Glow - Rosa perolado
+      primary: '#C83E72',      // Rosa profundo vibrante
+      background: '#FFF8FB',   // Branco rosado
+      secondary: '#FFFCFE',    // Quase branco
+      text: '#6E1E42',         // Rosa muito escuro
+      accent: '#D84E80',       // Rosa accent
+      glow: 'rgba(200, 62, 114, 0.28)'
     },
     requiredEssence: 70,
     theme: 'light'
@@ -106,12 +106,12 @@ export const THEMES = {
     icon: '☁️',
     description: 'Serenidade, leveza e paz interior.',
     colors: {
-      primary: '#B8D4E8',      // Azul claro suave (primária)
-      background: '#F0F8FF',   // Azul céu muito claro (fundo)
-      secondary: '#E6F3FF',    // Azul quase branco (detalhes)
-      text: '#6B9AC4',         // Azul claro suave (texto)
-      accent: '#A8D0E8',       // Azul claro (acento)
-      glow: 'rgba(184, 212, 232, 0.3)'
+      primary: '#2E7898',      // Azul céu profundo
+      background: '#F5FBFF',   // Branco gelo
+      secondary: '#EEF8FF',    // Azul muito claro
+      text: '#1A4A64',         // Azul escuro
+      accent: '#3888A8',       // Azul accent
+      glow: 'rgba(46, 120, 152, 0.28)'
     },
     requiredEssence: 70,
     theme: 'light'
@@ -120,14 +120,14 @@ export const THEMES = {
     id: 'pink_mist',
     name: 'Bruma Rosada',
     icon: '🌿',
-    description: 'Cuidado, acolhimento, feminino suave.',
+    description: 'Cuidado, acolhimento, natureza suave.',
     colors: {
-      primary: '#E6C9D6',      // Destaque - Rosa suave
-      background: '#D8E4DC',   // Base - Verde claro acinzentado
-      secondary: '#F3F8F5',    // Base mais claro - Verde quase branco
-      text: '#5A6B5F',         // Texto - Verde acinzentado escuro
-      accent: '#E6C9D6',       // Destaque - Rosa suave
-      glow: 'rgba(200, 222, 212, 0.3)' // Glow - Verde translúcido
+      primary: '#306858',      // Verde sálvia profundo
+      background: '#F5FAF7',   // Branco menta
+      secondary: '#EEF7F2',    // Verde muito claro
+      text: '#1A3D32',         // Verde escuro
+      accent: '#3E7868',       // Verde sálvia accent
+      glow: 'rgba(48, 104, 88, 0.28)'
     },
     requiredEssence: 60,
     theme: 'light'
@@ -138,12 +138,12 @@ export const THEMES = {
     icon: '🌅',
     description: 'Espiritual, calmo, início de ciclos.',
     colors: {
-      primary: '#B19CD9',      // Destaque - Roxo suave
-      background: '#E6D9F0',   // Base - Lilás claro
-      secondary: '#F2EEFA',    // Base mais claro - Lilás quase branco
-      text: '#6B5B8A',         // Texto - Roxo acinzentado
-      accent: '#B19CD9',       // Destaque - Roxo suave
-      glow: 'rgba(194, 180, 232, 0.3)' // Glow - Lavanda
+      primary: '#5A3AA8',      // Roxo médio rico
+      background: '#FAF8FF',   // Branco lavanda
+      secondary: '#F4F0FF',    // Lavanda muito claro
+      text: '#3A2070',         // Roxo escuro
+      accent: '#6A48B8',       // Roxo accent
+      glow: 'rgba(90, 58, 168, 0.28)'
     },
     requiredEssence: 80,
     theme: 'light'
@@ -154,12 +154,12 @@ export const THEMES = {
     icon: '🌸',
     description: 'Delicado, emocional, seguro.',
     colors: {
-      primary: '#FF8FA3',      // Destaque - Coral rosado
-      background: '#FFF0F6',   // Base - Rosa muito claro
-      secondary: '#FFF8FB',    // Base mais claro - Rosa quase branco
-      text: '#8B4A5F',         // Texto - Rosa escuro
-      accent: '#FF8FA3',       // Destaque - Coral rosado
-      glow: 'rgba(255, 192, 203, 0.3)' // Glow - Blush suave
+      primary: '#B02848',      // Coral profundo
+      background: '#FFF6F9',   // Branco pétala
+      secondary: '#FFF0F5',    // Rosa muito claro
+      text: '#6A1830',         // Coral escuro
+      accent: '#C03858',       // Coral accent
+      glow: 'rgba(176, 40, 72, 0.28)'
     },
     requiredEssence: 100,
     theme: 'light'

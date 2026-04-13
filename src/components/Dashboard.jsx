@@ -11,6 +11,116 @@ import { setNotificationCallback, notifyEssenceGained, notifyAchievement } from 
 import { addEssence, DAILY_ESSENCE_LIMIT, THEMES, MYSTIC_TITLES, canUnlockMysticTitle, unlockMysticTitle } from '../utils/gamification'
 import './Dashboard.css'
 
+// Decorações mescladas de todos os temas no header
+function HeaderDecorations() {
+  const w = 'rgba(255,255,255,'
+  const heart   = 'M 16,27 C 7,18 2,13 2,8 C 2,3.6 5.6,0 10,0 C 12.4,0 14.7,1.1 16,3 C 17.3,1.1 19.6,0 22,0 C 26.4,0 30,3.6 30,8 C 30,13 25,18 16,27 Z'
+  const star4   = 'M 0,-9 L 2.2,-2.2 L 9,0 L 2.2,2.2 L 0,9 L -2.2,2.2 L -9,0 L -2.2,-2.2 Z'
+  const diamond = 'M 0,-9 L 6,0 L 0,9 L -6,0 Z'
+
+  return (
+    <div className="header-decorations" aria-hidden="true">
+      <svg viewBox="0 0 800 80" preserveAspectRatio="xMidYMid slice" className="header-decorations-svg">
+        <defs>
+          <mask id="hd-crescent">
+            <rect width="800" height="80" fill="white"/>
+            <circle cx="744" cy="11" r="16" fill="black"/>
+          </mask>
+        </defs>
+
+        {/* ── Raios de luz de fundo (lilac_dawn) ── */}
+        <g stroke={w+'0.06)'} strokeWidth="24" strokeLinecap="round">
+          <line x1="800" y1="80" x2="700" y2="-10"/>
+          <line x1="800" y1="80" x2="755" y2="-5"/>
+          <line x1="0"   y1="80" x2="85"  y2="-10"/>
+          <line x1="0"   y1="80" x2="40"  y2="-5"/>
+        </g>
+
+        {/* ── 🌙 Lua crescente (serene_moon) ── */}
+        <circle cx="735" cy="19" r="22" fill={w+'0.18)'} mask="url(#hd-crescent)"/>
+
+        {/* ── ☁️ Nuvem esquerda (soft_sky) ── */}
+        <g fill={w+'0.13)'} transform="translate(28,22)">
+          <circle cx="0"  cy="8"  r="9"/>
+          <circle cx="12" cy="4"  r="12"/>
+          <circle cx="24" cy="8"  r="9"/>
+          <circle cx="34" cy="10" r="7"/>
+          <rect x="-3" y="8" width="42" height="13" rx="3"/>
+        </g>
+
+        {/* ── ☁️ Nuvem central direita (soft_sky) ── */}
+        <g fill={w+'0.09)'} transform="translate(468,30)">
+          <circle cx="0"  cy="5" r="7"/>
+          <circle cx="9"  cy="3" r="9"/>
+          <circle cx="20" cy="5" r="7"/>
+          <rect x="-2" y="5" width="25" height="9" rx="2"/>
+        </g>
+
+        {/* ── 🐦 Pássaros (soft_sky) ── */}
+        <g stroke={w+'0.22)'} strokeWidth="1.8" fill="none" strokeLinecap="round">
+          <path d="M112,14 Q115,10 118,14 Q121,10 124,14"/>
+          <path d="M540,16 Q543,12 546,16 Q549,12 552,16"/>
+          <path d="M558,26 Q561,22 564,26 Q567,22 570,26"/>
+        </g>
+
+        {/* ── 🌿 Folhas (pink_mist) ── */}
+        <ellipse cx="218" cy="20" rx="20" ry="7"   fill={w+'0.14)'} transform="rotate(-42,218,20)"/>
+        <ellipse cx="258" cy="38" rx="16" ry="5.5" fill={w+'0.10)'} transform="rotate(28,258,38)"/>
+        <ellipse cx="590" cy="14" rx="18" ry="6.5" fill={w+'0.13)'} transform="rotate(-50,590,14)"/>
+        <ellipse cx="625" cy="38" rx="14" ry="5"   fill={w+'0.09)'} transform="rotate(35,625,38)"/>
+
+        {/* ── 💜 Corações (pink_aura) ── */}
+        <path d={heart} fill={w+'0.15)'} transform="translate(330,6)  scale(0.78)"/>
+        <path d={heart} fill={w+'0.11)'} transform="translate(680,22) scale(0.56)"/>
+        <path d={heart} fill={w+'0.09)'} transform="translate(162,28) scale(0.50)"/>
+        <path d={heart} fill={w+'0.08)'} transform="translate(440,32) scale(0.44)"/>
+
+        {/* ── 💎 Diamantes (lilac_dawn) ── */}
+        <path d={diamond} fill={w+'0.16)'} transform="translate(420,18)"/>
+        <path d={diamond} fill={w+'0.12)'} transform="translate(193,12) scale(0.8)"/>
+        <path d={diamond} fill={w+'0.11)'} transform="translate(382,36) scale(0.75)"/>
+        <path d={diamond} fill={w+'0.10)'} transform="translate(650,34) scale(0.72)"/>
+
+        {/* ── ⭐ Estrelas 4 pontas (serene_moon / lilac_dawn) ── */}
+        <path d={star4} fill={w+'0.20)'} transform="translate(616,13) scale(0.92)"/>
+        <path d={star4} fill={w+'0.16)'} transform="translate(474,22) scale(0.70)"/>
+        <path d={star4} fill={w+'0.14)'} transform="translate(762,28) scale(0.65)"/>
+        <path d={star4} fill={w+'0.12)'} transform="translate(290,16) scale(0.55)"/>
+        <path d={star4} fill={w+'0.10)'} transform="translate(86,36)  scale(0.52)"/>
+        <path d={star4} fill={w+'0.09)'} transform="translate(170,46) scale(0.48)"/>
+
+        {/* ── 🌸 Flor de 5 pétalas (petal) ── */}
+        <g transform="translate(356,44)" fill={w+'0.11)'}>
+          <ellipse cx="0" cy="-8" rx="4"   ry="6" transform="rotate(0)"/>
+          <ellipse cx="0" cy="-8" rx="4"   ry="6" transform="rotate(72)"/>
+          <ellipse cx="0" cy="-8" rx="4"   ry="6" transform="rotate(144)"/>
+          <ellipse cx="0" cy="-8" rx="4"   ry="6" transform="rotate(216)"/>
+          <ellipse cx="0" cy="-8" rx="4"   ry="6" transform="rotate(288)"/>
+          <circle  cx="0" cy="0"  r="2.8"          fill={w+'0.20)'}/>
+        </g>
+
+        {/* ── 🌸 Pétalas soltas (petal) ── */}
+        <ellipse cx="138" cy="20" rx="12"  ry="4.5" fill={w+'0.13)'} transform="rotate(-40,138,20)"/>
+        <ellipse cx="402" cy="10" rx="12"  ry="4.5" fill={w+'0.11)'} transform="rotate(55,402,10)"/>
+        <ellipse cx="500" cy="46" rx="11"  ry="4"   fill={w+'0.10)'} transform="rotate(-28,500,46)"/>
+        <ellipse cx="716" cy="40" rx="10"  ry="4"   fill={w+'0.12)'} transform="rotate(-22,716,40)"/>
+
+        {/* ── Círculos de brilho (lilac_dawn) ── */}
+        <circle cx="740" cy="28" r="20" fill="none" stroke={w+'0.08)'} strokeWidth="1.5"/>
+        <circle cx="740" cy="28" r="30" fill="none" stroke={w+'0.05)'} strokeWidth="1"/>
+
+        {/* ── Pontos brilhantes espalhados ── */}
+        <circle cx="308" cy="12" r="2.5" fill={w+'0.18)'}/>
+        <circle cx="455" cy="40" r="2"   fill={w+'0.15)'}/>
+        <circle cx="663" cy="18" r="2.5" fill={w+'0.20)'}/>
+        <circle cx="70"  cy="48" r="1.8" fill={w+'0.12)'}/>
+        <circle cx="776" cy="52" r="1.5" fill={w+'0.14)'}/>
+        <circle cx="530" cy="52" r="2"   fill={w+'0.10)'}/>
+      </svg>
+    </div>
+  )
+}
+
 // Componente de barra de progresso diária compacta
 function DailyEssenceProgressBar({ user }) {
   const today = new Date().toDateString()
@@ -18,17 +128,26 @@ function DailyEssenceProgressBar({ user }) {
   const todayEssence = dailyEssence[today] || 0
   const progressPercentage = Math.min(100, (todayEssence / DAILY_ESSENCE_LIMIT) * 100)
   const isComplete = todayEssence >= DAILY_ESSENCE_LIMIT
+  const isWarning = !isComplete && progressPercentage >= 80
+
+  if (isComplete) {
+    return (
+      <div className="daily-essence-complete-badge" title="Limite diário atingido!">
+        ✨ {DAILY_ESSENCE_LIMIT}/{DAILY_ESSENCE_LIMIT} hoje
+      </div>
+    )
+  }
 
   return (
-    <div className="daily-essence-bar-compact">
-      <span className="daily-essence-text">{todayEssence} / {DAILY_ESSENCE_LIMIT}</span>
+    <div className="daily-essence-bar-compact" title={`${todayEssence} de ${DAILY_ESSENCE_LIMIT} Essências hoje`}>
+      <span className={`daily-essence-text ${isWarning ? 'warning' : ''}`}>
+        {todayEssence}<span className="daily-essence-limit">/{DAILY_ESSENCE_LIMIT}</span>
+      </span>
       <div className="daily-essence-bar-compact-container">
-        <div 
-          className={`daily-essence-bar-compact-fill ${isComplete ? 'complete' : ''}`}
+        <div
+          className={`daily-essence-bar-compact-fill ${isWarning ? 'warning' : ''}`}
           style={{ width: `${progressPercentage}%` }}
-        >
-          {isComplete && <span className="daily-essence-check">✔</span>}
-        </div>
+        />
       </div>
     </div>
   )
@@ -251,6 +370,7 @@ function Dashboard({ user, onLogout }) {
 
       {/* Header */}
       <header className="dashboard-header">
+        <HeaderDecorations />
         <div className="header-content">
           <Logo size="medium" showText={true} variant="light" />
           <div className="header-right">
