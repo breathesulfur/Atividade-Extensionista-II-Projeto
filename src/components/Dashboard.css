@@ -466,6 +466,12 @@
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
 }
 
+/* Logo sempre visível em qualquer header temático */
+[class*="theme-"] .dashboard-header .logo-icon {
+  filter: brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.20)) !important;
+  animation: none !important;
+}
+
 /* ── 🌙 Lua Serena — âmbar dourado ── */
 .dashboard.theme-serene_moon,
 .dashboard-content.theme-serene_moon {

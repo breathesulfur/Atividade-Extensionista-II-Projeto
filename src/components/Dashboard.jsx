@@ -11,164 +11,111 @@ import { setNotificationCallback, notifyEssenceGained, notifyAchievement } from 
 import { addEssence, DAILY_ESSENCE_LIMIT, THEMES, MYSTIC_TITLES, canUnlockMysticTitle, unlockMysticTitle } from '../utils/gamification'
 import './Dashboard.css'
 
-// Decorações temáticas do header
-function ThemeDecorations({ theme }) {
-  if (!theme) return null
-
+// Decorações mescladas de todos os temas no header
+function HeaderDecorations() {
   const w = 'rgba(255,255,255,'
-  const heart = 'M 16,27 C 7,18 2,13 2,8 C 2,3.6 5.6,0 10,0 C 12.4,0 14.7,1.1 16,3 C 17.3,1.1 19.6,0 22,0 C 26.4,0 30,3.6 30,8 C 30,13 25,18 16,27 Z'
-  const star4 = 'M 0,-9 L 2.2,-2.2 L 9,0 L 2.2,2.2 L 0,9 L -2.2,2.2 L -9,0 L -2.2,-2.2 Z'
+  const heart   = 'M 16,27 C 7,18 2,13 2,8 C 2,3.6 5.6,0 10,0 C 12.4,0 14.7,1.1 16,3 C 17.3,1.1 19.6,0 22,0 C 26.4,0 30,3.6 30,8 C 30,13 25,18 16,27 Z'
+  const star4   = 'M 0,-9 L 2.2,-2.2 L 9,0 L 2.2,2.2 L 0,9 L -2.2,2.2 L -9,0 L -2.2,-2.2 Z'
   const diamond = 'M 0,-9 L 6,0 L 0,9 L -6,0 Z'
-
-  const themes = {
-    serene_moon: (
-      <>
-        <defs>
-          <mask id="crescent-m">
-            <rect width="800" height="80" fill="white"/>
-            <circle cx="744" cy="11" r="16" fill="black"/>
-          </mask>
-        </defs>
-        {/* Lua crescente */}
-        <circle cx="735" cy="19" r="22" fill={w+'0.2)'} mask="url(#crescent-m)"/>
-        {/* Estrelas dispersas */}
-        <circle cx="610" cy="11" r="2.5" fill={w+'0.22)'}/>
-        <circle cx="662" cy="28" r="1.8" fill={w+'0.18)'}/>
-        <circle cx="575" cy="22" r="1.5" fill={w+'0.15)'}/>
-        <circle cx="690" cy="38" r="2"   fill={w+'0.18)'}/>
-        <circle cx="550" cy="13" r="2"   fill={w+'0.16)'}/>
-        <circle cx="80"  cy="18" r="3"   fill={w+'0.1)'}/>
-        <circle cx="118" cy="35" r="1.8" fill={w+'0.1)'}/>
-        {/* Estrelas de 4 pontas */}
-        <path d={star4} fill={w+'0.2)'}  transform="translate(637,14) scale(0.9)"/>
-        <path d={star4} fill={w+'0.14)'} transform="translate(564,33) scale(0.6)"/>
-        <path d={star4} fill={w+'0.12)'} transform="translate(95,38) scale(0.55)"/>
-      </>
-    ),
-
-    pink_aura: (
-      <>
-        {/* Corações */}
-        <path d={heart} fill={w+'0.18)'} transform="translate(693,10) scale(0.85)"/>
-        <path d={heart} fill={w+'0.12)'} transform="translate(730,28) scale(0.55)"/>
-        <path d={heart} fill={w+'0.1)'}  transform="translate(560,22) scale(0.5)"/>
-        <path d={heart} fill={w+'0.1)'}  transform="translate(80,14) scale(0.6)"/>
-        {/* Estrelas faíscas */}
-        <path d={star4} fill={w+'0.22)'} transform="translate(655,12) scale(0.9)"/>
-        <path d={star4} fill={w+'0.18)'} transform="translate(614,30) scale(0.65)"/>
-        <path d={star4} fill={w+'0.15)'} transform="translate(700,35) scale(0.6)"/>
-        <path d={star4} fill={w+'0.12)'} transform="translate(120,30) scale(0.55)"/>
-        {/* Círculos suaves */}
-        <circle cx="745" cy="14" r="7" fill={w+'0.07)'}/>
-        <circle cx="762" cy="36" r="5" fill={w+'0.08)'}/>
-      </>
-    ),
-
-    soft_sky: (
-      <>
-        {/* Nuvens — grupos de círculos */}
-        <g fill={w+'0.17)'} transform="translate(610,18)">
-          <circle cx="0"  cy="8"  r="10"/>
-          <circle cx="13" cy="4"  r="13"/>
-          <circle cx="27" cy="8"  r="10"/>
-          <circle cx="38" cy="10" r="8"/>
-          <rect x="-4" y="8" width="48" height="14" rx="3"/>
-        </g>
-        <g fill={w+'0.11)'} transform="translate(530,34)">
-          <circle cx="0"  cy="5" r="7"/>
-          <circle cx="9"  cy="3" r="9"/>
-          <circle cx="19" cy="5" r="7"/>
-          <rect x="-3" y="5" width="27" height="10" rx="2"/>
-        </g>
-        <g fill={w+'0.08)'} transform="translate(60,22)">
-          <circle cx="0"  cy="6" r="8"/>
-          <circle cx="10" cy="3" r="10"/>
-          <circle cx="20" cy="6" r="8"/>
-          <rect x="-3" y="6" width="28" height="10" rx="2"/>
-        </g>
-        {/* Pássaros */}
-        <g stroke={w+'0.26)'} strokeWidth="2" fill="none" strokeLinecap="round">
-          <path d="M572,14 Q576,10 580,14 Q584,10 588,14"/>
-          <path d="M596,24 Q599,20 602,24 Q605,20 608,24"/>
-          <path d="M556,30 Q559,27 562,30 Q565,27 568,30"/>
-          <path d="M115,16 Q118,12 121,16 Q124,12 127,16"/>
-        </g>
-      </>
-    ),
-
-    pink_mist: (
-      <>
-        {/* Folhas — elipses rotacionadas */}
-        <ellipse cx="695" cy="18" rx="22" ry="8" fill={w+'0.16)'} transform="rotate(-35,695,18)"/>
-        <ellipse cx="730" cy="32" rx="18" ry="7" fill={w+'0.13)'} transform="rotate(22,730,32)"/>
-        <ellipse cx="658" cy="14" rx="20" ry="7" fill={w+'0.18)'} transform="rotate(-55,658,14)"/>
-        <ellipse cx="755" cy="22" rx="15" ry="6" fill={w+'0.11)'} transform="rotate(42,755,22)"/>
-        <ellipse cx="100" cy="22" rx="16" ry="6" fill={w+'0.12)'} transform="rotate(-28,100,22)"/>
-        <ellipse cx="70"  cy="38" rx="14" ry="5" fill={w+'0.1)'}  transform="rotate(48,70,38)"/>
-        {/* Nervuras centrais das folhas */}
-        <line x1="677" y1="10" x2="713" y2="26" stroke={w+'0.14)'} strokeWidth="1" transform="rotate(-35,695,18)"/>
-        {/* Raminhos */}
-        <path d="M680,70 C690,50 712,35 722,14" stroke={w+'0.12)'} strokeWidth="1.5" fill="none"/>
-        <path d="M720,70 C724,52 730,38 740,24" stroke={w+'0.1)'}  strokeWidth="1.2" fill="none"/>
-      </>
-    ),
-
-    lilac_dawn: (
-      <>
-        {/* Raios de luz diagonais */}
-        <g stroke={w+'0.1)'} strokeWidth="18" strokeLinecap="round">
-          <line x1="800" y1="80" x2="700" y2="-10"/>
-          <line x1="800" y1="80" x2="750" y2="-10"/>
-          <line x1="800" y1="80" x2="790" y2="-10"/>
-        </g>
-        {/* Diamantes */}
-        <path d={diamond} fill={w+'0.18)'} transform="translate(630,20)"/>
-        <path d={diamond} fill={w+'0.2)'}  transform="translate(662,10) scale(0.8)"/>
-        <path d={diamond} fill={w+'0.13)'} transform="translate(604,34) scale(0.75)"/>
-        <path d={diamond} fill={w+'0.1)'}  transform="translate(90,24) scale(0.7)"/>
-        {/* Estrelas */}
-        <path d={star4} fill={w+'0.22)'} transform="translate(700,15) scale(0.95)"/>
-        <path d={star4} fill={w+'0.16)'} transform="translate(560,20) scale(0.7)"/>
-        <path d={star4} fill={w+'0.13)'} transform="translate(115,32) scale(0.6)"/>
-        {/* Círculos de brilho */}
-        <circle cx="740" cy="30" r="18" fill="none" stroke={w+'0.1)'} strokeWidth="1.5"/>
-        <circle cx="740" cy="30" r="28" fill="none" stroke={w+'0.07)'} strokeWidth="1"/>
-      </>
-    ),
-
-    petal: (
-      <>
-        {/* Pétalas caindo — elipses finas rotacionadas */}
-        <ellipse cx="705" cy="14" rx="14" ry="5.5" fill={w+'0.18)'} transform="rotate(-42,705,14)"/>
-        <ellipse cx="728" cy="30" rx="12" ry="5"   fill={w+'0.15)'} transform="rotate(26,728,30)"/>
-        <ellipse cx="748" cy="11" rx="13" ry="5"   fill={w+'0.14)'} transform="rotate(62,748,11)"/>
-        <ellipse cx="763" cy="36" rx="11" ry="4.5" fill={w+'0.16)'} transform="rotate(-22,763,36)"/>
-        <ellipse cx="682" cy="36" rx="10" ry="4"   fill={w+'0.12)'} transform="rotate(50,682,36)"/>
-        <ellipse cx="90"  cy="20" rx="13" ry="5"   fill={w+'0.13)'} transform="rotate(-38,90,20)"/>
-        <ellipse cx="112" cy="36" rx="11" ry="4.5" fill={w+'0.11)'} transform="rotate(30,112,36)"/>
-        {/* Flor de 5 pétalas */}
-        <g transform="translate(660,20)" fill={w+'0.13)'}>
-          <ellipse cx="0" cy="-9" rx="4.5" ry="7" transform="rotate(0)"/>
-          <ellipse cx="0" cy="-9" rx="4.5" ry="7" transform="rotate(72)"/>
-          <ellipse cx="0" cy="-9" rx="4.5" ry="7" transform="rotate(144)"/>
-          <ellipse cx="0" cy="-9" rx="4.5" ry="7" transform="rotate(216)"/>
-          <ellipse cx="0" cy="-9" rx="4.5" ry="7" transform="rotate(288)"/>
-          <circle cx="0" cy="0" r="3.5" fill={w+'0.22)'}/>
-        </g>
-        {/* Pequenos pontos */}
-        <circle cx="600" cy="20" r="3" fill={w+'0.12)'}/>
-        <circle cx="580" cy="36" r="2" fill={w+'0.1)'}/>
-        <circle cx="632" cy="10" r="2" fill={w+'0.14)'}/>
-      </>
-    ),
-  }
-
-  if (!themes[theme]) return null
 
   return (
     <div className="header-decorations" aria-hidden="true">
       <svg viewBox="0 0 800 80" preserveAspectRatio="xMidYMid slice" className="header-decorations-svg">
-        {themes[theme]}
+        <defs>
+          <mask id="hd-crescent">
+            <rect width="800" height="80" fill="white"/>
+            <circle cx="744" cy="11" r="16" fill="black"/>
+          </mask>
+        </defs>
+
+        {/* ── Raios de luz de fundo (lilac_dawn) ── */}
+        <g stroke={w+'0.06)'} strokeWidth="24" strokeLinecap="round">
+          <line x1="800" y1="80" x2="700" y2="-10"/>
+          <line x1="800" y1="80" x2="755" y2="-5"/>
+          <line x1="0"   y1="80" x2="85"  y2="-10"/>
+          <line x1="0"   y1="80" x2="40"  y2="-5"/>
+        </g>
+
+        {/* ── 🌙 Lua crescente (serene_moon) ── */}
+        <circle cx="735" cy="19" r="22" fill={w+'0.18)'} mask="url(#hd-crescent)"/>
+
+        {/* ── ☁️ Nuvem esquerda (soft_sky) ── */}
+        <g fill={w+'0.13)'} transform="translate(28,22)">
+          <circle cx="0"  cy="8"  r="9"/>
+          <circle cx="12" cy="4"  r="12"/>
+          <circle cx="24" cy="8"  r="9"/>
+          <circle cx="34" cy="10" r="7"/>
+          <rect x="-3" y="8" width="42" height="13" rx="3"/>
+        </g>
+
+        {/* ── ☁️ Nuvem central direita (soft_sky) ── */}
+        <g fill={w+'0.09)'} transform="translate(468,30)">
+          <circle cx="0"  cy="5" r="7"/>
+          <circle cx="9"  cy="3" r="9"/>
+          <circle cx="20" cy="5" r="7"/>
+          <rect x="-2" y="5" width="25" height="9" rx="2"/>
+        </g>
+
+        {/* ── 🐦 Pássaros (soft_sky) ── */}
+        <g stroke={w+'0.22)'} strokeWidth="1.8" fill="none" strokeLinecap="round">
+          <path d="M112,14 Q115,10 118,14 Q121,10 124,14"/>
+          <path d="M540,16 Q543,12 546,16 Q549,12 552,16"/>
+          <path d="M558,26 Q561,22 564,26 Q567,22 570,26"/>
+        </g>
+
+        {/* ── 🌿 Folhas (pink_mist) ── */}
+        <ellipse cx="218" cy="20" rx="20" ry="7"   fill={w+'0.14)'} transform="rotate(-42,218,20)"/>
+        <ellipse cx="258" cy="38" rx="16" ry="5.5" fill={w+'0.10)'} transform="rotate(28,258,38)"/>
+        <ellipse cx="590" cy="14" rx="18" ry="6.5" fill={w+'0.13)'} transform="rotate(-50,590,14)"/>
+        <ellipse cx="625" cy="38" rx="14" ry="5"   fill={w+'0.09)'} transform="rotate(35,625,38)"/>
+
+        {/* ── 💜 Corações (pink_aura) ── */}
+        <path d={heart} fill={w+'0.15)'} transform="translate(330,6)  scale(0.78)"/>
+        <path d={heart} fill={w+'0.11)'} transform="translate(680,22) scale(0.56)"/>
+        <path d={heart} fill={w+'0.09)'} transform="translate(162,28) scale(0.50)"/>
+        <path d={heart} fill={w+'0.08)'} transform="translate(440,32) scale(0.44)"/>
+
+        {/* ── 💎 Diamantes (lilac_dawn) ── */}
+        <path d={diamond} fill={w+'0.16)'} transform="translate(420,18)"/>
+        <path d={diamond} fill={w+'0.12)'} transform="translate(193,12) scale(0.8)"/>
+        <path d={diamond} fill={w+'0.11)'} transform="translate(382,36) scale(0.75)"/>
+        <path d={diamond} fill={w+'0.10)'} transform="translate(650,34) scale(0.72)"/>
+
+        {/* ── ⭐ Estrelas 4 pontas (serene_moon / lilac_dawn) ── */}
+        <path d={star4} fill={w+'0.20)'} transform="translate(616,13) scale(0.92)"/>
+        <path d={star4} fill={w+'0.16)'} transform="translate(474,22) scale(0.70)"/>
+        <path d={star4} fill={w+'0.14)'} transform="translate(762,28) scale(0.65)"/>
+        <path d={star4} fill={w+'0.12)'} transform="translate(290,16) scale(0.55)"/>
+        <path d={star4} fill={w+'0.10)'} transform="translate(86,36)  scale(0.52)"/>
+        <path d={star4} fill={w+'0.09)'} transform="translate(170,46) scale(0.48)"/>
+
+        {/* ── 🌸 Flor de 5 pétalas (petal) ── */}
+        <g transform="translate(356,44)" fill={w+'0.11)'}>
+          <ellipse cx="0" cy="-8" rx="4"   ry="6" transform="rotate(0)"/>
+          <ellipse cx="0" cy="-8" rx="4"   ry="6" transform="rotate(72)"/>
+          <ellipse cx="0" cy="-8" rx="4"   ry="6" transform="rotate(144)"/>
+          <ellipse cx="0" cy="-8" rx="4"   ry="6" transform="rotate(216)"/>
+          <ellipse cx="0" cy="-8" rx="4"   ry="6" transform="rotate(288)"/>
+          <circle  cx="0" cy="0"  r="2.8"          fill={w+'0.20)'}/>
+        </g>
+
+        {/* ── 🌸 Pétalas soltas (petal) ── */}
+        <ellipse cx="138" cy="20" rx="12"  ry="4.5" fill={w+'0.13)'} transform="rotate(-40,138,20)"/>
+        <ellipse cx="402" cy="10" rx="12"  ry="4.5" fill={w+'0.11)'} transform="rotate(55,402,10)"/>
+        <ellipse cx="500" cy="46" rx="11"  ry="4"   fill={w+'0.10)'} transform="rotate(-28,500,46)"/>
+        <ellipse cx="716" cy="40" rx="10"  ry="4"   fill={w+'0.12)'} transform="rotate(-22,716,40)"/>
+
+        {/* ── Círculos de brilho (lilac_dawn) ── */}
+        <circle cx="740" cy="28" r="20" fill="none" stroke={w+'0.08)'} strokeWidth="1.5"/>
+        <circle cx="740" cy="28" r="30" fill="none" stroke={w+'0.05)'} strokeWidth="1"/>
+
+        {/* ── Pontos brilhantes espalhados ── */}
+        <circle cx="308" cy="12" r="2.5" fill={w+'0.18)'}/>
+        <circle cx="455" cy="40" r="2"   fill={w+'0.15)'}/>
+        <circle cx="663" cy="18" r="2.5" fill={w+'0.20)'}/>
+        <circle cx="70"  cy="48" r="1.8" fill={w+'0.12)'}/>
+        <circle cx="776" cy="52" r="1.5" fill={w+'0.14)'}/>
+        <circle cx="530" cy="52" r="2"   fill={w+'0.10)'}/>
       </svg>
     </div>
   )
@@ -423,7 +370,7 @@ function Dashboard({ user, onLogout }) {
 
       {/* Header */}
       <header className="dashboard-header">
-        <ThemeDecorations theme={currentUser.activeTheme} />
+        <HeaderDecorations />
         <div className="header-content">
           <Logo size="medium" showText={true} variant="light" />
           <div className="header-right">
