@@ -811,7 +811,7 @@
   }
   to {
     opacity: 1;
-    max-height: 5000px;
+    max-height: 20000px;
     padding-top: 0;
     padding-bottom: var(--spacing-lg);
   }

@@ -199,10 +199,9 @@
 /* Botão de ação positiva: ENTRAR no grupo
    Usa cores do tema ativo, com microanimações suaves */
 .join-group-button:not(.joined) {
-  /* Estilos base - serão sobrescritos pelos temas */
-  background: var(--primary);
+  background: var(--gradient-mystic);
   color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px var(--shadow-mystic);
 }
 
 .join-group-button:not(.joined):hover {
@@ -269,7 +268,7 @@
 
 /* Botão de visualizar grupo (ação positiva) */
 .view-group-button {
-  background: var(--primary);
+  background: var(--gradient-mystic);
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -277,12 +276,12 @@
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  box-shadow: 0 2px 10px var(--shadow-mystic);
 }
 
 .view-group-button:hover {
-  background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 15px var(--shadow-mystic);
 }
 
 /* Botão de excluir grupo (apenas para criadores) */
@@ -319,30 +318,32 @@
 
 /* 🌙 TEMA: Lua Serena */
 .theme-serene_moon .view-group-button {
-  background: var(--theme-primary, #E6D48A);
-  color: var(--theme-text, #5A6B7A);
-  box-shadow: 0 2px 8px var(--theme-glow, rgba(230, 212, 138, 0.3));
+  background: linear-gradient(135deg, #A07808 0%, #C49820 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(160, 120, 8, 0.3);
   font-weight: 700;
 }
 
 .theme-serene_moon .view-group-button:hover {
-  background: var(--theme-accent, #DCCB78);
+  background: linear-gradient(135deg, #A07808 0%, #C49820 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--theme-glow, rgba(230, 212, 138, 0.4));
+  box-shadow: 0 4px 15px rgba(160, 120, 8, 0.45);
 }
 
 /* Botão ENTRAR - usa cores do tema */
 .theme-serene_moon .join-group-button:not(.joined) {
-  background: var(--theme-primary, #E6D48A);
-  color: var(--theme-text, #5A6B7A);
-  box-shadow: 0 2px 8px var(--theme-glow, rgba(230, 212, 138, 0.3));
+  background: linear-gradient(135deg, #A07808 0%, #C49820 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(160, 120, 8, 0.3);
   font-weight: 700;
 }
 
 .theme-serene_moon .join-group-button:not(.joined):hover {
-  background: var(--theme-accent, #DCCB78);
+  background: linear-gradient(135deg, #A07808 0%, #C49820 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--theme-glow, rgba(230, 212, 138, 0.4));
+  box-shadow: 0 4px 15px rgba(160, 120, 8, 0.45);
 }
 
 /* Botão SAIR - neutro, sem cores do tema */
@@ -359,30 +360,32 @@
 
 /* ✨ TEMA: Aura Rosa */
 .theme-pink_aura .view-group-button {
-  background: var(--theme-primary, #F0A6C1);
-  color: var(--theme-text, #7A2E4D);
-  box-shadow: 0 2px 8px var(--theme-glow, rgba(240, 166, 193, 0.4));
+  background: linear-gradient(135deg, #A83060 0%, #CC4878 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(168, 48, 96, 0.3);
   font-weight: 700;
 }
 
 .theme-pink_aura .view-group-button:hover {
-  background: var(--theme-accent, #E894B3);
+  background: linear-gradient(135deg, #A83060 0%, #CC4878 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--theme-glow, rgba(240, 166, 193, 0.5));
+  box-shadow: 0 4px 15px rgba(168, 48, 96, 0.45);
 }
 
 /* Botão ENTRAR - usa cores do tema */
 .theme-pink_aura .join-group-button:not(.joined) {
-  background: var(--theme-primary, #F0A6C1);
-  color: var(--theme-text, #7A2E4D);
-  box-shadow: 0 2px 8px var(--theme-glow, rgba(240, 166, 193, 0.4));
+  background: linear-gradient(135deg, #A83060 0%, #CC4878 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(168, 48, 96, 0.3);
   font-weight: 700;
 }
 
 .theme-pink_aura .join-group-button:not(.joined):hover {
-  background: var(--theme-accent, #E894B3);
+  background: linear-gradient(135deg, #A83060 0%, #CC4878 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--theme-glow, rgba(240, 166, 193, 0.5));
+  box-shadow: 0 4px 15px rgba(168, 48, 96, 0.45);
 }
 
 /* Botão SAIR - neutro, sem cores do tema */
@@ -397,34 +400,34 @@
   border-color: var(--theme-primary, #F0A6C1);
 }
 
-/* ☁️ TEMA: Céu Suave - Tons de azul claro */
+/* ☁️ TEMA: Céu Suave */
 .theme-soft_sky .view-group-button {
-  background: var(--theme-primary, #B8D4E8);
-  color: var(--theme-background, #F0F8FF);
-  box-shadow: 0 2px 8px rgba(184, 212, 232, 0.3);
+  background: linear-gradient(135deg, #26628A 0%, #3E82A8 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(38, 98, 138, 0.3);
   font-weight: 700;
 }
 
 .theme-soft_sky .view-group-button:hover {
-  background: var(--theme-accent, #A8D0E8);
+  background: linear-gradient(135deg, #26628A 0%, #3E82A8 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(184, 212, 232, 0.4);
-  color: var(--theme-background, #F0F8FF);
+  box-shadow: 0 4px 15px rgba(38, 98, 138, 0.45);
 }
 
 /* Botão ENTRAR - usa cores do tema */
 .theme-soft_sky .join-group-button:not(.joined) {
-  background: var(--theme-primary, #B8D4E8);
-  color: var(--theme-background, #F0F8FF);
-  box-shadow: 0 2px 8px rgba(184, 212, 232, 0.3);
+  background: linear-gradient(135deg, #26628A 0%, #3E82A8 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(38, 98, 138, 0.3);
   font-weight: 700;
 }
 
 .theme-soft_sky .join-group-button:not(.joined):hover {
-  background: var(--theme-accent, #A8D0E8);
+  background: linear-gradient(135deg, #26628A 0%, #3E82A8 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(184, 212, 232, 0.4);
-  color: var(--theme-background, #F0F8FF);
+  box-shadow: 0 4px 15px rgba(38, 98, 138, 0.45);
 }
 
 /* Botão SAIR - neutro, sem cores do tema */
@@ -601,29 +604,31 @@
 
 /* 🌿 TEMA: Bruma Rosada - botões */
 .theme-pink_mist .view-group-button {
-  background: var(--theme-primary, #E6C9D6);
-  color: var(--theme-text, #5A6B5F);
-  box-shadow: 0 2px 8px var(--theme-glow, rgba(200, 222, 212, 0.3));
+  background: linear-gradient(135deg, #285848 0%, #3E7860 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(40, 88, 72, 0.3);
   font-weight: 700;
 }
 
 .theme-pink_mist .view-group-button:hover {
-  background: var(--theme-accent, #D8B8C8);
+  background: linear-gradient(135deg, #285848 0%, #3E7860 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--theme-glow, rgba(200, 222, 212, 0.4));
+  box-shadow: 0 4px 15px rgba(40, 88, 72, 0.45);
 }
 
 .theme-pink_mist .join-group-button:not(.joined) {
-  background: var(--theme-primary, #E6C9D6);
-  color: var(--theme-text, #5A6B5F);
-  box-shadow: 0 2px 8px var(--theme-glow, rgba(200, 222, 212, 0.3));
+  background: linear-gradient(135deg, #285848 0%, #3E7860 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(40, 88, 72, 0.3);
   font-weight: 700;
 }
 
 .theme-pink_mist .join-group-button:not(.joined):hover {
-  background: var(--theme-accent, #D8B8C8);
+  background: linear-gradient(135deg, #285848 0%, #3E7860 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--theme-glow, rgba(200, 222, 212, 0.4));
+  box-shadow: 0 4px 15px rgba(40, 88, 72, 0.45);
 }
 
 .theme-pink_mist .join-group-button.joined {
@@ -689,29 +694,31 @@
 
 /* 🌅 TEMA: Amanhecer Lilás - botões */
 .theme-lilac_dawn .view-group-button {
-  background: var(--theme-primary, #B19CD9);
-  color: var(--theme-text, #6B5B8A);
-  box-shadow: 0 2px 8px var(--theme-glow, rgba(194, 180, 232, 0.3));
+  background: linear-gradient(135deg, #4A28A0 0%, #6848C0 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(74, 40, 160, 0.3);
   font-weight: 700;
 }
 
 .theme-lilac_dawn .view-group-button:hover {
-  background: var(--theme-accent, #A08BC8);
+  background: linear-gradient(135deg, #4A28A0 0%, #6848C0 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--theme-glow, rgba(194, 180, 232, 0.4));
+  box-shadow: 0 4px 15px rgba(74, 40, 160, 0.45);
 }
 
 .theme-lilac_dawn .join-group-button:not(.joined) {
-  background: var(--theme-primary, #B19CD9);
-  color: var(--theme-text, #6B5B8A);
-  box-shadow: 0 2px 8px var(--theme-glow, rgba(194, 180, 232, 0.3));
+  background: linear-gradient(135deg, #4A28A0 0%, #6848C0 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(74, 40, 160, 0.3);
   font-weight: 700;
 }
 
 .theme-lilac_dawn .join-group-button:not(.joined):hover {
-  background: var(--theme-accent, #A08BC8);
+  background: linear-gradient(135deg, #4A28A0 0%, #6848C0 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--theme-glow, rgba(194, 180, 232, 0.4));
+  box-shadow: 0 4px 15px rgba(74, 40, 160, 0.45);
 }
 
 .theme-lilac_dawn .join-group-button.joined {
@@ -777,29 +784,31 @@
 
 /* 🌸 TEMA: Pétala Rosa - botões */
 .theme-petal .view-group-button {
-  background: var(--theme-primary, #FF8FA3);
-  color: var(--theme-text, #8B4A5F);
-  box-shadow: 0 2px 8px var(--theme-glow, rgba(255, 192, 203, 0.3));
+  background: linear-gradient(135deg, #961838 0%, #B83258 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(150, 24, 56, 0.3);
   font-weight: 700;
 }
 
 .theme-petal .view-group-button:hover {
-  background: var(--theme-accent, #F07A90);
+  background: linear-gradient(135deg, #961838 0%, #B83258 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--theme-glow, rgba(255, 192, 203, 0.4));
+  box-shadow: 0 4px 15px rgba(150, 24, 56, 0.45);
 }
 
 .theme-petal .join-group-button:not(.joined) {
-  background: var(--theme-primary, #FF8FA3);
-  color: var(--theme-text, #8B4A5F);
-  box-shadow: 0 2px 8px var(--theme-glow, rgba(255, 192, 203, 0.3));
+  background: linear-gradient(135deg, #961838 0%, #B83258 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(150, 24, 56, 0.3);
   font-weight: 700;
 }
 
 .theme-petal .join-group-button:not(.joined):hover {
-  background: var(--theme-accent, #F07A90);
+  background: linear-gradient(135deg, #961838 0%, #B83258 100%);
+  color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--theme-glow, rgba(255, 192, 203, 0.4));
+  box-shadow: 0 4px 15px rgba(150, 24, 56, 0.45);
 }
 
 .theme-petal .join-group-button.joined {
@@ -881,3 +890,4 @@
     flex-direction: column;
   }
 }
+

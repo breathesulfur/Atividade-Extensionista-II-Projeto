@@ -47,7 +47,7 @@ const AccordionSection = memo(({ id, icon, title, children, isOpen, hasError = f
         role="region"
         aria-labelledby={`accordion-header-${id}`}
         style={{ 
-          maxHeight: isOpen ? '5000px' : '0',
+          maxHeight: isOpen ? '20000px' : '0',
           opacity: isOpen ? 1 : 0,
           overflow: 'hidden',
           paddingTop: isOpen ? '0' : '0',

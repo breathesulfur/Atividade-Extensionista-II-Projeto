@@ -1222,3 +1222,22 @@
 .theme-petal .stat-label {
   color: var(--theme-text, #7C3A55);
 }
+
+/* ========================================
+   GRADIENTE FIXO NO BOTÃO EDITAR PERFIL
+   Mantém o gradiente místico em todos os temas
+   ======================================== */
+
+[class*="theme-"] .edit-profile-button,
+[class*="profile-theme-"] .edit-profile-button {
+  background: var(--gradient-mystic) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px var(--shadow-mystic) !important;
+}
+
+[class*="theme-"] .edit-profile-button:hover,
+[class*="profile-theme-"] .edit-profile-button:hover {
+  background: var(--gradient-mystic) !important;
+  color: white !important;
+  box-shadow: 0 8px 25px var(--shadow-mystic) !important;
+}
