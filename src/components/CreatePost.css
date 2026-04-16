@@ -135,7 +135,7 @@
   box-shadow: 0 4px 15px rgba(230, 212, 138, 0.3);
 }
 
-/* ✨ Tema: Aura Rosa */
+/* 🌲 Tema: Floresta Encantada */
 .theme-pink_aura .create-post-card {
   background: var(--theme-secondary, #FDECF3);
   border-color: var(--theme-primary, #F0A6C1);
@@ -211,7 +211,7 @@
   box-shadow: 0 4px 15px rgba(196, 213, 232, 0.3);
 }
 
-/* 🌿 Tema: Bruma Rosada */
+/* ❤️‍🔥 Tema: Coração Mágico */
 .theme-pink_mist .create-post-card {
   background: var(--theme-secondary, #F3F8F5);
   border-color: var(--theme-primary, #E6C9D6);

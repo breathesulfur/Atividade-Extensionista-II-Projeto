@@ -298,7 +298,7 @@
   opacity: 0.9;
 }
 
-/* ✨ Tema: Aura Rosa - Tons de rosa luminoso */
+/* 🌲 Tema: Floresta Encantada - Verde profundo acolhedor */
 .theme-pink_aura .group-chat {
   background: var(--theme-background, #F6C1D6);
   border-color: var(--theme-primary, #F0A6C1);
@@ -520,7 +520,7 @@
   opacity: 0.9;
 }
 
-/* 🌿 Tema: Bruma Rosada - Verde sálvia com rosa sutil */
+/* ❤️‍🔥 Tema: Coração Mágico - Vermelho carmim vibrante */
 .theme-pink_mist .group-chat {
   background: var(--theme-background, #DDEBE3);
   border-color: var(--theme-primary, #C8DED4);

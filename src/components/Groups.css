@@ -358,7 +358,7 @@
   border-color: var(--theme-primary, #E6D48A);
 }
 
-/* ✨ TEMA: Aura Rosa */
+/* 🌲 TEMA: Floresta Encantada */
 .theme-pink_aura .view-group-button {
   background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #2A6040 0%, #3E8058 100%);
   color: white;
@@ -503,7 +503,7 @@
   opacity: 0.9;
 }
 
-/* ✨ Tema: Aura Rosa */
+/* 🌲 Tema: Floresta Encantada */
 .theme-pink_aura .groups-header h2,
 .theme-pink_aura .section-title {
   color: var(--theme-text, #7A2E4D);
