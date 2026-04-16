@@ -86,16 +86,16 @@ export const THEMES = {
   },
   PINK_AURA: {
     id: 'pink_aura',
-    name: 'Aura Rosa',
-    icon: '✨',
-    description: 'Empatia, afeto e presença.',
+    name: 'Floresta Encantada',
+    icon: '🌲',
+    description: 'Mistério, proteção e acolhimento.',
     colors: {
-      primary: '#C83E72',      // Rosa profundo vibrante
-      background: '#FFF8FB',   // Branco rosado
-      secondary: '#FFFCFE',    // Quase branco
-      text: '#6E1E42',         // Rosa muito escuro
-      accent: '#D84E80',       // Rosa accent
-      glow: 'rgba(200, 62, 114, 0.28)'
+      primary: '#2A6040',      // Verde floresta profundo
+      background: '#F5FAF7',   // Branco menta suave
+      secondary: '#EEF7F2',    // Verde muito claro
+      text: '#1A3D20',         // Verde escuro
+      accent: '#3E8058',       // Verde floresta accent
+      glow: 'rgba(42, 96, 64, 0.28)'
     },
     requiredEssence: 70,
     theme: 'light'
@@ -106,28 +106,28 @@ export const THEMES = {
     icon: '☁️',
     description: 'Serenidade, leveza e paz interior.',
     colors: {
-      primary: '#2E7898',      // Azul céu profundo
+      primary: '#4090B8',      // Azul céu claro
       background: '#F5FBFF',   // Branco gelo
       secondary: '#EEF8FF',    // Azul muito claro
-      text: '#1A4A64',         // Azul escuro
-      accent: '#3888A8',       // Azul accent
-      glow: 'rgba(46, 120, 152, 0.28)'
+      text: '#1A5080',         // Azul escuro
+      accent: '#68B8D8',       // Azul névoa celeste
+      glow: 'rgba(64, 144, 184, 0.28)'
     },
     requiredEssence: 70,
     theme: 'light'
   },
   PINK_MIST: {
     id: 'pink_mist',
-    name: 'Bruma Rosada',
-    icon: '🌿',
-    description: 'Cuidado, acolhimento, natureza suave.',
+    name: 'Coração Mágico',
+    icon: '❤️‍🔥',
+    description: 'Amor, emoção e força interior.',
     colors: {
-      primary: '#306858',      // Verde sálvia profundo
-      background: '#F5FAF7',   // Branco menta
-      secondary: '#EEF7F2',    // Verde muito claro
-      text: '#1A3D32',         // Verde escuro
-      accent: '#3E7868',       // Verde sálvia accent
-      glow: 'rgba(48, 104, 88, 0.28)'
+      primary: '#B01830',      // Carmim vibrante
+      background: '#FFF5F7',   // Branco rosado quente
+      secondary: '#FFF0F4',    // Rosa muito claro
+      text: '#6A0A18',         // Vermelho escuro
+      accent: '#D83050',       // Carmim accent
+      glow: 'rgba(176, 24, 48, 0.28)'
     },
     requiredEssence: 60,
     theme: 'light'
@@ -138,12 +138,12 @@ export const THEMES = {
     icon: '🌅',
     description: 'Espiritual, calmo, início de ciclos.',
     colors: {
-      primary: '#5A3AA8',      // Roxo médio rico
+      primary: '#7060C0',      // Lilás claro vibrante
       background: '#FAF8FF',   // Branco lavanda
       secondary: '#F4F0FF',    // Lavanda muito claro
       text: '#3A2070',         // Roxo escuro
-      accent: '#6A48B8',       // Roxo accent
-      glow: 'rgba(90, 58, 168, 0.28)'
+      accent: '#9080E0',       // Lilás accent
+      glow: 'rgba(112, 96, 192, 0.28)'
     },
     requiredEssence: 80,
     theme: 'light'
@@ -154,12 +154,12 @@ export const THEMES = {
     icon: '🌸',
     description: 'Delicado, emocional, seguro.',
     colors: {
-      primary: '#B02848',      // Coral profundo
+      primary: '#D04878',      // Rosa delicado
       background: '#FFF6F9',   // Branco pétala
       secondary: '#FFF0F5',    // Rosa muito claro
-      text: '#6A1830',         // Coral escuro
-      accent: '#C03858',       // Coral accent
-      glow: 'rgba(176, 40, 72, 0.28)'
+      text: '#6A1040',         // Rosa escuro
+      accent: '#F068A0',       // Rosa suave accent
+      glow: 'rgba(208, 72, 120, 0.28)'
     },
     requiredEssence: 100,
     theme: 'light'

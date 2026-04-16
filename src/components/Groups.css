@@ -318,32 +318,32 @@
 
 /* 🌙 TEMA: Lua Serena */
 .theme-serene_moon .view-group-button {
-  background: linear-gradient(135deg, #A07808 0%, #C49820 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #C8A000 0%, #E8C030 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(160, 120, 8, 0.3);
+  box-shadow: 0 2px 12px rgba(200, 160, 0, 0.40);
   font-weight: 700;
 }
 
 .theme-serene_moon .view-group-button:hover {
-  background: linear-gradient(135deg, #A07808 0%, #C49820 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #C8A000 0%, #E8C030 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(160, 120, 8, 0.45);
+  box-shadow: 0 4px 18px rgba(200, 160, 0, 0.55);
 }
 
 /* Botão ENTRAR - usa cores do tema */
 .theme-serene_moon .join-group-button:not(.joined) {
-  background: linear-gradient(135deg, #A07808 0%, #C49820 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #C8A000 0%, #E8C030 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(160, 120, 8, 0.3);
+  box-shadow: 0 2px 12px rgba(200, 160, 0, 0.40);
   font-weight: 700;
 }
 
 .theme-serene_moon .join-group-button:not(.joined):hover {
-  background: linear-gradient(135deg, #A07808 0%, #C49820 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #C8A000 0%, #E8C030 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(160, 120, 8, 0.45);
+  box-shadow: 0 4px 18px rgba(200, 160, 0, 0.55);
 }
 
 /* Botão SAIR - neutro, sem cores do tema */
@@ -360,32 +360,32 @@
 
 /* ✨ TEMA: Aura Rosa */
 .theme-pink_aura .view-group-button {
-  background: linear-gradient(135deg, #A83060 0%, #CC4878 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #2A6040 0%, #3E8058 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(168, 48, 96, 0.3);
+  box-shadow: 0 2px 12px rgba(42, 96, 64, 0.40);
   font-weight: 700;
 }
 
 .theme-pink_aura .view-group-button:hover {
-  background: linear-gradient(135deg, #A83060 0%, #CC4878 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #2A6040 0%, #3E8058 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(168, 48, 96, 0.45);
+  box-shadow: 0 4px 18px rgba(42, 96, 64, 0.55);
 }
 
 /* Botão ENTRAR - usa cores do tema */
 .theme-pink_aura .join-group-button:not(.joined) {
-  background: linear-gradient(135deg, #A83060 0%, #CC4878 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #2A6040 0%, #3E8058 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(168, 48, 96, 0.3);
+  box-shadow: 0 2px 12px rgba(42, 96, 64, 0.40);
   font-weight: 700;
 }
 
 .theme-pink_aura .join-group-button:not(.joined):hover {
-  background: linear-gradient(135deg, #A83060 0%, #CC4878 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #2A6040 0%, #3E8058 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(168, 48, 96, 0.45);
+  box-shadow: 0 4px 18px rgba(42, 96, 64, 0.55);
 }
 
 /* Botão SAIR - neutro, sem cores do tema */
@@ -402,32 +402,32 @@
 
 /* ☁️ TEMA: Céu Suave */
 .theme-soft_sky .view-group-button {
-  background: linear-gradient(135deg, #26628A 0%, #3E82A8 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #4090B8 0%, #68B8D8 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(38, 98, 138, 0.3);
+  box-shadow: 0 2px 12px rgba(64, 144, 184, 0.40);
   font-weight: 700;
 }
 
 .theme-soft_sky .view-group-button:hover {
-  background: linear-gradient(135deg, #26628A 0%, #3E82A8 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #4090B8 0%, #68B8D8 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(38, 98, 138, 0.45);
+  box-shadow: 0 4px 18px rgba(64, 144, 184, 0.55);
 }
 
 /* Botão ENTRAR - usa cores do tema */
 .theme-soft_sky .join-group-button:not(.joined) {
-  background: linear-gradient(135deg, #26628A 0%, #3E82A8 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #4090B8 0%, #68B8D8 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(38, 98, 138, 0.3);
+  box-shadow: 0 2px 12px rgba(64, 144, 184, 0.40);
   font-weight: 700;
 }
 
 .theme-soft_sky .join-group-button:not(.joined):hover {
-  background: linear-gradient(135deg, #26628A 0%, #3E82A8 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #4090B8 0%, #68B8D8 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(38, 98, 138, 0.45);
+  box-shadow: 0 4px 18px rgba(64, 144, 184, 0.55);
 }
 
 /* Botão SAIR - neutro, sem cores do tema */
@@ -602,123 +602,123 @@
   opacity: 0.9;
 }
 
-/* 🌿 TEMA: Bruma Rosada - botões */
+/* ❤️‍🔥 TEMA: Coração Mágico - botões */
 .theme-pink_mist .view-group-button {
-  background: linear-gradient(135deg, #285848 0%, #3E7860 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #B01830 0%, #D83050 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(40, 88, 72, 0.3);
+  box-shadow: 0 2px 12px rgba(176, 24, 48, 0.40);
   font-weight: 700;
 }
 
 .theme-pink_mist .view-group-button:hover {
-  background: linear-gradient(135deg, #285848 0%, #3E7860 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #B01830 0%, #D83050 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(40, 88, 72, 0.45);
+  box-shadow: 0 4px 18px rgba(176, 24, 48, 0.55);
 }
 
 .theme-pink_mist .join-group-button:not(.joined) {
-  background: linear-gradient(135deg, #285848 0%, #3E7860 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #B01830 0%, #D83050 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(40, 88, 72, 0.3);
+  box-shadow: 0 2px 12px rgba(176, 24, 48, 0.40);
   font-weight: 700;
 }
 
 .theme-pink_mist .join-group-button:not(.joined):hover {
-  background: linear-gradient(135deg, #285848 0%, #3E7860 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #B01830 0%, #D83050 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(40, 88, 72, 0.45);
+  box-shadow: 0 4px 18px rgba(176, 24, 48, 0.55);
 }
 
 .theme-pink_mist .join-group-button.joined {
-  border-color: var(--theme-primary, #E6C9D6);
-  color: var(--theme-text, #5A6B5F);
+  border-color: var(--theme-primary, #B01830);
+  color: var(--theme-text, #6A0A18);
   background: transparent;
 }
 
 .theme-pink_mist .join-group-button.joined:hover {
-  background: var(--theme-glow, rgba(200, 222, 212, 0.1));
-  border-color: var(--theme-primary, #E6C9D6);
+  background: var(--theme-glow, rgba(176, 24, 48, 0.1));
+  border-color: var(--theme-primary, #B01830);
 }
 
-/* 🌿 Tema: Bruma Rosada */
+/* ❤️‍🔥 Tema: Coração Mágico */
 .theme-pink_mist .groups-header h2,
 .theme-pink_mist .section-title {
-  color: var(--theme-text, #5A6B5F);
+  color: var(--theme-text, #6A0A18);
   font-weight: 700;
 }
 
 .theme-pink_mist .create-group-button {
-  background: linear-gradient(135deg, var(--theme-primary, #E6C9D6) 0%, var(--theme-accent, #E6C9D6) 100%);
-  color: var(--theme-text, #5A6B5F);
-  box-shadow: 0 4px 15px rgba(200, 222, 212, 0.3);
-  border: 1px solid var(--theme-primary, #E6C9D6);
+  background: linear-gradient(135deg, var(--theme-primary, #B01830) 0%, var(--theme-accent, #D83050) 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(176, 24, 48, 0.3);
+  border: 1px solid var(--theme-primary, #B01830);
   font-weight: 700;
 }
 
 .theme-pink_mist .group-item {
-  background: var(--theme-background, #D8E4DC);
-  border-color: var(--theme-primary, #E6C9D6);
-  color: var(--theme-text, #5A6B5F);
+  background: var(--theme-background, #FFF5F7);
+  border-color: var(--theme-primary, #B01830);
+  color: var(--theme-text, #6A0A18);
   font-weight: 600;
 }
 
 .theme-pink_mist .group-item h4 {
-  color: var(--theme-text, #5A6B5F);
+  color: var(--theme-text, #6A0A18);
   font-weight: 700;
 }
 
 .theme-pink_mist .group-description {
-  color: var(--theme-text, #5A6B5F);
+  color: var(--theme-text, #6A0A18);
   font-weight: 500;
   opacity: 0.9;
 }
 
 .theme-pink_mist .group-meta {
-  color: var(--theme-text, #5A6B5F);
+  color: var(--theme-text, #6A0A18);
   opacity: 0.8;
 }
 
 .theme-pink_mist .group-game {
-  color: var(--theme-accent, #E6C9D6);
+  color: var(--theme-accent, #D83050);
   font-weight: 600;
 }
 
 .theme-pink_mist .empty-state {
-  background: var(--theme-background, #D8E4DC);
-  border-color: var(--theme-primary, #E6C9D6);
-  color: var(--theme-text, #5A6B5F);
+  background: var(--theme-background, #FFF5F7);
+  border-color: var(--theme-primary, #B01830);
+  color: var(--theme-text, #6A0A18);
   opacity: 0.9;
 }
 
 /* 🌅 TEMA: Amanhecer Lilás - botões */
 .theme-lilac_dawn .view-group-button {
-  background: linear-gradient(135deg, #4A28A0 0%, #6848C0 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #7060C0 0%, #9080E0 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(74, 40, 160, 0.3);
+  box-shadow: 0 2px 12px rgba(112, 96, 192, 0.40);
   font-weight: 700;
 }
 
 .theme-lilac_dawn .view-group-button:hover {
-  background: linear-gradient(135deg, #4A28A0 0%, #6848C0 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #7060C0 0%, #9080E0 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(74, 40, 160, 0.45);
+  box-shadow: 0 4px 18px rgba(112, 96, 192, 0.55);
 }
 
 .theme-lilac_dawn .join-group-button:not(.joined) {
-  background: linear-gradient(135deg, #4A28A0 0%, #6848C0 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #7060C0 0%, #9080E0 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(74, 40, 160, 0.3);
+  box-shadow: 0 2px 12px rgba(112, 96, 192, 0.40);
   font-weight: 700;
 }
 
 .theme-lilac_dawn .join-group-button:not(.joined):hover {
-  background: linear-gradient(135deg, #4A28A0 0%, #6848C0 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #7060C0 0%, #9080E0 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(74, 40, 160, 0.45);
+  box-shadow: 0 4px 18px rgba(112, 96, 192, 0.55);
 }
 
 .theme-lilac_dawn .join-group-button.joined {
@@ -784,91 +784,91 @@
 
 /* 🌸 TEMA: Pétala Rosa - botões */
 .theme-petal .view-group-button {
-  background: linear-gradient(135deg, #961838 0%, #B83258 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #D04878 0%, #F068A0 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(150, 24, 56, 0.3);
+  box-shadow: 0 2px 12px rgba(208, 72, 120, 0.40);
   font-weight: 700;
 }
 
 .theme-petal .view-group-button:hover {
-  background: linear-gradient(135deg, #961838 0%, #B83258 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #D04878 0%, #F068A0 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(150, 24, 56, 0.45);
+  box-shadow: 0 4px 18px rgba(208, 72, 120, 0.55);
 }
 
 .theme-petal .join-group-button:not(.joined) {
-  background: linear-gradient(135deg, #961838 0%, #B83258 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #D04878 0%, #F068A0 100%);
   color: white;
-  box-shadow: 0 2px 10px rgba(150, 24, 56, 0.3);
+  box-shadow: 0 2px 12px rgba(208, 72, 120, 0.40);
   font-weight: 700;
 }
 
 .theme-petal .join-group-button:not(.joined):hover {
-  background: linear-gradient(135deg, #961838 0%, #B83258 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%), linear-gradient(135deg, #D04878 0%, #F068A0 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(150, 24, 56, 0.45);
+  box-shadow: 0 4px 18px rgba(208, 72, 120, 0.55);
 }
 
 .theme-petal .join-group-button.joined {
-  border-color: var(--theme-primary, #FF8FA3);
-  color: var(--theme-text, #8B4A5F);
+  border-color: var(--theme-primary, #D04878);
+  color: var(--theme-text, #6A1040);
   background: transparent;
 }
 
 .theme-petal .join-group-button.joined:hover {
-  background: var(--theme-glow, rgba(255, 192, 203, 0.1));
-  border-color: var(--theme-primary, #FF8FA3);
+  background: var(--theme-glow, rgba(208, 72, 120, 0.1));
+  border-color: var(--theme-primary, #D04878);
 }
 
 /* 🌸 Tema: Pétala Rosa */
 .theme-petal .groups-header h2,
 .theme-petal .section-title {
-  color: var(--theme-text, #8B4A5F);
+  color: var(--theme-text, #6A1040);
   font-weight: 700;
 }
 
 .theme-petal .create-group-button {
-  background: linear-gradient(135deg, var(--theme-primary, #FF8FA3) 0%, var(--theme-accent, #FF8FA3) 100%);
-  color: var(--theme-text, #8B4A5F);
-  box-shadow: 0 4px 15px rgba(255, 192, 203, 0.3);
-  border: 1px solid var(--theme-primary, #FF8FA3);
+  background: linear-gradient(135deg, var(--theme-primary, #D04878) 0%, var(--theme-accent, #F068A0) 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(208, 72, 120, 0.3);
+  border: 1px solid var(--theme-primary, #D04878);
   font-weight: 700;
 }
 
 .theme-petal .group-item {
-  background: var(--theme-background, #FFF0F6);
-  border-color: var(--theme-primary, #FF8FA3);
-  color: var(--theme-text, #8B4A5F);
+  background: var(--theme-background, #FFF6F9);
+  border-color: var(--theme-primary, #D04878);
+  color: var(--theme-text, #6A1040);
   font-weight: 600;
 }
 
 .theme-petal .group-item h4 {
-  color: var(--theme-text, #8B4A5F);
+  color: var(--theme-text, #6A1040);
   font-weight: 700;
 }
 
 .theme-petal .group-description {
-  color: var(--theme-text, #8B4A5F);
+  color: var(--theme-text, #6A1040);
   font-weight: 500;
   opacity: 0.9;
 }
 
 .theme-petal .group-meta {
-  color: var(--theme-text, #8B4A5F);
+  color: var(--theme-text, #6A1040);
   opacity: 0.8;
 }
 
 .theme-petal .group-game {
-  color: var(--theme-accent, #FF8FA3);
+  color: var(--theme-accent, #F068A0);
   font-weight: 600;
 }
 
 .theme-petal .empty-state {
-  background: var(--theme-background, #FFF0F6);
-  border-color: var(--theme-primary, #FF8FA3);
-  color: var(--theme-text, #8B4A5F);
+  background: var(--theme-background, #FFF6F9);
+  border-color: var(--theme-primary, #D04878);
+  color: var(--theme-text, #6A1040);
   opacity: 0.9;
 }
 
