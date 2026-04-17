@@ -418,21 +418,21 @@ function Dashboard({ user, onLogout }) {
           onClick={() => setActiveTab('feed')}
           aria-pressed={activeTab === 'feed'}
         >
-          <span>📱</span> Feed
+          <span>📰</span> Feed
         </button>
         <button
           className={`nav-button ${activeTab === 'groups' ? 'active' : ''}`}
           onClick={() => setActiveTab('groups')}
           aria-pressed={activeTab === 'groups'}
         >
-          <span>🎮</span> Grupos
+          <span>🎯</span> Grupos
         </button>
         <button
           className={`nav-button ${activeTab === 'profile' ? 'active' : ''}`}
           onClick={() => setActiveTab('profile')}
           aria-pressed={activeTab === 'profile'}
         >
-          <span>👤</span> Perfil
+          <span>🙋</span> Perfil
         </button>
       </nav>
 
