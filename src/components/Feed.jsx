@@ -29,10 +29,26 @@ function WelcomeModal({ user, onClose }) {
   )
 }
 
+// Chave isolada por usuário — desacopla a flag "já viu o welcome" do objeto `user`,
+// que é sobrescrito em vários pontos (login, editar perfil, criar/entrar em grupo)
+// e pode perder a flag no meio do caminho. Ver PR de correção do modal.
+const welcomeSeenKey = (userId) => `inclusivchat_welcome_seen_${userId}`
+
+function hasSeenWelcome(user) {
+  if (!user?.id) return false
+  // Migração: usuários antigos podem ter a flag no próprio objeto user.
+  // Se tiver, já marca a chave nova e considera visto.
+  if (user.hasSeenWelcome) {
+    try { localStorage.setItem(welcomeSeenKey(user.id), '1') } catch {}
+    return true
+  }
+  return localStorage.getItem(welcomeSeenKey(user.id)) === '1'
+}
+
 function Feed({ user, onUserUpdate }) {
   const [posts, setPosts] = useState([])
   const [showCreatePost, setShowCreatePost] = useState(false)
-  const [showWelcome, setShowWelcome] = useState(!user.hasSeenWelcome)
+  const [showWelcome, setShowWelcome] = useState(() => !hasSeenWelcome(user))
 
   // Carrega postagens do localStorage
   useEffect(() => {
@@ -45,15 +61,9 @@ function Feed({ user, onUserUpdate }) {
 
   const handleCloseWelcome = () => {
     setShowWelcome(false)
-    const updatedUser = { ...user, hasSeenWelcome: true }
-    localStorage.setItem('inclusivchat_user', JSON.stringify(updatedUser))
-    const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-    const idx = savedUsers.findIndex(u => u.id === user.id)
-    if (idx !== -1) {
-      savedUsers[idx] = { ...savedUsers[idx], hasSeenWelcome: true }
-      localStorage.setItem('inclusivchat_users', JSON.stringify(savedUsers))
+    if (user?.id) {
+      try { localStorage.setItem(welcomeSeenKey(user.id), '1') } catch {}
     }
-    onUserUpdate(updatedUser)
   }
 
   // Cria nova postagem
