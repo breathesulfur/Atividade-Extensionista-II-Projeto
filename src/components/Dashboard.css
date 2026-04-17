@@ -478,9 +478,10 @@
 }
 
 .dashboard.theme-serene_moon .dashboard-header {
-  background: linear-gradient(135deg, #A07808 0%, #C49820 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, transparent 55%),
+              linear-gradient(135deg, #C8A000 0%, #E8C030 100%);
   color: white;
-  box-shadow: 0 4px 24px rgba(160, 120, 8, 0.45);
+  box-shadow: 0 4px 24px rgba(200, 160, 0, 0.45);
 }
 
 .dashboard.theme-serene_moon .dashboard-nav {
