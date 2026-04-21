@@ -63,7 +63,7 @@ const AccordionSection = memo(({ id, icon, title, children, isOpen, hasError = f
 
 AccordionSection.displayName = 'AccordionSection'
 
-function EditProfile({ user, onSave, onCancel }) {
+function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
   // Snapshot imutável do usuário capturado na montagem inicial
   // Este snapshot NÃO muda durante a edição, garantindo estabilidade
   const userSnapshotRef = useRef(null)
@@ -694,7 +694,12 @@ function EditProfile({ user, onSave, onCancel }) {
     }
     
     setCurrentUser(userWithTheme)
-    
+
+    // Propaga preview para o Dashboard (para que o fundo do app também mude)
+    if (typeof onUserUpdate === 'function') {
+      onUserUpdate(userWithTheme)
+    }
+
     // Atualiza também o localStorage para persistir
     // Usa o snapshot para encontrar o usuário
     try {
@@ -713,9 +718,14 @@ function EditProfile({ user, onSave, onCancel }) {
 
   const handleFrameSelect = (frameId, updatedUser) => {
     if (!updatedUser) return
-    
+
     setCurrentUser(updatedUser)
-    
+
+    // Propaga preview para o Dashboard (moldura visível imediatamente)
+    if (typeof onUserUpdate === 'function') {
+      onUserUpdate(updatedUser)
+    }
+
     // Atualiza também o localStorage para persistir
     // Usa o snapshot para encontrar o usuário
     try {
@@ -734,9 +744,14 @@ function EditProfile({ user, onSave, onCancel }) {
 
   const handleTitleSelect = (titleId, updatedUser) => {
     if (!updatedUser) return
-    
+
     setCurrentUser(updatedUser)
-    
+
+    // Propaga preview para o Dashboard (título visível imediatamente)
+    if (typeof onUserUpdate === 'function') {
+      onUserUpdate(updatedUser)
+    }
+
     // Atualiza também o localStorage para persistir
     // Usa o snapshot para encontrar o usuário
     try {

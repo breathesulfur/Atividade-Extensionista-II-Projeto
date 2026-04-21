@@ -327,10 +327,10 @@
 
 .game-chip {
   padding: var(--spacing-sm) var(--spacing-md);
-  border: 2px solid var(--border);
+  border: 2px solid var(--theme-primary, var(--border));
   border-radius: var(--radius-full);
-  background: var(--surface);
-  color: var(--text-primary);
+  background: var(--theme-secondary, var(--surface));
+  color: var(--theme-text, var(--text-primary));
   font-size: 0.9rem;
   transition: all 0.2s;
   font-weight: 500;
@@ -339,14 +339,19 @@
 }
 
 .game-chip:hover {
-  border-color: var(--primary);
+  border-color: var(--theme-accent, var(--primary));
   transform: translateY(-2px);
 }
 
 .game-chip.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
+  background: var(--theme-primary, var(--primary));
+  color: #FFFFFF;
+  border-color: var(--theme-primary, var(--primary));
+}
+
+/* Lua Serena: chip dourado precisa de texto escuro para contraste */
+.theme-serene_moon .game-chip.active {
+  color: var(--theme-text, #5C4A1E);
 }
 
 .games-selected {
@@ -539,6 +544,25 @@
   color: var(--primary-dark);
 }
 
+/* Plataformas de Jogo (opcional) */
+.platforms-hint {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0 0 var(--spacing-sm) 0;
+  line-height: 1.5;
+}
+
+.platforms-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md) var(--spacing-lg);
+  margin-top: var(--spacing-sm);
+}
+
+.platforms-grid .form-group {
+  margin-bottom: 0;
+}
+
 @media (max-width: 640px) {
   .signup-card {
     padding: var(--spacing-lg);
@@ -550,5 +574,9 @@
 
   .games-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .platforms-grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -374,11 +374,16 @@
 
 .game-tag {
   padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--primary);
-  color: white;
+  background: var(--theme-primary, var(--primary));
+  color: #FFFFFF;
   border-radius: var(--radius-full);
   font-size: 0.9rem;
   font-weight: 500;
+}
+
+/* Lua Serena: fundo dourado pede texto escuro */
+.theme-serene_moon .game-tag {
+  color: var(--theme-text, #5C4A1E);
 }
 
 .no-games,
@@ -1224,20 +1229,9 @@
 }
 
 /* ========================================
-   GRADIENTE FIXO NO BOTÃO EDITAR PERFIL
-   Mantém o gradiente místico em todos os temas
+   BOTÃO EDITAR PERFIL — CORES POR TEMA
+   O estilo base está na linha 22 (gradiente místico),
+   e cada tema visual define sua própria variação
+   acima usando var(--theme-primary). Sem !important
+   para permitir que o tema ativo assuma a cor.
    ======================================== */
-
-[class*="theme-"] .edit-profile-button,
-[class*="profile-theme-"] .edit-profile-button {
-  background: var(--gradient-mystic) !important;
-  color: white !important;
-  box-shadow: 0 4px 15px var(--shadow-mystic) !important;
-}
-
-[class*="theme-"] .edit-profile-button:hover,
-[class*="profile-theme-"] .edit-profile-button:hover {
-  background: var(--gradient-mystic) !important;
-  color: white !important;
-  box-shadow: 0 8px 25px var(--shadow-mystic) !important;
-}

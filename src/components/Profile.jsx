@@ -104,6 +104,7 @@ function Profile({ user, onUserUpdate }) {
           user={user}
           onSave={handleSaveProfile}
           onCancel={handleCloseEdit}
+          onUserUpdate={onUserUpdate}
         />
       </div>
     )

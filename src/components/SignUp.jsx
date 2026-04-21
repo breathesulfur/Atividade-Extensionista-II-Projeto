@@ -15,7 +15,15 @@ function SignUp({ onSignUp, onBackToLogin }) {
     pronoun: '',
     games: [],
     city: '',
-    state: ''
+    state: '',
+    platforms: {
+      steam: '',
+      epic: '',
+      xbox: '',
+      playstation: '',
+      nintendo: '',
+      riot: ''
+    }
   })
   const [loading, setLoading] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
@@ -129,12 +137,25 @@ function SignUp({ onSignUp, onBackToLogin }) {
   // Manipula mudanças nos campos do formulário
   const handleChange = (e) => {
     const { name, value } = e.target
-    
+
     // Limpa validação customizada do e-mail quando o usuário começar a digitar
     if (name === 'email') {
       e.target.setCustomValidity('')
     }
-    
+
+    // Campo de plataforma (platforms.steam, platforms.epic, etc)
+    if (name.startsWith('platforms.')) {
+      const field = name.split('.')[1]
+      setFormData(prev => ({
+        ...prev,
+        platforms: {
+          ...prev.platforms,
+          [field]: value
+        }
+      }))
+      return
+    }
+
     setFormData(prev => {
       // Se mudou o estado, limpa a cidade
       if (name === 'state') {
@@ -280,6 +301,14 @@ function SignUp({ onSignUp, onBackToLogin }) {
         games: formData.games,
         city: formData.city,
         state: formData.state,
+        platforms: {
+          steam: formData.platforms.steam.trim(),
+          epic: formData.platforms.epic.trim(),
+          xbox: formData.platforms.xbox.trim(),
+          playstation: formData.platforms.playstation.trim(),
+          nintendo: formData.platforms.nintendo.trim(),
+          riot: formData.platforms.riot.trim()
+        },
         points: 0,
         badges: [],
         joinedGroups: [],
@@ -663,9 +692,105 @@ function SignUp({ onSignUp, onBackToLogin }) {
             )}
           </div>
 
+          {/* Plataformas de Jogo (opcional) */}
+          <div className="form-section-divider">
+            <span className="form-section-badge">🎮</span>
+            <span className="form-section-title">Plataformas de Jogo (opcional)</span>
+          </div>
+
+          <p className="platforms-hint">
+            Adicione seus IDs para facilitar conexões com outras pessoas. Você pode preencher ou editar depois em <strong>Editar Perfil</strong>.
+          </p>
+
+          <div className="platforms-grid">
+            <div className="form-group">
+              <label htmlFor="platform-steam" className="form-label">Steam</label>
+              <input
+                type="text"
+                id="platform-steam"
+                name="platforms.steam"
+                value={formData.platforms.steam}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="ID ou URL do perfil"
+                disabled={loading || isRedirecting}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="platform-epic" className="form-label">Epic Games</label>
+              <input
+                type="text"
+                id="platform-epic"
+                name="platforms.epic"
+                value={formData.platforms.epic}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Nome de usuário"
+                disabled={loading || isRedirecting}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="platform-xbox" className="form-label">Xbox Live</label>
+              <input
+                type="text"
+                id="platform-xbox"
+                name="platforms.xbox"
+                value={formData.platforms.xbox}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Gamertag"
+                disabled={loading || isRedirecting}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="platform-playstation" className="form-label">PlayStation</label>
+              <input
+                type="text"
+                id="platform-playstation"
+                name="platforms.playstation"
+                value={formData.platforms.playstation}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="ID Online"
+                disabled={loading || isRedirecting}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="platform-nintendo" className="form-label">Nintendo Switch</label>
+              <input
+                type="text"
+                id="platform-nintendo"
+                name="platforms.nintendo"
+                value={formData.platforms.nintendo}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Friend Code"
+                disabled={loading || isRedirecting}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="platform-riot" className="form-label">Riot Games</label>
+              <input
+                type="text"
+                id="platform-riot"
+                name="platforms.riot"
+                value={formData.platforms.riot}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="usuario#tag"
+                disabled={loading || isRedirecting}
+              />
+            </div>
+          </div>
+
           {/* Botão de Submit */}
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="signup-button"
             disabled={loading}
           >

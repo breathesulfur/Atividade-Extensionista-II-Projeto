@@ -421,15 +421,7 @@ export const initializeSeedData = () => {
     console.log('✅ Grupos iniciais criados!')
   }
 
-  // Cria usuário de teste automaticamente em desenvolvimento
-  // Verifica se está em modo de desenvolvimento (Vite usa import.meta.env.DEV)
-  try {
-    if (import.meta.env.DEV) {
-      createTestUser()
-    }
-  } catch (e) {
-    // Fallback: se import.meta não estiver disponível, cria de qualquer forma em desenvolvimento
-    // (útil para testes)
-    createTestUser()
-  }
+  // Usuário de teste desabilitado temporariamente para teste limpo de produção.
+  // (Ver também o diagnóstico de produção: este bloco tinha um fallback no catch
+  //  que criava o usuário mesmo em build de produção.)
 }
