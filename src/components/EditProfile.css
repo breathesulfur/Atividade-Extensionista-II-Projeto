@@ -227,10 +227,10 @@
 
 .game-chip {
   padding: var(--spacing-sm) var(--spacing-md);
-  border: 2px solid var(--border);
+  border: 2px solid var(--theme-primary, var(--border));
   border-radius: var(--radius-full);
-  background: var(--surface);
-  color: var(--text-primary);
+  background: var(--theme-secondary, var(--surface));
+  color: var(--theme-text, var(--text-primary));
   font-size: 0.9rem;
   transition: all 0.2s;
   font-weight: 500;
@@ -239,14 +239,19 @@
 }
 
 .game-chip:hover:not(:disabled) {
-  border-color: var(--primary);
+  border-color: var(--theme-accent, var(--primary));
   transform: translateY(-2px);
 }
 
 .game-chip.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
+  background: var(--theme-primary, var(--primary));
+  color: #FFFFFF;
+  border-color: var(--theme-primary, var(--primary));
+}
+
+/* Lua Serena: chip dourado precisa de texto escuro para contraste */
+.theme-serene_moon .game-chip.active {
+  color: var(--theme-text, #5C4A1E);
 }
 
 .game-chip:disabled {
@@ -287,8 +292,8 @@
 
 .add-custom-game-button {
   padding: var(--spacing-sm) var(--spacing-lg);
-  background: var(--gradient-mystic);
-  color: white;
+  background: var(--theme-primary, var(--gradient-mystic));
+  color: #FFFFFF;
   border: none;
   border-radius: var(--radius-md);
   font-weight: 600;
@@ -299,9 +304,15 @@
   min-width: 100px;
 }
 
+/* Lua Serena: fundo dourado pede texto escuro */
+.theme-serene_moon .add-custom-game-button {
+  color: var(--theme-text, #5C4A1E);
+}
+
 .add-custom-game-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--shadow-mystic);
+  filter: brightness(1.08);
+  box-shadow: 0 4px 12px var(--theme-glow, var(--shadow-mystic));
 }
 
 .add-custom-game-button:disabled {
@@ -691,8 +702,8 @@
 
 .save-btn {
   padding: var(--spacing-md) var(--spacing-xl);
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  color: white;
+  background: var(--theme-primary, linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%));
+  color: #FFFFFF;
   border: none;
   border-radius: var(--radius-md);
   font-size: 1rem;
@@ -705,9 +716,15 @@
   gap: var(--spacing-sm);
 }
 
+/* Lua Serena: fundo dourado pede texto escuro */
+.theme-serene_moon .save-btn {
+  color: var(--theme-text, #5C4A1E);
+}
+
 .save-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px var(--shadow);
+  filter: brightness(1.08);
+  box-shadow: 0 10px 20px var(--theme-glow, var(--shadow));
 }
 
 .save-btn:disabled {

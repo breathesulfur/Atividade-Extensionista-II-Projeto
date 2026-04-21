@@ -50,6 +50,13 @@ function Feed({ user, onUserUpdate }) {
   const [showCreatePost, setShowCreatePost] = useState(false)
   const [showWelcome, setShowWelcome] = useState(() => !hasSeenWelcome(user))
 
+  // Marca como visto imediatamente ao montar — evita reexibição ao trocar de aba
+  useEffect(() => {
+    if (showWelcome && user?.id) {
+      try { localStorage.setItem(welcomeSeenKey(user.id), '1') } catch {}
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   // Carrega postagens do localStorage
   useEffect(() => {
     const savedPosts = getPosts()
