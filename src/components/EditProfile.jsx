@@ -640,7 +640,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
 
   // Handlers para recompensas (temas, molduras, títulos)
   // Atualizam apenas o estado local currentUser, não dependem da prop user
-  const handleThemeSelect = (themeId, updatedUser) => {
+  const handleThemeSelect = async (themeId, updatedUser) => {
     if (!updatedUser) return
     
     // Se themeId for null, remove o tema ativo (retorna ao padrão)
@@ -670,7 +670,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     }
   }
 
-  const handleFrameSelect = (frameId, updatedUser) => {
+  const handleFrameSelect = async (frameId, updatedUser) => {
     if (!updatedUser) return
 
     setCurrentUser(updatedUser)
@@ -688,7 +688,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     }
   }
 
-  const handleTitleSelect = (titleId, updatedUser) => {
+  const handleTitleSelect = async (titleId, updatedUser) => {
     if (!updatedUser) return
 
     setCurrentUser(updatedUser)
