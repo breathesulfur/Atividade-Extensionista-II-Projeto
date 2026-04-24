@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import GroupCard from './GroupCard'
 import CreateGroup from './CreateGroup'
-import { getGroups, saveGroups } from '../utils/storage'
+import { fetchGroups, createGroup as dbCreateGroup, deleteGroup as dbDeleteGroup, joinGroup, leaveGroup } from '../lib/db'
 import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES } from '../utils/gamification'
 import { getPosts } from '../utils/storage'
 import { notifyAchievement, notifyEssenceGained, notifySuccess, notifyError } from '../utils/notifications'
@@ -44,147 +44,73 @@ function Groups({ user, onUserUpdate }) {
   const [showCreateGroup, setShowCreateGroup] = useState(false)
   const [selectedGroup, setSelectedGroup] = useState(null)
 
-  // Carrega grupos do localStorage
-  useEffect(() => {
-    const savedGroups = getGroups()
-    setGroups(savedGroups)
-  }, [])
+  const loadGroups = async () => {
+    const data = await fetchGroups()
+    setGroups(data)
+  }
+
+  useEffect(() => { loadGroups() }, [])
 
   // Cria novo grupo
-  const handleCreateGroup = (groupData) => {
-    const newGroup = {
-      id: Date.now().toString(),
-      ...groupData,
-      createdBy: user.id,
-      members: [user.id],
-      createdAt: new Date().toISOString()
-    }
-
-    const updatedGroups = [...groups, newGroup]
-    setGroups(updatedGroups)
-    saveGroups(updatedGroups)
+  const handleCreateGroup = async (groupData) => {
+    const newGroup = await dbCreateGroup(user.id, groupData.name, groupData.description, groupData.game)
+    if (newGroup) setGroups(prev => [...prev, newGroup])
     setShowCreateGroup(false)
   }
 
-  // Exclui um grupo (apenas grupos criados pelo usuário)
-  const handleDeleteGroup = (groupId) => {
+  // Exclui um grupo
+  const handleDeleteGroup = async (groupId) => {
     const group = groups.find(g => g.id === groupId)
-    
-    if (!group) {
-      notifyError('Grupo não encontrado.')
-      return
-    }
+    if (!group) { notifyError('Grupo não encontrado.'); return }
+    if (group.createdBy !== user.id) { notifyError('Você só pode excluir grupos que você criou.'); return }
+    if (!window.confirm(`Tem certeza que deseja excluir o grupo "${group.name}"?`)) return
 
-    if (group.createdBy !== user.id) {
-      notifyError('Você só pode excluir grupos que você criou.')
-      return
-    }
-
-    const confirmed = window.confirm(`Tem certeza que deseja excluir o grupo "${group.name}"? Esta ação não pode ser desfeita.`)
-    if (!confirmed) {
-      return
-    }
-
-    const updatedGroups = groups.filter(g => g.id !== groupId)
-    setGroups(updatedGroups)
-    saveGroups(updatedGroups)
+    await dbDeleteGroup(groupId)
+    setGroups(prev => prev.filter(g => g.id !== groupId))
     notifySuccess('Grupo excluído com sucesso!')
   }
 
   // Entra/sai de um grupo
-  const handleToggleMembership = (groupId) => {
+  const handleToggleMembership = async (groupId) => {
     const group = groups.find(g => g.id === groupId)
     const isMember = group?.members.includes(user.id) || false
 
-    // Se for sair, pede confirmação
     if (isMember) {
-      const confirmed = window.confirm('Tem certeza que deseja sair do grupo?')
-      if (!confirmed) {
-        return
-      }
-    }
+      if (!window.confirm('Tem certeza que deseja sair do grupo?')) return
+      await leaveGroup(groupId, user.id)
+      setGroups(prev => prev.map(g =>
+        g.id === groupId ? { ...g, members: g.members.filter(id => id !== user.id) } : g
+      ))
+    } else {
+      await joinGroup(groupId, user.id)
+      setGroups(prev => prev.map(g =>
+        g.id === groupId ? { ...g, members: [...g.members, user.id] } : g
+      ))
 
-    const updatedGroups = groups.map(group => {
-      if (group.id === groupId) {
-        return {
-          ...group,
-          members: isMember
-            ? group.members.filter(id => id !== user.id)
-            : [...group.members, user.id]
-        }
-      }
-      return group
-    })
-
-    setGroups(updatedGroups)
-    saveGroups(updatedGroups)
-
-    // Se entrou no grupo, verifica se já entrou antes e adiciona Essência apenas na primeira vez
-    if (!isMember) {
-      // Obtém lista de grupos que o usuário já entrou (guarda histórico)
+      // Gamificação — essência só na primeira vez
       const joinedGroups = user.joinedGroups || []
-      
-      // Verifica se este é um grupo novo (não está no histórico)
       const isNewGroup = !joinedGroups.includes(groupId)
-      
-      let updatedUser = { ...user }
-      
-      // Só adiciona essência se for um grupo novo
+
       if (isNewGroup) {
-        updatedUser = addEssence(user, ESSENCE.JOIN_GROUP)
-        
-        // Notifica sobre essências ganhas
+        let updatedUser = addEssence(user, ESSENCE.JOIN_GROUP)
+        updatedUser = { ...updatedUser, joinedGroups: [...joinedGroups, groupId] }
         notifyEssenceGained(ESSENCE.JOIN_GROUP, 'Participar de grupo inclusivo')
-        
-        // Adiciona o grupo ao histórico de grupos que o usuário já entrou
-        updatedUser = {
-          ...updatedUser,
-          joinedGroups: [...joinedGroups, groupId]
-        }
-        
-        // Salva no localStorage
-        localStorage.setItem('inclusivchat_user', JSON.stringify(updatedUser))
-        
-        // Atualiza também na lista de usuários
-        const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-        const userIndex = savedUsers.findIndex(u => u.id === user.id || u.email === user.email)
-        if (userIndex !== -1) {
-          savedUsers[userIndex] = { ...savedUsers[userIndex], ...updatedUser }
-          localStorage.setItem('inclusivchat_users', JSON.stringify(savedUsers))
-        }
-        
-        // Verifica badges após entrar no grupo
+
         setTimeout(() => {
           const posts = getPosts()
-          const messages = {}
-          const newBadges = checkBadges(updatedUser, posts, updatedGroups, messages)
-          
-          const userBadges = updatedUser.badges || []
-          const trulyNewBadges = newBadges.filter(badge => !userBadges.includes(badge.id))
-          
-          if (trulyNewBadges.length > 0) {
-            updatedUser = {
-              ...updatedUser,
-              badges: [...userBadges, ...trulyNewBadges.map(b => b.id)]
-            }
-            
-            // Mostra notificação de novos selos (exceto REVEALED_ESSENCE que deve aparecer apenas ao completar perfil)
-            const badgesToNotify = trulyNewBadges.filter(badge => badge.id !== BADGES.REVEALED_ESSENCE.id)
-            badgesToNotify.forEach((badge, index) => {
-              setTimeout(() => {
-                notifyAchievement(
-                  badge.name,
-                  getActionMessage(badge.id)
-                )
-              }, 100 + (index * 500))
+          const currentGroups = groups.map(g =>
+            g.id === groupId ? { ...g, members: [...g.members, user.id] } : g
+          )
+          const newBadges = checkBadges(updatedUser, posts, currentGroups, {})
+          const trulyNew = newBadges.filter(b => !(updatedUser.badges || []).includes(b.id))
+          if (trulyNew.length > 0) {
+            updatedUser = { ...updatedUser, badges: [...(updatedUser.badges || []), ...trulyNew.map(b => b.id)] }
+            trulyNew.filter(b => b.id !== BADGES.REVEALED_ESSENCE.id).forEach((badge, i) => {
+              setTimeout(() => notifyAchievement(badge.name, getActionMessage(badge.id)), 100 + i * 500)
             })
           }
-          
           onUserUpdate(updatedUser)
         }, 100)
-      } else {
-        // Mesmo que não tenha ganho essência, atualiza o usuário (pode ter mudado algo)
-        onUserUpdate(updatedUser)
       }
     }
   }

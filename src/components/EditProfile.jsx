@@ -4,6 +4,7 @@ import SuccessModal from './SuccessModal'
 import { notifyError, notifyEssenceGained } from '../utils/notifications'
 import { addEssence, ESSENCE, checkBadges, BADGES, THEMES, applyTheme } from '../utils/gamification'
 import { getPosts, getGroups } from '../utils/storage'
+import { updateProfile } from '../lib/db'
 import { validateRequiredField, validateEmail, validateSelect, validatePassword, validateConfirmPassword } from '../utils/validation'
 import ThemeSelector from './ThemeSelector'
 import AvatarFrameSelector from './AvatarFrameSelector'
@@ -539,25 +540,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         return
       }
 
-      // Verifica se o e-mail já está cadastrado (apenas se mudou)
-      // Usa o snapshot, não a prop user
-      if (formData.email.toLowerCase().trim() !== snapshot.email?.toLowerCase().trim()) {
-        const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-        const emailExists = savedUsers.some(u => 
-          (snapshot.id && u.id !== snapshot.id && u.email !== snapshot.email) && 
-          u.email && u.email.toLowerCase().trim() === formData.email.toLowerCase().trim()
-        )
-        
-        if (emailExists) {
-          notifyError('Este e-mail já está cadastrado. Use outro e-mail.')
-          setLastErrorSection('account-data')
-          setOpenSection('account-data')
-          setLoading(false)
-          return
-        }
-      }
-
-      // Valida pronome personalizado se "Outro" foi selecionado
+// Valida pronome personalizado se "Outro" foi selecionado
       if (formData.pronoun === 'Outro' && !customPronoun.trim()) {
         notifyError('Por favor, informe seu pronome personalizado.')
         setLastErrorSection('public-info')
@@ -634,28 +617,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         }
       }
 
-      // Busca a senha atual do usuário no localStorage antes de atualizar
-      // Usa o snapshot, não a prop user
-      const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-      const currentUserData = savedUsers.find(u => (snapshot.id && u.id === snapshot.id) || (snapshot.email && u.email === snapshot.email))
-      const currentPassword = currentUserData?.password || ''
-      
-      // Salva no localStorage para persistir
-      localStorage.setItem('inclusivchat_user', JSON.stringify(updatedUser))
-      
-      // Atualiza também na lista de usuários se existir
-      const userIndex = savedUsers.findIndex(u => (snapshot.id && u.id === snapshot.id) || (snapshot.email && u.email === snapshot.email))
-      if (userIndex !== -1) {
-        savedUsers[userIndex] = { ...savedUsers[userIndex], ...updatedUser }
-        // Se uma nova senha foi fornecida, atualiza a senha
-        if (formData.password && formData.password.trim()) {
-          savedUsers[userIndex].password = formData.password
-        } else {
-          // Mantém a senha original
-          savedUsers[userIndex].password = currentPassword
-        }
-        localStorage.setItem('inclusivchat_users', JSON.stringify(savedUsers))
-      }
+      await updateProfile(snapshot.id, updatedUser)
 
       // Mostra o modal de sucesso primeiro
       setShowSuccessModal(true)
@@ -678,7 +640,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
 
   // Handlers para recompensas (temas, molduras, títulos)
   // Atualizam apenas o estado local currentUser, não dependem da prop user
-  const handleThemeSelect = (themeId, updatedUser) => {
+  const handleThemeSelect = async (themeId, updatedUser) => {
     if (!updatedUser) return
     
     // Se themeId for null, remove o tema ativo (retorna ao padrão)
@@ -700,23 +662,15 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
       onUserUpdate(userWithTheme)
     }
 
-    // Atualiza também o localStorage para persistir
-    // Usa o snapshot para encontrar o usuário
     try {
       const snapshot = userSnapshotRef.current || {}
-      localStorage.setItem('inclusivchat_user', JSON.stringify(userWithTheme))
-      const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-      const userIndex = savedUsers.findIndex(u => (snapshot.id && u.id === snapshot.id) || (snapshot.email && u.email === snapshot.email))
-      if (userIndex !== -1) {
-        savedUsers[userIndex] = { ...savedUsers[userIndex], ...userWithTheme }
-        localStorage.setItem('inclusivchat_users', JSON.stringify(savedUsers))
-      }
+      await updateProfile(snapshot.id, userWithTheme)
     } catch (error) {
       console.error('Erro ao salvar tema:', error)
     }
   }
 
-  const handleFrameSelect = (frameId, updatedUser) => {
+  const handleFrameSelect = async (frameId, updatedUser) => {
     if (!updatedUser) return
 
     setCurrentUser(updatedUser)
@@ -726,23 +680,15 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
       onUserUpdate(updatedUser)
     }
 
-    // Atualiza também o localStorage para persistir
-    // Usa o snapshot para encontrar o usuário
     try {
       const snapshot = userSnapshotRef.current || {}
-      localStorage.setItem('inclusivchat_user', JSON.stringify(updatedUser))
-      const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-      const userIndex = savedUsers.findIndex(u => (snapshot.id && u.id === snapshot.id) || (snapshot.email && u.email === snapshot.email))
-      if (userIndex !== -1) {
-        savedUsers[userIndex] = { ...savedUsers[userIndex], ...updatedUser }
-        localStorage.setItem('inclusivchat_users', JSON.stringify(savedUsers))
-      }
+      await updateProfile(snapshot.id, updatedUser)
     } catch (error) {
       console.error('Erro ao salvar moldura:', error)
     }
   }
 
-  const handleTitleSelect = (titleId, updatedUser) => {
+  const handleTitleSelect = async (titleId, updatedUser) => {
     if (!updatedUser) return
 
     setCurrentUser(updatedUser)
@@ -752,17 +698,9 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
       onUserUpdate(updatedUser)
     }
 
-    // Atualiza também o localStorage para persistir
-    // Usa o snapshot para encontrar o usuário
     try {
       const snapshot = userSnapshotRef.current || {}
-      localStorage.setItem('inclusivchat_user', JSON.stringify(updatedUser))
-      const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-      const userIndex = savedUsers.findIndex(u => (snapshot.id && u.id === snapshot.id) || (snapshot.email && u.email === snapshot.email))
-      if (userIndex !== -1) {
-        savedUsers[userIndex] = { ...savedUsers[userIndex], ...updatedUser }
-        localStorage.setItem('inclusivchat_users', JSON.stringify(savedUsers))
-      }
+      await updateProfile(snapshot.id, updatedUser)
     } catch (error) {
       console.error('Erro ao salvar título:', error)
     }

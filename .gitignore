@@ -27,3 +27,8 @@ dist-ssr
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# Environment variables (never commit credentials)
+.env
+.env.local
+.env.*.local

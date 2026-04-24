@@ -4,6 +4,7 @@ import Logo from './Logo'
 import SuccessModal from './SuccessModal'
 import { notifyError, notifySuccess } from '../utils/notifications'
 import { validateRequiredField, validateEmail, validatePassword, validateConfirmPassword, validateSelect } from '../utils/validation'
+import { signUp, getProfile } from '../lib/db'
 import './SignUp.css'
 
 function SignUp({ onSignUp, onBackToLogin }) {
@@ -228,15 +229,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
       return
     }
 
-    // Verifica se o e-mail já está cadastrado
-    const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-    const emailExists = savedUsers.some(u => u.email.toLowerCase() === formData.email.trim().toLowerCase())
-    
-    if (emailExists) {
-      notifyError('Este e-mail já está cadastrado. Tente fazer login ou use outro e-mail.')
-      return
-    }
-
     if (!formData.password) {
       notifyError('Por favor, insira uma senha.')
       return
@@ -288,44 +280,47 @@ function SignUp({ onSignUp, onBackToLogin }) {
     setLoading(true)
 
     try {
-      // Simula delay de requisição
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const pronoun = formData.pronoun === 'Outro' ? customPronoun.trim() : formData.pronoun
 
-      // Cria objeto de usuário com dados iniciais
-      const userData = {
-        id: Date.now().toString(),
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        password: formData.password, // Em produção, isso seria hash
-        pronoun: formData.pronoun === 'Outro' ? customPronoun.trim() : formData.pronoun,
-        games: formData.games,
-        city: formData.city,
-        state: formData.state,
-        platforms: {
-          steam: formData.platforms.steam.trim(),
-          epic: formData.platforms.epic.trim(),
-          xbox: formData.platforms.xbox.trim(),
-          playstation: formData.platforms.playstation.trim(),
-          nintendo: formData.platforms.nintendo.trim(),
-          riot: formData.platforms.riot.trim()
-        },
-        points: 0,
-        badges: [],
-        joinedGroups: [],
-        createdAt: new Date().toISOString()
+      const { data, error } = await signUp(
+        formData.email.trim(),
+        formData.password,
+        {
+          name: formData.name.trim(),
+          pronoun,
+          city: formData.city,
+          state: formData.state,
+          games: formData.games,
+          platforms: {
+            steam: formData.platforms.steam.trim(),
+            epic: formData.platforms.epic.trim(),
+            xbox: formData.platforms.xbox.trim(),
+            playstation: formData.platforms.playstation.trim(),
+            nintendo: formData.platforms.nintendo.trim(),
+            riot: formData.platforms.riot.trim(),
+          },
+        }
+      )
+
+      if (error) {
+        if (error.message.includes('already registered') || error.message.includes('already been registered')) {
+          notifyError('Este e-mail já está cadastrado. Tente fazer login ou use outro e-mail.')
+        } else {
+          notifyError('Erro ao criar conta: ' + error.message)
+        }
+        return
       }
 
       // Mostra modal de sucesso
       setShowSuccessModal(true)
-      
-      // Após 2 segundos, mostra loading e redireciona
-      setTimeout(() => {
+
+      setTimeout(async () => {
         setShowSuccessModal(false)
         setIsRedirecting(true)
-        
-        // Após mais 1.5 segundos, faz o signup (que redireciona automaticamente)
-        setTimeout(() => {
-          onSignUp(userData)
+
+        setTimeout(async () => {
+          const profile = await getProfile(data.user.id, data.user.email)
+          if (profile) onSignUp(profile)
         }, 1500)
       }, 2000)
     } catch (error) {
@@ -409,7 +404,7 @@ function SignUp({ onSignUp, onBackToLogin }) {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              onBlur={(e) => validateEmail(e, true)}
+              onBlur={(e) => validateEmail(e)}
               className="form-input"
               placeholder="Digite seu e-mail"
               required

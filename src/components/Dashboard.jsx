@@ -6,7 +6,7 @@ import Logo from './Logo'
 import Notification from './Notification'
 import LoadingSpinner from './LoadingSpinner'
 import FAQ from './FAQ'
-import { updateUser } from '../utils/storage'
+import { updateProfile } from '../lib/db'
 import { setNotificationCallback, notifyEssenceGained, notifyAchievement } from '../utils/notifications'
 import { addEssence, DAILY_ESSENCE_LIMIT, THEMES, MYSTIC_TITLES, canUnlockMysticTitle, unlockMysticTitle } from '../utils/gamification'
 import './Dashboard.css'
@@ -211,7 +211,7 @@ function Dashboard({ user, onLogout }) {
 
   // Atualiza usuário no localStorage quando mudar
   useEffect(() => {
-    updateUser(currentUser)
+    updateProfile(currentUser.id, currentUser)
   }, [currentUser])
 
   // Verifica se atingiu limite diário e mostra notificação (apenas uma vez por dia)
@@ -316,7 +316,9 @@ function Dashboard({ user, onLogout }) {
   const handleLogoutConfirm = async () => {
     setShowLogoutConfirm(false)
     setIsLoggingOut(true)
-    await new Promise(resolve => setTimeout(resolve, 800))
+    const { signOut } = await import('../lib/db')
+    await signOut()
+    await new Promise(resolve => setTimeout(resolve, 400))
     onLogout()
   }
 
