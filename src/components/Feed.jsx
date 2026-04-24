@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PostCard from './PostCard'
 import CreatePost from './CreatePost'
-import { getPosts, savePosts } from '../utils/storage'
+import { fetchPosts, createPost, deletePost, subscribeToPosts } from '../lib/db'
 import './Feed.css'
 
 function WelcomeModal({ user, onClose }) {
@@ -29,42 +29,38 @@ function WelcomeModal({ user, onClose }) {
   )
 }
 
-// Chave isolada por usuário — desacopla a flag "já viu o welcome" do objeto `user`,
-// que é sobrescrito em vários pontos (login, editar perfil, criar/entrar em grupo)
-// e pode perder a flag no meio do caminho. Ver PR de correção do modal.
 const welcomeSeenKey = (userId) => `inclusivchat_welcome_seen_${userId}`
 
 function hasSeenWelcome(user) {
   if (!user?.id) return false
-  // Migração: usuários antigos podem ter a flag no próprio objeto user.
-  // Se tiver, já marca a chave nova e considera visto.
-  if (user.hasSeenWelcome) {
-    try { localStorage.setItem(welcomeSeenKey(user.id), '1') } catch {}
-    return true
-  }
   return localStorage.getItem(welcomeSeenKey(user.id)) === '1'
 }
 
 function Feed({ user, onUserUpdate }) {
   const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
   const [showCreatePost, setShowCreatePost] = useState(false)
   const [showWelcome, setShowWelcome] = useState(() => !hasSeenWelcome(user))
 
-  // Marca como visto imediatamente ao montar — evita reexibição ao trocar de aba
+  // Marca welcome como visto imediatamente ao montar
   useEffect(() => {
     if (showWelcome && user?.id) {
       try { localStorage.setItem(welcomeSeenKey(user.id), '1') } catch {}
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Carrega postagens do localStorage
-  useEffect(() => {
-    const savedPosts = getPosts()
-    const sortedPosts = savedPosts.sort((a, b) =>
-      new Date(b.createdAt) - new Date(a.createdAt)
-    )
-    setPosts(sortedPosts)
+  const loadPosts = useCallback(async () => {
+    const data = await fetchPosts()
+    setPosts(data)
+    setLoading(false)
   }, [])
+
+  // Carrega posts e assina realtime
+  useEffect(() => {
+    loadPosts()
+    const unsubscribe = subscribeToPosts(loadPosts)
+    return unsubscribe
+  }, [loadPosts])
 
   const handleCloseWelcome = () => {
     setShowWelcome(false)
@@ -73,45 +69,22 @@ function Feed({ user, onUserUpdate }) {
     }
   }
 
-  // Cria nova postagem
-  const handleCreatePost = (content) => {
-    const newPost = {
-      id: Date.now().toString(),
-      userId: user.id,
-      userName: user.name,
-      userPronoun: user.pronoun,
-      userAvatar: user.avatar || user.picture || null,
-      userCity: user.city || '',
-      userState: user.state || '',
-      content: content,
-      likes: [],
-      reactions: {},
-      comments: [],
-      createdAt: new Date().toISOString()
+  const handleCreatePost = async (content) => {
+    const newPost = await createPost(user.id, content)
+    if (newPost) {
+      setPosts(prev => [newPost, ...prev])
     }
-
-    const updatedPosts = [newPost, ...posts]
-    setPosts(updatedPosts)
-    savePosts(updatedPosts)
     setShowCreatePost(false)
   }
 
-  // Atualiza postagem (após curtir/comentar)
   const handleUpdatePost = (postId, updatedPost) => {
-    const updatedPosts = posts.map(post =>
-      post.id === postId ? updatedPost : post
-    )
-    setPosts(updatedPosts)
-    savePosts(updatedPosts)
+    setPosts(prev => prev.map(p => p.id === postId ? updatedPost : p))
   }
 
-  // Exclui postagem
-  const handleDeletePost = (postId) => {
-    if (window.confirm('Tem certeza que deseja excluir esta postagem?')) {
-      const updatedPosts = posts.filter(post => post.id !== postId)
-      setPosts(updatedPosts)
-      savePosts(updatedPosts)
-    }
+  const handleDeletePost = async (postId) => {
+    if (!window.confirm('Tem certeza que deseja excluir esta postagem?')) return
+    await deletePost(postId)
+    setPosts(prev => prev.filter(p => p.id !== postId))
   }
 
   return (
@@ -139,7 +112,9 @@ function Feed({ user, onUserUpdate }) {
       )}
 
       <div className="posts-container">
-        {posts.length === 0 ? (
+        {loading ? (
+          <div className="empty-state"><p>Carregando postagens...</p></div>
+        ) : posts.length === 0 ? (
           <div className="empty-state">
             <p>Nenhuma postagem ainda. Seja o primeiro a compartilhar algo! 🎮</p>
           </div>

@@ -3,6 +3,7 @@ import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES } from '../u
 import { getPosts, getGroups } from '../utils/storage'
 import { notifyError, notifyAchievement, notifyEssenceGained } from '../utils/notifications'
 import { validateRequiredField, validateSelect, validateTextarea } from '../utils/validation'
+import { updateProfile } from '../lib/db'
 import './CreateGroup.css'
 
 function CreateGroup({ user, onCreateGroup, onUserUpdate }) {
@@ -52,7 +53,7 @@ function CreateGroup({ user, onCreateGroup, onUserUpdate }) {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (!formData.name.trim()) {
@@ -99,17 +100,8 @@ function CreateGroup({ user, onCreateGroup, onUserUpdate }) {
       notifyEssenceGained(essenceAmount, 'Criar grupo adicional')
     }
     
-    // Salva no localStorage
-    localStorage.setItem('inclusivchat_user', JSON.stringify(updatedUser))
-    
-    // Atualiza também na lista de usuários se existir
-    const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-    const userIndex = savedUsers.findIndex(u => u.id === user.id || u.email === user.email)
-    if (userIndex !== -1) {
-      savedUsers[userIndex] = { ...savedUsers[userIndex], ...updatedUser }
-      localStorage.setItem('inclusivchat_users', JSON.stringify(savedUsers))
-    }
-    
+    await updateProfile(user.id, updatedUser)
+
     // Atualiza o usuário no componente pai
     onUserUpdate(updatedUser)
 

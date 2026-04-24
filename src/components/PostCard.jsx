@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { filterProfanity } from '../utils/profanityFilter'
 import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES, MIN_COMMENT_LENGTH_FOR_ESSENCE } from '../utils/gamification'
-import { getStorage, getPosts, getGroups } from '../utils/storage'
+import { toggleReaction as dbToggleReaction, addComment as dbAddComment } from '../lib/db'
+import { getPosts, getGroups } from '../utils/storage'
 import { notifyError, notifyAchievement, notifySuccess, notifyEssenceGained } from '../utils/notifications'
 import EmojiPicker from './EmojiPicker'
 import AvatarFrame from './AvatarFrame'
@@ -21,29 +22,21 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
   const [reportCommentId, setReportCommentId] = useState(null)
   const emojiButtonRef = useRef(null)
 
-  // Busca dados do autor da postagem
+  // Usa authorProfile já embutido no post (vem do join Supabase)
   useEffect(() => {
-    const savedUsers = getStorage('inclusivchat_users') || []
-    let author = savedUsers.find(u => u.id === post.userId)
-    
-    // Se não encontrou nos usuários salvos, usa o usuário atual se for ele
-    if (!author && post.userId === currentUser.id) {
-      author = currentUser
-    }
-    
-    // Se ainda não encontrou, cria um objeto básico com os dados da postagem
-    if (!author) {
-      author = {
+    if (post.authorProfile) {
+      setPostAuthor(post.authorProfile)
+    } else if (post.userId === currentUser.id) {
+      setPostAuthor(currentUser)
+    } else {
+      setPostAuthor({
         id: post.userId,
         name: post.userName,
         pronoun: post.userPronoun,
         avatar: post.userAvatar || null,
-        picture: post.userAvatar || null
-      }
+      })
     }
-    
-    setPostAuthor(author)
-  }, [post.userId, post.userName, post.userPronoun, post.userAvatar, currentUser])
+  }, [post.authorProfile, post.userId, post.userName, post.userPronoun, post.userAvatar, currentUser])
 
   // Atualiza posição do modal quando necessário
   useEffect(() => {
@@ -128,60 +121,38 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
     return date.toLocaleDateString('pt-BR')
   }
 
-  // Manipula reação (novo sistema)
-  const handleReaction = (emoji) => {
+  // Manipula reação (novo sistema) — otimista + persiste no Supabase
+  const handleReaction = async (emoji) => {
     const currentReactions = getReactions()
     const userReacted = hasUserReacted(emoji)
     let updatedReactions = { ...currentReactions }
 
     if (userReacted) {
-      // Remove reação
       updatedReactions[emoji] = updatedReactions[emoji].filter(id => id !== currentUser.id)
-      // Remove emoji se não houver mais reações
-      if (updatedReactions[emoji].length === 0) {
-        delete updatedReactions[emoji]
-      }
+      if (updatedReactions[emoji].length === 0) delete updatedReactions[emoji]
     } else {
-      // Adiciona reação
-      if (!updatedReactions[emoji]) {
-        updatedReactions[emoji] = []
-      }
-      // Garante que não duplica o usuário
+      if (!updatedReactions[emoji]) updatedReactions[emoji] = []
       if (!updatedReactions[emoji].includes(currentUser.id)) {
         updatedReactions[emoji] = [...updatedReactions[emoji], currentUser.id]
       }
-      
-      // Nota: Reações não concedem essências conforme o sistema de gamificação
-      // As essências são concedidas apenas pelas ações principais listadas no FAQ
     }
 
-    // Atualiza likes também para compatibilidade (se for ❤️)
     let updatedLikes = post.likes || []
     if (emoji === '❤️') {
       if (userReacted) {
         updatedLikes = updatedLikes.filter(id => id !== currentUser.id)
-      } else {
-        // Garante que não duplica o usuário
-        if (!updatedLikes.includes(currentUser.id)) {
-          updatedLikes = [...updatedLikes, currentUser.id]
-        }
+      } else if (!updatedLikes.includes(currentUser.id)) {
+        updatedLikes = [...updatedLikes, currentUser.id]
       }
     }
 
-    const updatedPost = {
-      ...post,
-      reactions: updatedReactions,
-      likes: updatedLikes
-    }
-
-    onUpdate(post.id, updatedPost)
+    onUpdate(post.id, { ...post, reactions: updatedReactions, likes: updatedLikes })
     setShowEmojiPicker(false)
+
+    await dbToggleReaction(post.id, currentUser.id, emoji)
   }
 
-  // Manipula curtida (mantém para compatibilidade)
-  const handleLike = () => {
-    handleReaction('❤️')
-  }
+  const handleLike = () => handleReaction('❤️')
 
   // Abre o seletor de emojis
   const handleOpenEmojiPicker = (forWhat) => {
@@ -304,7 +275,7 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
   }
 
   // Manipula comentário
-  const handleComment = (e) => {
+  const handleComment = async (e) => {
     e.preventDefault()
 
     if (!commentText.trim()) {
@@ -312,67 +283,37 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
       return
     }
 
-    // Filtra palavras ofensivas
     const filteredComment = filterProfanity(commentText.trim())
 
-    const newComment = {
+    // Atualização otimista local
+    const optimisticComment = {
       id: Date.now().toString(),
       userId: currentUser.id,
       userName: currentUser.name,
       userPronoun: currentUser.pronoun,
       content: filteredComment,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+    }
+    onUpdate(post.id, { ...post, comments: [...(post.comments || []), optimisticComment] })
+    setCommentText('')
+    setShowComments(true)
+
+    // Persiste no Supabase
+    const saved = await dbAddComment(post.id, currentUser.id, filteredComment)
+    if (saved) {
+      onUpdate(post.id, {
+        ...post,
+        comments: [...(post.comments || []), saved],
+      })
     }
 
-    const updatedPost = {
-      ...post,
-      comments: [...(post.comments || []), newComment]
-    }
-
-    // Adiciona Essência ao usuário (apenas se o comentário tiver tamanho mínimo)
+    // Gamificação
     let updatedUser = currentUser
     if (filteredComment.length >= MIN_COMMENT_LENGTH_FOR_ESSENCE) {
       updatedUser = addEssence(currentUser, ESSENCE.SUPPORTIVE_COMMENT)
       notifyEssenceGained(ESSENCE.SUPPORTIVE_COMMENT, 'Fazer comentário de apoio')
     }
     onUserUpdate(updatedUser)
-
-    onUpdate(post.id, updatedPost)
-    
-    // Verifica badges após comentar (com delay para garantir que o comentário foi salvo)
-    setTimeout(() => {
-      const posts = getPosts()
-      const groups = getGroups()
-      const messages = {}
-      const newBadges = checkBadges(updatedUser, posts, groups, messages)
-      
-      // Filtra apenas badges realmente novos
-      const userBadges = updatedUser.badges || []
-      const trulyNewBadges = newBadges.filter(badge => !userBadges.includes(badge.id))
-      
-      // Se houver novos badges, adiciona ao usuário
-      if (trulyNewBadges.length > 0) {
-        const finalUser = {
-          ...updatedUser,
-          badges: [...userBadges, ...trulyNewBadges.map(b => b.id)]
-        }
-        onUserUpdate(finalUser)
-        
-        // Mostra notificação de novos badges (exceto REVEALED_ESSENCE que deve aparecer apenas ao completar perfil)
-        const badgesToNotify = trulyNewBadges.filter(badge => badge.id !== BADGES.REVEALED_ESSENCE.id)
-        badgesToNotify.forEach((badge, index) => {
-          setTimeout(() => {
-            notifyAchievement(
-              badge.name,
-              getActionMessage(badge.id)
-            )
-          }, 100 + (index * 500)) // Espaça as notificações
-        })
-      }
-    }, 100)
-    
-    setCommentText('')
-    setShowComments(true)
   }
 
   return (

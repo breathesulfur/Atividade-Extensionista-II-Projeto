@@ -4,78 +4,55 @@ import SignUp from './components/SignUp'
 import ForgotPassword from './components/ForgotPassword'
 import Dashboard from './components/Dashboard'
 import Notification from './components/Notification'
-import { initializeSeedData } from './utils/seedData'
+import LoadingSpinner from './components/LoadingSpinner'
 import { setNotificationCallback } from './utils/notifications'
+import { getSession, onAuthStateChange, getProfile } from './lib/db'
 import './App.css'
 
 function App() {
   const [user, setUser] = useState(null)
-  const [currentView, setCurrentView] = useState('login') // 'login', 'signup', 'forgotPassword'
+  const [loading, setLoading] = useState(true)
+  const [currentView, setCurrentView] = useState('login')
   const [notification, setNotification] = useState(null)
 
-  // Configura o sistema de notificações
   useEffect(() => {
     setNotificationCallback((message, type, duration) => {
       setNotification({ message, type, duration })
     })
   }, [])
 
-  // Inicializa dados iniciais e verifica se há usuário logado
+  // Verifica sessão existente e escuta mudanças de auth
   useEffect(() => {
-    // Inicializa dados de exemplo (postagens e grupos)
-    initializeSeedData()
-    
-    // Verifica se há usuário logado no localStorage
-    const savedUser = localStorage.getItem('inclusivchat_user')
-    if (savedUser) {
-      const userData = JSON.parse(savedUser)
-      setUser(userData)
+    let mounted = true
+
+    const loadProfile = async (session) => {
+      if (!session?.user) { if (mounted) { setUser(null); setLoading(false) }; return }
+      const profile = await getProfile(session.user.id, session.user.email)
+      if (mounted) { setUser(profile); setLoading(false) }
     }
+
+    getSession().then(({ data: { session } }) => loadProfile(session))
+
+    const { data: { subscription } } = onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') loadProfile(session)
+      if (event === 'SIGNED_OUT') { if (mounted) { setUser(null); setLoading(false) } }
+    })
+
+    return () => { mounted = false; subscription.unsubscribe() }
   }, [])
 
-  // Função para fazer login
-  const handleLogin = (userData) => {
-    // Garante que avatar/picture seja preservado
-    const savedUser = localStorage.getItem('inclusivchat_user')
-    if (savedUser) {
-      const previousUser = JSON.parse(savedUser)
-      if (previousUser.avatar || previousUser.picture) {
-        userData.avatar = userData.avatar || previousUser.avatar || previousUser.picture
-        userData.picture = userData.picture || previousUser.picture || previousUser.avatar
-      }
-      // Preserva lastLoginDates
-      if (previousUser.lastLoginDates) {
-        userData.lastLoginDates = previousUser.lastLoginDates
-      }
-    }
-    
-    setUser(userData)
-    localStorage.setItem('inclusivchat_user', JSON.stringify(userData))
-    setCurrentView('login')
-  }
+  const handleLogout = () => setUser(null)
 
-  // Função para fazer cadastro
-  const handleSignUp = (userData) => {
-    // Salva o usuário na lista de usuários (em produção seria no backend)
-    const savedUsers = JSON.parse(localStorage.getItem('inclusivchat_users') || '[]')
-    savedUsers.push(userData)
-    localStorage.setItem('inclusivchat_users', JSON.stringify(savedUsers))
-    
-    // Faz login automaticamente após cadastro
-    const { password, ...userWithoutPassword } = userData
-    handleLogin(userWithoutPassword)
-  }
-
-  // Função para fazer logout
-  const handleLogout = () => {
-    setUser(null)
-    localStorage.removeItem('inclusivchat_user')
-    setCurrentView('login')
+  if (loading) {
+    return (
+      <div className="app" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <LoadingSpinner size="large" text="Carregando..." />
+      </div>
+    )
   }
 
   return (
     <div className="app">
-      {/* Notificações para telas de login/signup */}
       {!user && notification && (
         <div className="notifications-container">
           <Notification
@@ -91,21 +68,19 @@ function App() {
         <>
           {currentView === 'login' && (
             <Login
-              onLogin={handleLogin}
+              onLogin={setUser}
               onNavigateToSignUp={() => setCurrentView('signup')}
               onNavigateToForgotPassword={() => setCurrentView('forgotPassword')}
             />
           )}
           {currentView === 'signup' && (
             <SignUp
-              onSignUp={handleSignUp}
+              onSignUp={setUser}
               onBackToLogin={() => setCurrentView('login')}
             />
           )}
           {currentView === 'forgotPassword' && (
-            <ForgotPassword
-              onBackToLogin={() => setCurrentView('login')}
-            />
+            <ForgotPassword onBackToLogin={() => setCurrentView('login')} />
           )}
         </>
       ) : (

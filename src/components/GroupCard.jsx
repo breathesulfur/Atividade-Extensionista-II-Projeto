@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { getGroupMessages, saveGroupMessages, getPosts, getGroups } from '../utils/storage'
+import React, { useState, useEffect, useRef } from 'react'
+import { fetchGroupMessages, sendGroupMessage, subscribeToGroupMessages } from '../lib/db'
+import { getPosts } from '../utils/storage'
 import { filterProfanity } from '../utils/profanityFilter'
 import { checkBadges, getActionMessage, BADGES } from '../utils/gamification'
 import { notifyError, notifyAchievement } from '../utils/notifications'
@@ -8,108 +9,71 @@ import './GroupCard.css'
 function GroupCard({ group, user, onBack, onUserUpdate }) {
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
+  const [loading, setLoading] = useState(true)
+  const containerRef = useRef(null)
 
-  // Carrega mensagens do localStorage
+  // Carrega mensagens e assina realtime
   useEffect(() => {
-    const savedMessages = getGroupMessages(group.id)
-    setMessages(savedMessages)
+    let mounted = true
+
+    fetchGroupMessages(group.id).then(data => {
+      if (mounted) { setMessages(data); setLoading(false) }
+    })
+
+    // Realtime: nova mensagem inserida por outro usuário
+    const unsubscribe = subscribeToGroupMessages(group.id, async () => {
+      const data = await fetchGroupMessages(group.id)
+      if (mounted) setMessages(data)
+    })
+
+    return () => { mounted = false; unsubscribe() }
   }, [group.id])
 
-  // Salva mensagens no localStorage quando mudarem
+  // Scroll para o fim quando mensagens chegam
   useEffect(() => {
-    if (messages.length > 0) {
-      saveGroupMessages(group.id, messages)
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight
     }
-  }, [messages, group.id])
+  }, [messages])
 
-  // Verifica se o usuário é membro do grupo
   const isMember = group.members?.includes(user.id) || false
 
-  // Formata data
   const formatDate = (dateString) => {
     const date = new Date(dateString)
     const now = new Date()
     const diff = now - date
     const minutes = Math.floor(diff / 60000)
     const hours = Math.floor(diff / 3600000)
-
     if (minutes < 1) return 'agora'
     if (minutes < 60) return `${minutes} min atrás`
     if (hours < 24) return `${hours}h atrás`
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
+    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
   }
 
-  // Envia mensagem
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault()
+    if (!isMember) { notifyError('Você precisa ser membro do grupo para enviar mensagens.'); return }
+    if (!newMessage.trim()) { notifyError('Por favor, escreva uma mensagem.'); return }
 
-    if (!isMember) {
-      notifyError('Você precisa ser membro do grupo para enviar mensagens.')
-      return
-    }
-
-    if (!newMessage.trim()) {
-      notifyError('Por favor, escreva uma mensagem.')
-      return
-    }
-
-    // Filtra palavras ofensivas
     const filteredMessage = filterProfanity(newMessage.trim())
-
-    const message = {
-      id: Date.now().toString(),
-      userId: user.id,
-      userName: user.name,
-      userPronoun: user.pronoun,
-      content: filteredMessage,
-      createdAt: new Date().toISOString()
-    }
-
-    setMessages([...messages, message])
     setNewMessage('')
 
-    // Verifica badges após enviar mensagem (com delay para garantir que a mensagem foi salva)
+    const saved = await sendGroupMessage(group.id, user.id, filteredMessage)
+    if (saved) {
+      setMessages(prev => [...prev, saved])
+    }
+
+    // Gamificação: verifica badges
     setTimeout(() => {
       const posts = getPosts()
-      const groups = getGroups()
-      const allMessages = { [group.id]: [...messages, message] }
-      const newBadges = checkBadges(user, posts, groups, allMessages)
-
-      // Filtra apenas badges realmente novos
-      const userBadges = user.badges || []
-      const trulyNewBadges = newBadges.filter(badge => !userBadges.includes(badge.id))
-
-      // Se houver novos badges, adiciona ao usuário
-      if (trulyNewBadges.length > 0) {
-        const finalUser = {
-          ...user,
-          badges: [...userBadges, ...trulyNewBadges.map(b => b.id)]
-        }
-        onUserUpdate(finalUser)
-
-        // Mostra notificação de novos badges (exceto REVEALED_ESSENCE que deve aparecer apenas ao completar perfil)
-        const badgesToNotify = trulyNewBadges.filter(badge => badge.id !== BADGES.REVEALED_ESSENCE.id)
-        badgesToNotify.forEach((badge, index) => {
-          setTimeout(() => {
-            notifyAchievement(
-              badge.name,
-              getActionMessage(badge.id)
-            )
-          }, 100 + (index * 500)) // Espaça as notificações
+      const newBadges = checkBadges(user, posts, [group], { [group.id]: messages })
+      const trulyNew = newBadges.filter(b => !(user.badges || []).includes(b.id))
+      if (trulyNew.length > 0) {
+        const updated = { ...user, badges: [...(user.badges || []), ...trulyNew.map(b => b.id)] }
+        onUserUpdate(updated)
+        trulyNew.filter(b => b.id !== BADGES.REVEALED_ESSENCE.id).forEach((badge, i) => {
+          setTimeout(() => notifyAchievement(badge.name, getActionMessage(badge.id)), 100 + i * 500)
         })
-      }
-    }, 100)
-
-    // Scroll para a última mensagem
-    setTimeout(() => {
-      const messagesContainer = document.getElementById('messages-container')
-      if (messagesContainer) {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight
       }
     }, 100)
   }
@@ -118,9 +82,7 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
     return (
       <div className="group-chat">
         <div className="chat-header">
-          <button onClick={onBack} className="back-button">
-            ← Voltar
-          </button>
+          <button onClick={onBack} className="back-button">← Voltar</button>
           <h2>{group.name}</h2>
         </div>
         <div className="not-member-message">
@@ -134,9 +96,7 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
   return (
     <div className="group-chat">
       <div className="chat-header">
-        <button onClick={onBack} className="back-button">
-          ← Voltar
-        </button>
+        <button onClick={onBack} className="back-button">← Voltar</button>
         <div className="chat-header-info">
           <h2>{group.name}</h2>
           <div className="chat-header-meta">
@@ -150,19 +110,16 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
         <p>{group.description}</p>
       </div>
 
-      <div id="messages-container" className="messages-container">
-        {messages.length === 0 ? (
-          <div className="empty-messages">
-            <p>Nenhuma mensagem ainda. Seja o primeiro a conversar! 💬</p>
-          </div>
+      <div id="messages-container" ref={containerRef} className="messages-container">
+        {loading ? (
+          <div className="empty-messages"><p>Carregando mensagens...</p></div>
+        ) : messages.length === 0 ? (
+          <div className="empty-messages"><p>Nenhuma mensagem ainda. Seja o primeiro a conversar! 💬</p></div>
         ) : (
           messages.map(message => {
             const isOwnMessage = message.userId === user.id
             return (
-              <div
-                key={message.id}
-                className={`message-item ${isOwnMessage ? 'own-message' : ''}`}
-              >
+              <div key={message.id} className={`message-item ${isOwnMessage ? 'own-message' : ''}`}>
                 <div className="message-header">
                   <strong>{message.userName}</strong>
                   <span className="message-pronoun">({message.userPronoun})</span>
@@ -184,9 +141,7 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
           className="message-input"
           maxLength="300"
         />
-        <button type="submit" className="send-button">
-          Enviar
-        </button>
+        <button type="submit" className="send-button">Enviar</button>
       </form>
     </div>
   )
