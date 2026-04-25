@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { filterProfanity } from '../utils/profanityFilter'
 import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES, MIN_COMMENT_LENGTH_FOR_ESSENCE } from '../utils/gamification'
-import { toggleReaction as dbToggleReaction, addComment as dbAddComment } from '../lib/db'
+import { toggleReaction as dbToggleReaction, addComment as dbAddComment, updateComment, deleteComment, createNotification } from '../lib/db'
 import { getPosts, getGroups } from '../utils/storage'
 import { notifyError, notifyAchievement, notifySuccess, notifyEssenceGained } from '../utils/notifications'
 import EmojiPicker from './EmojiPicker'
@@ -20,6 +20,8 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
   const [showReportModal, setShowReportModal] = useState(false)
   const [reportType, setReportType] = useState(null) // 'post' ou 'comment'
   const [reportCommentId, setReportCommentId] = useState(null)
+  const [editingCommentId, setEditingCommentId] = useState(null)
+  const [editCommentText, setEditCommentText] = useState('')
   const emojiButtonRef = useRef(null)
 
   // Usa authorProfile já embutido no post (vem do join Supabase)
@@ -150,6 +152,17 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
     setShowEmojiPicker(false)
 
     await dbToggleReaction(post.id, currentUser.id, emoji)
+
+    if (!userReacted && post.userId !== currentUser.id) {
+      createNotification({
+        userId: post.userId,
+        type: 'reaction',
+        sourceUserId: currentUser.id,
+        sourceUserName: currentUser.name,
+        postId: post.id,
+        message: `${currentUser.name} reagiu com ${emoji} à sua postagem`,
+      })
+    }
   }
 
   const handleLike = () => handleReaction('❤️')
@@ -305,6 +318,16 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
         ...post,
         comments: [...(post.comments || []), saved],
       })
+      if (post.userId !== currentUser.id) {
+        createNotification({
+          userId: post.userId,
+          type: 'comment',
+          sourceUserId: currentUser.id,
+          sourceUserName: currentUser.name,
+          postId: post.id,
+          message: `${currentUser.name} comentou na sua postagem: "${filteredComment.slice(0, 60)}${filteredComment.length > 60 ? '...' : ''}"`,
+        })
+      }
     }
 
     // Gamificação
@@ -314,6 +337,35 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
       notifyEssenceGained(ESSENCE.SUPPORTIVE_COMMENT, 'Fazer comentário de apoio')
     }
     onUserUpdate(updatedUser)
+  }
+
+  const handleEditComment = (comment) => {
+    setEditingCommentId(comment.id)
+    setEditCommentText(comment.content)
+  }
+
+  const handleSaveEditComment = async (commentId) => {
+    if (!editCommentText.trim()) return
+    const ok = await updateComment(commentId, editCommentText.trim())
+    if (ok) {
+      onUpdate(post.id, {
+        ...post,
+        comments: post.comments.map(c =>
+          c.id === commentId ? { ...c, content: editCommentText.trim(), updatedAt: new Date().toISOString() } : c
+        ),
+      })
+      setEditingCommentId(null)
+    } else {
+      notifyError('Erro ao editar comentário.')
+    }
+  }
+
+  const handleDeleteComment = async (commentId) => {
+    await deleteComment(commentId)
+    onUpdate(post.id, {
+      ...post,
+      comments: (post.comments || []).filter(c => c.id !== commentId),
+    })
   }
 
   return (
@@ -458,8 +510,23 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
                       <span className="comment-pronoun">({comment.userPronoun})</span>
                     </div>
                     <div className="comment-actions">
-                      <div className="comment-date">{formatDate(comment.createdAt)}</div>
-                      {comment.userId !== currentUser.id && (
+                      <div className="comment-date">{formatDate(comment.createdAt)}{comment.updatedAt && ' (editado)'}</div>
+                      {comment.userId === currentUser.id ? (
+                        <>
+                          <button
+                            onClick={() => handleEditComment(comment)}
+                            className="edit-comment-button"
+                            aria-label="Editar comentário"
+                            title="Editar comentário"
+                          >✏️</button>
+                          <button
+                            onClick={() => handleDeleteComment(comment.id)}
+                            className="delete-comment-button"
+                            aria-label="Excluir comentário"
+                            title="Excluir comentário"
+                          >🗑️</button>
+                        </>
+                      ) : (
                         <button
                           onClick={() => handleReportComment(comment.id)}
                           className="report-comment-button"
@@ -471,7 +538,24 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
                       )}
                     </div>
                   </div>
-                  <div className="comment-content">{comment.content}</div>
+                  {editingCommentId === comment.id ? (
+                    <div className="comment-edit-form">
+                      <input
+                        type="text"
+                        value={editCommentText}
+                        onChange={e => setEditCommentText(e.target.value)}
+                        className="comment-input"
+                        maxLength="200"
+                        autoFocus
+                      />
+                      <div className="comment-edit-actions">
+                        <button onClick={() => handleSaveEditComment(comment.id)} className="comment-submit">Salvar</button>
+                        <button onClick={() => setEditingCommentId(null)} className="cancel-edit-button">Cancelar</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="comment-content">{comment.content}</div>
+                  )}
                 </div>
               ))
             ) : (

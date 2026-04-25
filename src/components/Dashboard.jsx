@@ -6,6 +6,8 @@ import Logo from './Logo'
 import Notification from './Notification'
 import LoadingSpinner from './LoadingSpinner'
 import FAQ from './FAQ'
+import NotificationBell from './NotificationBell'
+import FeedbackForm from './FeedbackForm'
 import { updateProfile } from '../lib/db'
 import { setNotificationCallback, notifyEssenceGained, notifyAchievement } from '../utils/notifications'
 import { addEssence, DAILY_ESSENCE_LIMIT, THEMES, MYSTIC_TITLES, canUnlockMysticTitle, unlockMysticTitle } from '../utils/gamification'
@@ -160,6 +162,7 @@ function Dashboard({ user, onLogout }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [showFAQ, setShowFAQ] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const [showFeedback, setShowFeedback] = useState(false)
   const previousEssenceRef = useRef(user.essence || user.points || 0)
   const processedMilestonesRef = useRef(new Set([Math.floor((user.essence || user.points || 0) / 50)]))
   const dailyLimitNotificationRef = useRef(false)
@@ -345,6 +348,9 @@ function Dashboard({ user, onLogout }) {
       {/* FAQ Modal */}
       <FAQ isOpen={showFAQ} onClose={() => setShowFAQ(false)} />
 
+      {/* Feedback Modal */}
+      {showFeedback && <FeedbackForm user={currentUser} onClose={() => setShowFeedback(false)} />}
+
       {/* Modal de confirmação de logout */}
       {showLogoutConfirm && (
         <div className="logout-confirm-overlay" onClick={() => setShowLogoutConfirm(false)}>
@@ -387,8 +393,17 @@ function Dashboard({ user, onLogout }) {
                 🔮 {currentUser.essence || currentUser.points || 0} Essências
               </div>
             </div>
-            <button 
-              onClick={() => setShowFAQ(true)} 
+            <NotificationBell user={currentUser} />
+            <button
+              onClick={() => setShowFeedback(true)}
+              className="faq-button-header"
+              aria-label="Enviar Feedback"
+              title="Enviar Feedback"
+            >
+              💜 Feedback
+            </button>
+            <button
+              onClick={() => setShowFAQ(true)}
               className="faq-button-header"
               aria-label="Abrir FAQ"
               title="Perguntas Frequentes"
