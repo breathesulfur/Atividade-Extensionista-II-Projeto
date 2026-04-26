@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { fetchGroupMessages, sendGroupMessage, subscribeToGroupMessages } from '../lib/db'
+import { fetchGroupMessages, sendGroupMessage, subscribeToGroupMessages, createNotification } from '../lib/db'
 import { getPosts } from '../utils/storage'
 import { filterProfanity } from '../utils/profanityFilter'
 import { checkBadges, getActionMessage, BADGES } from '../utils/gamification'
@@ -61,6 +61,16 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
     const saved = await sendGroupMessage(group.id, user.id, filteredMessage)
     if (saved) {
       setMessages(prev => [...prev, saved])
+      if (group.createdBy && group.createdBy !== user.id) {
+        createNotification({
+          userId: group.createdBy,
+          type: 'group_message',
+          sourceUserId: user.id,
+          sourceUserName: user.name,
+          groupId: group.id,
+          message: `${user.name} enviou uma mensagem no seu grupo "${group.name}"`,
+        })
+      }
     }
 
     // Gamificação: verifica badges

@@ -96,6 +96,7 @@ const mapPost = (row) => ({
       userPronoun: c.profiles?.pronoun || '',
       content: c.content,
       createdAt: c.created_at,
+      updatedAt: c.updated_at || null,
     }))
     .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)),
   createdAt: row.created_at,
@@ -170,7 +171,7 @@ const POST_SELECT = `
   profiles:user_id (name, pronoun, avatar, city, state, active_avatar_frame, unlocked_avatar_frames),
   post_likes (user_id),
   post_reactions (user_id, emoji),
-  comments (id, user_id, content, created_at, profiles:user_id (name, pronoun))
+  comments (id, user_id, content, created_at, updated_at, profiles:user_id (name, pronoun))
 `
 
 export const fetchPosts = async () => {
@@ -239,7 +240,7 @@ export const addComment = async (postId, userId, content) => {
   const { data, error } = await supabase
     .from('comments')
     .insert({ post_id: postId, user_id: userId, content })
-    .select('id, user_id, content, created_at, profiles:user_id (name, pronoun)')
+    .select('id, user_id, content, created_at, updated_at, profiles:user_id (name, pronoun)')
     .single()
 
   if (error) { console.error('Erro ao comentar:', error); return null }
@@ -250,7 +251,18 @@ export const addComment = async (postId, userId, content) => {
     userPronoun: data.profiles?.pronoun || '',
     content: data.content,
     createdAt: data.created_at,
+    updatedAt: null,
   }
+}
+
+export const updateComment = async (commentId, content) => {
+  const { error } = await supabase
+    .from('comments')
+    .update({ content, updated_at: new Date().toISOString() })
+    .eq('id', commentId)
+
+  if (error) { console.error('Erro ao editar comentário:', error); return false }
+  return true
 }
 
 export const deleteComment = async (commentId) => {
@@ -381,4 +393,79 @@ export const subscribeToGroupMessages = (groupId, onMessage) => {
     .subscribe()
 
   return () => supabase.removeChannel(channel)
+}
+
+// ─────────────────────────────────────────────
+// Notificações
+// ─────────────────────────────────────────────
+
+export const createNotification = async ({ userId, type, sourceUserId, sourceUserName, postId, groupId, message }) => {
+  // Não notifica a si mesmo
+  if (userId === sourceUserId) return
+
+  const { error } = await supabase.from('notifications').insert({
+    user_id: userId,
+    type,
+    source_user_id: sourceUserId,
+    source_user_name: sourceUserName,
+    post_id: postId || null,
+    group_id: groupId || null,
+    message,
+  })
+
+  if (error) console.error('Erro ao criar notificação:', error)
+}
+
+export const fetchNotifications = async (userId) => {
+  const { data, error } = await supabase
+    .from('notifications')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(50)
+
+  if (error) { console.error('Erro ao buscar notificações:', error); return [] }
+  return data || []
+}
+
+export const markNotificationRead = async (notificationId) => {
+  await supabase.from('notifications').update({ read: true }).eq('id', notificationId)
+}
+
+export const markAllNotificationsRead = async (userId) => {
+  await supabase.from('notifications').update({ read: true }).eq('user_id', userId).eq('read', false)
+}
+
+export const deleteNotification = async (notificationId) => {
+  await supabase.from('notifications').delete().eq('id', notificationId)
+}
+
+export const subscribeToNotifications = (userId, onNew) => {
+  const channel = supabase
+    .channel(`notifications-${userId}`)
+    .on(
+      'postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` },
+      (payload) => onNew(payload.new)
+    )
+    .subscribe()
+
+  return () => supabase.removeChannel(channel)
+}
+
+// ─────────────────────────────────────────────
+// Feedback
+// ─────────────────────────────────────────────
+
+export const submitFeedback = async ({ userId, userName, rating, category, message }) => {
+  const { error } = await supabase.from('feedback').insert({
+    user_id: userId,
+    user_name: userName,
+    rating,
+    category,
+    message,
+  })
+
+  if (error) { console.error('Erro ao enviar feedback:', error); return false }
+  return true
 }

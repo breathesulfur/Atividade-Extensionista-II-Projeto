@@ -68,24 +68,26 @@
 }
 
 .theme-icon {
-  font-size: 3rem;
+  font-size: 2.2rem;
   text-align: center;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
 }
 
 .theme-info {
   flex: 1;
+  position: relative;
+  z-index: 2; /* fica acima do lock overlay */
 }
 
 .theme-name {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: var(--spacing-xs);
 }
 
 .theme-description {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
   line-height: 1.5;
 }
@@ -95,11 +97,11 @@
   bottom: 0;
   left: 0;
   right: 0;
-  min-height: 52%;
+  min-height: 42%;
   background: linear-gradient(
     to top,
-    rgba(248, 246, 255, 0.98) 50%,
-    rgba(248, 246, 255, 0.75) 75%,
+    rgba(248, 246, 255, 0.98) 55%,
+    rgba(248, 246, 255, 0.80) 80%,
     transparent 100%
   );
   display: flex;

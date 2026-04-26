@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import GroupCard from './GroupCard'
 import CreateGroup from './CreateGroup'
-import { fetchGroups, createGroup as dbCreateGroup, deleteGroup as dbDeleteGroup, joinGroup, leaveGroup } from '../lib/db'
+import { fetchGroups, createGroup as dbCreateGroup, deleteGroup as dbDeleteGroup, joinGroup, leaveGroup, createNotification } from '../lib/db'
 import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES } from '../utils/gamification'
 import { getPosts } from '../utils/storage'
 import { notifyAchievement, notifyEssenceGained, notifySuccess, notifyError } from '../utils/notifications'
@@ -86,6 +86,17 @@ function Groups({ user, onUserUpdate }) {
       setGroups(prev => prev.map(g =>
         g.id === groupId ? { ...g, members: [...g.members, user.id] } : g
       ))
+
+      if (group.createdBy && group.createdBy !== user.id) {
+        createNotification({
+          userId: group.createdBy,
+          type: 'group_join',
+          sourceUserId: user.id,
+          sourceUserName: user.name,
+          groupId,
+          message: `${user.name} entrou no seu grupo "${group.name}"`,
+        })
+      }
 
       // Gamificação — essência só na primeira vez
       const joinedGroups = user.joinedGroups || []
