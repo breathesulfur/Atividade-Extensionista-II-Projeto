@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { filterProfanity } from '../utils/profanityFilter'
-import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES, MIN_COMMENT_LENGTH_FOR_ESSENCE } from '../utils/gamification'
+import { addEssence, addEssenceWithChecks, ESSENCE, checkBadges, getActionMessage, BADGES, MIN_COMMENT_LENGTH_FOR_ESSENCE } from '../utils/gamification'
 import { toggleReaction as dbToggleReaction, addComment as dbAddComment, updateComment, deleteComment, createNotification } from '../lib/db'
 import { getPosts, getGroups } from '../utils/storage'
 import { notifyError, notifyAchievement, notifySuccess, notifyEssenceGained } from '../utils/notifications'
@@ -330,11 +330,14 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
       }
     }
 
-    // Gamificação
+    // Gamificação — com cooldown de 10 min entre comentários
     let updatedUser = currentUser
     if (filteredComment.length >= MIN_COMMENT_LENGTH_FOR_ESSENCE) {
-      updatedUser = addEssence(currentUser, ESSENCE.SUPPORTIVE_COMMENT)
-      notifyEssenceGained(ESSENCE.SUPPORTIVE_COMMENT, 'Fazer comentário de apoio')
+      const result = addEssenceWithChecks(currentUser, ESSENCE.SUPPORTIVE_COMMENT, 'SUPPORTIVE_COMMENT')
+      if (result.success) {
+        updatedUser = result.user
+        notifyEssenceGained(ESSENCE.SUPPORTIVE_COMMENT, 'Fazer comentário de apoio')
+      }
     }
     onUserUpdate(updatedUser)
   }
