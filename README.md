@@ -51,7 +51,7 @@ O aplicativo busca criar um ambiente digital seguro, onde usuárias e usuários 
 
 O aplicativo utiliza Essências como forma simbólica de reconhecimento por ações positivas, com limite diário para evitar uso excessivo.
 
-🪄 Ações Positivas (exemplos):
+✅ Ações Positivas (exemplos):
 
 - Criar postagem respeitosa
 - Comentar com apoio
