@@ -234,8 +234,8 @@ function Dashboard({ user, onLogout }) {
         lastDailyLimitNotificationDate: today
       }
       setCurrentUser(updatedUser)
-      updateUser(updatedUser)
-      
+      updateProfile(updatedUser.id, updatedUser)
+
       // Mostra notificação após pequeno delay
       setTimeout(() => {
         notifyAchievement(
@@ -270,7 +270,7 @@ function Dashboard({ user, onLogout }) {
       
       // Atualiza o usuário de forma assíncrona para evitar conflitos
       setTimeout(() => {
-        updateUser(updatedUser)
+        updateProfile(updatedUser.id, updatedUser)
         setCurrentUser(updatedUser)
         
         // Notifica sobre o bônus usando o sistema padrão de notificações
@@ -296,7 +296,7 @@ function Dashboard({ user, onLogout }) {
       updatedUser = unlockMysticTitle(updatedUser, title.id)
     })
 
-    updateUser(updatedUser)
+    updateProfile(updatedUser.id, updatedUser)
     setCurrentUser(updatedUser)
 
     newTitles.forEach((title, index) => {
