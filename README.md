@@ -10,8 +10,6 @@ Plataforma social gamer inclusiva e segura voltada ao acolhimento de mulheres e 
 
 Desenvolvido como Atividade Extensionista II do curso de Análise e Desenvolvimento de Sistemas (UNINTER), o InclusivChat cria um ambiente digital seguro onde usuárias e usuários podem se expressar livremente, participar de grupos temáticos e ser incentivados a comportamentos saudáveis por meio de um sistema de recompensas simbólicas — sem rankings públicos nem comparações entre pessoas.
 
----
-
 ## 🧩 Funcionalidades
 
 ### 👤 Perfil
