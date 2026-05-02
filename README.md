@@ -178,7 +178,15 @@ npm run test:e2e
 npm run test:e2e:ui
 ```
 
-Credenciais de teste podem ser passadas via `TEST_EMAIL` e `TEST_PASSWORD`.
+Os testes autenticados (login, notificações, feedback, temas, comentários) precisam de credenciais válidas via `TEST_EMAIL` e `TEST_PASSWORD`. Sem essas variáveis, eles são pulados automaticamente — apenas a smoke suite roda.
+
+```bash
+# Windows (PowerShell)
+$env:TEST_EMAIL="seu_email@dominio.com"; $env:TEST_PASSWORD="sua_senha"; npm run test:e2e
+
+# Linux / macOS
+TEST_EMAIL=seu_email@dominio.com TEST_PASSWORD=sua_senha npm run test:e2e
+```
 
 ---
 
