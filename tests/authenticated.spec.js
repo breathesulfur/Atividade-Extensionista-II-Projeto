@@ -1,8 +1,12 @@
 import { test, expect } from '@playwright/test'
 
 const APP_URL = 'http://localhost:5173'
-const EMAIL = process.env.TEST_EMAIL || 'teste@producao.com'
-const PASSWORD = process.env.TEST_PASSWORD || '123456'
+const EMAIL = process.env.TEST_EMAIL
+const PASSWORD = process.env.TEST_PASSWORD
+
+test.beforeEach(() => {
+  test.skip(!EMAIL || !PASSWORD, 'Defina TEST_EMAIL e TEST_PASSWORD para rodar os testes autenticados')
+})
 
 async function login(page) {
   await page.goto(APP_URL)

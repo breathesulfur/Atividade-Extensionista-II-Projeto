@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test'
 
 const APP_URL = 'http://localhost:5173'
-const EMAIL = process.env.TEST_EMAIL || 'teste@producao.com'
-const PASSWORD = process.env.TEST_PASSWORD || '123456'
+const EMAIL = process.env.TEST_EMAIL
+const PASSWORD = process.env.TEST_PASSWORD
 
 const RUN_TAG = `e2e-${Date.now()}`
 const POST_CONTENT = `[${RUN_TAG}] postagem de teste`
@@ -14,6 +14,7 @@ async function readEssence(page) {
 }
 
 test('comentários: criar, editar, excluir e cooldown', async ({ page }) => {
+  test.skip(!EMAIL || !PASSWORD, 'Defina TEST_EMAIL e TEST_PASSWORD para rodar este teste')
   page.on('dialog', d => d.accept())
 
   await page.goto(APP_URL)
