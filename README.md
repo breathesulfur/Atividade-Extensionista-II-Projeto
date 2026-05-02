@@ -76,6 +76,7 @@ Limite de **50 Essências por dia** para evitar uso excessivo.
 | Frontend | React 18 + Vite 5 |
 | Estilização | CSS3 puro (sem framework) |
 | Backend / BaaS | Supabase (PostgreSQL + Auth + Realtime) |
+| E-mail (recuperação de senha) | EmailJS |
 | Deploy | Vercel (CI/CD via GitHub) |
 | Testes E2E | Playwright |
 | Controle de versão | Git + GitHub |
@@ -127,11 +128,19 @@ npm install
 Crie um arquivo `.env` na raiz do projeto:
 
 ```env
+# Supabase
 VITE_SUPABASE_URL=sua_url_do_projeto_supabase
 VITE_SUPABASE_ANON_KEY=sua_anon_key_do_supabase
+
+# EmailJS (recuperação de senha)
+VITE_EMAILJS_SERVICE_ID=seu_service_id
+VITE_EMAILJS_TEMPLATE_ID=seu_template_id
+VITE_EMAILJS_PUBLIC_KEY=sua_public_key
 ```
 
-Onde encontrar: **Supabase Dashboard → Project Settings → API**
+Onde encontrar:
+- **Supabase**: Dashboard → Project Settings → API
+- **EmailJS**: [emailjs.com](https://www.emailjs.com) → Account → API Keys
 
 ### Schema do Banco
 
@@ -153,6 +162,21 @@ npm run dev
 npm run build
 # Arquivos gerados em /dist
 ```
+
+### Testes E2E
+
+```bash
+# Instala o navegador do Playwright (apenas na primeira vez)
+npx playwright install chromium
+
+# Roda toda a suíte
+npm run test:e2e
+
+# Modo interativo (UI do Playwright)
+npm run test:e2e:ui
+```
+
+Credenciais de teste podem ser passadas via `TEST_EMAIL` e `TEST_PASSWORD`.
 
 ---
 
@@ -179,6 +203,7 @@ inclusivchat/
 │   │   ├── EditProfile.jsx          # Edição de perfil e recompensas
 │   │   ├── NotificationBell.jsx     # Sino de notificações com Realtime
 │   │   ├── FeedbackForm.jsx         # Formulário de feedback
+│   │   ├── FAQ.jsx                  # Modal de perguntas frequentes
 │   │   ├── ThemeSelector.jsx        # Seletor de temas visuais
 │   │   ├── AvatarFrame.jsx          # Renderização de moldura de avatar
 │   │   ├── AvatarFrameSelector.jsx  # Seletor de molduras
@@ -195,8 +220,13 @@ inclusivchat/
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css
+├── tests/                           # Testes E2E (Playwright)
+│   ├── smoke.spec.js                # Fluxos públicos (login, cadastro)
+│   ├── authenticated.spec.js        # Fluxos pós-login (notificações, feedback, temas)
+│   └── fixtures.spec.js             # Fluxo de comentários e cooldown de essências
 ├── supabase_schema.sql              # Schema v1 (tabelas base)
 ├── supabase_schema_v2.sql           # Schema v2 (notifications + feedback)
+├── playwright.config.js
 ├── index.html
 ├── vite.config.js
 └── package.json

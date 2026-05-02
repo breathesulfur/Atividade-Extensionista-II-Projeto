@@ -98,7 +98,6 @@ function Groups({ user, onUserUpdate }) {
         })
       }
 
-      // Gamificação — essência só na primeira vez
       const joinedGroups = user.joinedGroups || []
       const isNewGroup = !joinedGroups.includes(groupId)
 

@@ -90,8 +90,6 @@
   line-height: 1.5;
 }
 
-/* Bloco de info de desbloqueio renderizado em fluxo normal,
-   abaixo de .theme-info — sem overlay absoluto que cobria o texto. */
 .theme-lock-overlay {
   margin-top: auto;
   display: flex;
