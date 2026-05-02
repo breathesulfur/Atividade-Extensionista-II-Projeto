@@ -123,7 +123,6 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
     return date.toLocaleDateString('pt-BR')
   }
 
-  // Manipula reação (novo sistema) — otimista + persiste no Supabase
   const handleReaction = async (emoji) => {
     const currentReactions = getReactions()
     const userReacted = hasUserReacted(emoji)
@@ -287,7 +286,6 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
     }
   }
 
-  // Manipula comentário
   const handleComment = async (e) => {
     e.preventDefault()
 
@@ -298,7 +296,6 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
 
     const filteredComment = filterProfanity(commentText.trim())
 
-    // Atualização otimista local
     const optimisticComment = {
       id: Date.now().toString(),
       userId: currentUser.id,
@@ -311,7 +308,6 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
     setCommentText('')
     setShowComments(true)
 
-    // Persiste no Supabase
     const saved = await dbAddComment(post.id, currentUser.id, filteredComment)
     if (saved) {
       onUpdate(post.id, {
@@ -330,7 +326,6 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
       }
     }
 
-    // Gamificação — com cooldown de 10 min entre comentários
     let updatedUser = currentUser
     if (filteredComment.length >= MIN_COMMENT_LENGTH_FOR_ESSENCE) {
       const result = addEssenceWithChecks(currentUser, ESSENCE.SUPPORTIVE_COMMENT, 'SUPPORTIVE_COMMENT')
