@@ -9,6 +9,9 @@
 }
 
 :root {
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+
   /* Paleta mística: rosa, lilás e roxo */
   --mystic-pink: #f472b6;
   --mystic-pink-light: #f9a8d4;
