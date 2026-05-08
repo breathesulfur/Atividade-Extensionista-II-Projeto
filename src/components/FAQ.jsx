@@ -1,7 +1,7 @@
 import React from 'react'
 import './FAQ.css'
 
-function FAQ({ isOpen, onClose }) {
+function FAQ({ isOpen, onClose, onShowTour }) {
   if (!isOpen) return null
 
   return (
@@ -30,6 +30,11 @@ function FAQ({ isOpen, onClose }) {
               <li>🏆 Conquistar selos e títulos místicos</li>
               <li>🎨 Personalizar temas e molduras de avatar</li>
             </ul>
+            {onShowTour && (
+              <button onClick={onShowTour} className="faq-tour-button">
+                🎬 Ver tour guiado
+              </button>
+            )}
           </section>
 
           {/* Como ganhar essências */}

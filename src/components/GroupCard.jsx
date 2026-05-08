@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { fetchGroupMessages, sendGroupMessage, subscribeToGroupMessages, createNotification } from '../lib/db'
+import { fetchGroupMessages, sendGroupMessage, subscribeToGroupMessages, createNotification, createPost } from '../lib/db'
 import { getPosts } from '../utils/storage'
 import { filterProfanity } from '../utils/profanityFilter'
 import { checkBadges, getActionMessage, BADGES } from '../utils/gamification'
-import { notifyError, notifyAchievement } from '../utils/notifications'
+import { notifyError, notifyAchievement, notifySuccess } from '../utils/notifications'
 import './GroupCard.css'
 
 function GroupCard({ group, user, onBack, onUserUpdate }) {
@@ -37,6 +37,19 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
   }, [messages])
 
   const isMember = group.members?.includes(user.id) || false
+
+  const handleShareGroup = async () => {
+    if (!isMember) { notifyError('Entre no grupo antes de compartilhar.'); return }
+    if (!window.confirm(`Compartilhar o grupo "${group.name}" no seu feed?`)) return
+
+    const description = (group.description || '').trim()
+    const summary = description ? `\n\n📝 ${description}` : ''
+    const content = `🎮 Vem participar do grupo "${group.name}" (${group.game})!${summary}\n\n[group:${group.id}]`
+
+    const newPost = await createPost(user.id, content)
+    if (newPost) notifySuccess('Grupo compartilhado no feed! 💜')
+    else notifyError('Não foi possível compartilhar agora.')
+  }
 
   const formatDate = (dateString) => {
     const date = new Date(dateString)
@@ -114,6 +127,14 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
             <span className="chat-members">👥 {group.members?.length || 0} membro{(group.members?.length || 0) !== 1 ? 's' : ''}</span>
           </div>
         </div>
+        <button
+          onClick={handleShareGroup}
+          className="chat-share-button"
+          aria-label="Compartilhar grupo no feed"
+          title="Compartilhar grupo no feed"
+        >
+          📢 Compartilhar
+        </button>
       </div>
 
       <div className="chat-description">
