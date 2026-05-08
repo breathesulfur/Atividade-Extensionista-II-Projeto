@@ -6,6 +6,7 @@ import Logo from './Logo'
 import Notification from './Notification'
 import LoadingSpinner from './LoadingSpinner'
 import FAQ from './FAQ'
+import Tour from './Tour'
 import NotificationBell from './NotificationBell'
 import FeedbackForm from './FeedbackForm'
 import { updateProfile } from '../lib/db'
@@ -163,6 +164,16 @@ function Dashboard({ user, onLogout }) {
   const [showFAQ, setShowFAQ] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
+  const [pendingGroupId, setPendingGroupId] = useState(null)
+  const tourSeenKey = `inclusivchat_welcome_seen_${user.id}`
+  const [showTour, setShowTour] = useState(() => {
+    try { return localStorage.getItem(tourSeenKey) !== '1' } catch { return false }
+  })
+
+  const handleOpenGroup = (groupId) => {
+    setPendingGroupId(groupId)
+    setActiveTab('groups')
+  }
   const previousEssenceRef = useRef(user.essence || user.points || 0)
   const processedMilestonesRef = useRef(new Set([Math.floor((user.essence || user.points || 0) / 50)]))
   const dailyLimitNotificationRef = useRef(false)
@@ -346,10 +357,25 @@ function Dashboard({ user, onLogout }) {
       )}
 
       {/* FAQ Modal */}
-      <FAQ isOpen={showFAQ} onClose={() => setShowFAQ(false)} />
+      <FAQ
+        isOpen={showFAQ}
+        onClose={() => setShowFAQ(false)}
+        onShowTour={() => { setShowFAQ(false); setShowTour(true) }}
+      />
 
       {/* Feedback Modal */}
       {showFeedback && <FeedbackForm user={currentUser} onClose={() => setShowFeedback(false)} />}
+
+      {/* Tour de boas-vindas */}
+      {showTour && (
+        <Tour
+          user={currentUser}
+          onClose={() => {
+            setShowTour(false)
+            try { localStorage.setItem(tourSeenKey, '1') } catch {}
+          }}
+        />
+      )}
 
       {/* Modal de confirmação de logout */}
       {showLogoutConfirm && (
@@ -456,10 +482,15 @@ function Dashboard({ user, onLogout }) {
       {/* Conteúdo */}
              <main className={`dashboard-content ${currentUser.activeTheme ? `theme-${currentUser.activeTheme}` : ''}`}>
                {activeTab === 'feed' && (
-                 <Feed user={currentUser} onUserUpdate={setCurrentUser} />
+                 <Feed user={currentUser} onUserUpdate={setCurrentUser} onOpenGroup={handleOpenGroup} />
                )}
                {activeTab === 'groups' && (
-                 <Groups user={currentUser} onUserUpdate={setCurrentUser} />
+                 <Groups
+                   user={currentUser}
+                   onUserUpdate={setCurrentUser}
+                   targetGroupId={pendingGroupId}
+                   onGroupOpened={() => setPendingGroupId(null)}
+                 />
                )}
                {activeTab === 'profile' && (
                  <Profile user={currentUser} onUserUpdate={setCurrentUser} />

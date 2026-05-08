@@ -871,3 +871,32 @@
     width: 100%;
   }
 }
+
+.chat-share-button {
+  margin-left: auto;
+  padding: 8px 14px;
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--mystic-purple-dark);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.chat-share-button:hover {
+  background: var(--gradient-mystic);
+  color: white;
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+@media (max-width: 640px) {
+  .chat-share-button {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+}

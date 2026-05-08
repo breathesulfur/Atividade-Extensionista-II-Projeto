@@ -10,7 +10,18 @@ import AvatarFrame from './AvatarFrame'
 import ReportModal from './ReportModal'
 import './PostCard.css'
 
-function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
+const GROUP_REF_REGEX = /\[group:([0-9a-f-]{36})\]/i
+
+function extractGroupRef(content) {
+  const match = (content || '').match(GROUP_REF_REGEX)
+  if (!match) return { text: content || '', groupId: null }
+  return {
+    text: content.replace(GROUP_REF_REGEX, '').trim(),
+    groupId: match[1],
+  }
+}
+
+function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenGroup }) {
   const [commentText, setCommentText] = useState('')
   const [showComments, setShowComments] = useState(false)
   const [postAuthor, setPostAuthor] = useState(null)
@@ -437,8 +448,18 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate }) {
       </div>
 
       <div className="post-content">
-        {post.content}
+        {extractGroupRef(post.content).text}
       </div>
+
+      {extractGroupRef(post.content).groupId && (
+        <button
+          type="button"
+          className="post-group-cta"
+          onClick={() => onOpenGroup && onOpenGroup(extractGroupRef(post.content).groupId)}
+        >
+          🎮 Visitar grupo
+        </button>
+      )}
 
       <div className="post-actions">
         <div className="reactions-container">

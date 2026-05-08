@@ -39,7 +39,7 @@ function getGameMeta(gameName) {
   return { icon: '🎮', color: '#8B5CF6' }
 }
 
-function Groups({ user, onUserUpdate }) {
+function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened }) {
   const [groups, setGroups] = useState([])
   const [showCreateGroup, setShowCreateGroup] = useState(false)
   const [selectedGroup, setSelectedGroup] = useState(null)
@@ -50,6 +50,17 @@ function Groups({ user, onUserUpdate }) {
   }
 
   useEffect(() => { loadGroups() }, [])
+
+  // Quando vem um targetGroupId externo (compartilhamento via post),
+  // abre automaticamente o grupo correspondente.
+  useEffect(() => {
+    if (!targetGroupId || groups.length === 0) return
+    const target = groups.find(g => g.id === targetGroupId)
+    if (target) {
+      setSelectedGroup(target)
+      onGroupOpened?.()
+    }
+  }, [targetGroupId, groups, onGroupOpened])
 
   // Cria novo grupo
   const handleCreateGroup = async (groupData) => {
