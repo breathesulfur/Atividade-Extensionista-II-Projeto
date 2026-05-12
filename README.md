@@ -284,6 +284,8 @@ O InclusivChat contribui para:
 | **Instituição** | UNINTER |
 | **Autora** | Luiza Costa |
 
+Veja o [cronograma de desenvolvimento](docs/CRONOGRAMA.md) com a duração de cada fase do projeto.
+
 ---
 
 Desenvolvido com 💜 para uma comunidade gamer mais inclusiva e segura.
