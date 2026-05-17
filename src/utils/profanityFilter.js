@@ -1,52 +1,117 @@
 /**
- * Filtro de palavras ofensivas
- * Lista de palavras que devem ser bloqueadas para manter o ambiente seguro
- * Esta lista pode ser expandida conforme necessário
+ * Filtro de palavras ofensivas.
+ *
+ * Lista mantida em PT-BR sem acentos. O motor normaliza o texto antes de
+ * comparar (remove diacríticos) e constrói regex que aceita variações
+ * acentuadas e plural, garantindo casamento mesmo com "vádia", "VADIAS", etc.
+ *
+ * A lista é dividida por categoria apenas para fins de manutenção — todas as
+ * categorias são tratadas igualmente em runtime.
  */
-const profanityWords = [
-  // Palavras ofensivas comuns
-  'idiota',
-  'burro',
-  'estupido',
-  'retardado',
+
+// Palavrões e ofensas gerais
+const GENERAL = [
+  'caralho', 'kralho', 'krl',
+  'porra', 'prr',
+  'merda', 'mrda',
+  'bosta',
+  'foda', 'fodase', 'foder', 'fude', 'fudido', 'fudida',
+  'desgraca', 'desgracado', 'desgracada',
+  'escroto', 'escrota',
+  'otario', 'otaria',
   'imbecil',
+  'burro', 'burra',
+  'idiota',
+  'retardado', 'retardada',
+  'demente',
+  'estupido', 'estupida',
   'babaca',
-  'otario',
   'trouxa',
-  // Adicione mais palavras conforme necessário
-  // Nota: Em produção, esta lista deveria ser mais abrangente
-  // e possivelmente carregada de um servidor para atualizações dinâmicas
+  'pqp', 'fdp', 'vsf', 'vtnc', 'vtmc',
 ]
 
-/**
- * Substitui palavras ofensivas por asteriscos
- * @param {string} text - Texto a ser filtrado
- * @returns {string} - Texto filtrado
- */
-export const filterProfanity = (text) => {
-  if (!text || typeof text !== 'string') return text
+// Termos pejorativos / misóginos contra mulheres
+const MISOGYNY = [
+  'puta', 'putinha', 'putona',
+  'vadia', 'vagaba', 'vagabunda',
+  'piranha', 'piriguete',
+  'biscate',
+  'rapariga',
+  'prostituta',
+  'safada', 'safadona',
+  'mulherzinha',
+  'galinha',
+]
 
-  let filteredText = text
+// Termos LGBTfóbicos (insultos contra a comunidade LGBTQIAPN+)
+const LGBTPHOBIA = [
+  'viado', 'veado', 'biba', 'bichinha',
+  'bicha',
+  'traveco',
+  'sapatao', 'sapatona',
+  'maricas',
+  'frutinha',
+  'baitola',
+  'sodomita',
+  'aberracao',
+  'aberracoes',
+]
 
-  // Cria regex para cada palavra ofensiva (case insensitive)
-  profanityWords.forEach(word => {
-    const regex = new RegExp(`\\b${word}\\b`, 'gi')
-    filteredText = filteredText.replace(regex, '*'.repeat(word.length))
-  })
+// Termos racistas
+const RACISM = [
+  'macaco', 'macaca',
+  'crioulo', 'crioula',
+  'mulato', 'mulata',
+]
 
-  return filteredText
+const ALL_WORDS = [...GENERAL, ...MISOGYNY, ...LGBTPHOBIA, ...RACISM]
+
+// Mapa de cada letra ASCII para o conjunto de variantes acentuadas em PT-BR.
+const ACCENT_VARIANTS = {
+  a: '[aáàâãä]',
+  e: '[eéèêë]',
+  i: '[iíìîï]',
+  o: '[oóòôõö]',
+  u: '[uúùûü]',
+  c: '[cç]',
+  n: '[nñ]',
+}
+
+// Constroi um regex case-insensitive que aceita variações acentuadas e plural
+// opcional para uma palavra-raiz. Cacheado para evitar reconstruir a cada chamada.
+const regexCache = new Map()
+function buildRegex(word) {
+  if (regexCache.has(word)) return regexCache.get(word)
+  const pattern = word
+    .toLowerCase()
+    .split('')
+    .map(c => ACCENT_VARIANTS[c] || c)
+    .join('')
+  const re = new RegExp(`\\b${pattern}s?\\b`, 'gi')
+  regexCache.set(word, re)
+  return re
 }
 
 /**
- * Verifica se o texto contém palavras ofensivas
- * @param {string} text - Texto a ser verificado
- * @returns {boolean} - true se contém palavras ofensivas
+ * Substitui palavras ofensivas por asteriscos, preservando o tamanho original.
+ */
+export const filterProfanity = (text) => {
+  if (!text || typeof text !== 'string') return text
+  let result = text
+  for (const word of ALL_WORDS) {
+    result = result.replace(buildRegex(word), (match) => '*'.repeat(match.length))
+  }
+  return result
+}
+
+/**
+ * Verifica se o texto contém alguma palavra ofensiva.
  */
 export const containsProfanity = (text) => {
   if (!text || typeof text !== 'string') return false
-
-  const lowerText = text.toLowerCase()
-  return profanityWords.some(word => 
-    lowerText.includes(word.toLowerCase())
-  )
+  return ALL_WORDS.some(word => {
+    const re = buildRegex(word)
+    re.lastIndex = 0
+    return re.test(text)
+  })
 }
