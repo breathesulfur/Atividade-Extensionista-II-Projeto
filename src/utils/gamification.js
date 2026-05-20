@@ -564,16 +564,15 @@ export const unlockAvatarFrame = (user, frameId) => {
   return user
 }
 
-// Títulos são desbloqueados automaticamente ao atingir essências totais (não consomem)
 export const canUnlockMysticTitle = (user, titleId) => {
   const title = Object.values(MYSTIC_TITLES).find(t => t.id === titleId)
   if (!title) return false
 
-  const essenciasTotais = user.essencias_totais ?? (user.essence || user.points || 0)
+  const essenciasDisponiveis = user.essencias_disponiveis ?? (user.essence || user.points || 0)
   const unlockedTitles = user.unlockedMysticTitles || []
 
   if (unlockedTitles.includes(titleId)) return false
-  return essenciasTotais >= title.requiredEssence
+  return essenciasDisponiveis >= title.requiredEssence
 }
 
 export const unlockMysticTitle = (user, titleId) => {
@@ -582,8 +581,10 @@ export const unlockMysticTitle = (user, titleId) => {
     const title = Object.values(MYSTIC_TITLES).find(t => t.id === titleId)
     if (!title) return user
 
+    let updatedUser = subtractEssence(user, title.requiredEssence)
+
     return {
-      ...user,
+      ...updatedUser,
       unlockedMysticTitles: [...unlockedTitles, titleId]
     }
   }

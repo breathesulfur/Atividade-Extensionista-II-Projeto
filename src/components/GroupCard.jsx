@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { fetchGroupMessages, sendGroupMessage, subscribeToGroupMessages, createNotification, createPost } from '../lib/db'
+import { fetchGroupMessages, sendGroupMessage, updateGroupMessage, deleteGroupMessage, subscribeToGroupMessages, createNotification, createPost } from '../lib/db'
 import { getPosts } from '../utils/storage'
 import { filterProfanity } from '../utils/profanityFilter'
 import { checkBadges, getActionMessage, BADGES } from '../utils/gamification'
@@ -10,6 +10,9 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
   const [loading, setLoading] = useState(true)
+  const [editingMessageId, setEditingMessageId] = useState(null)
+  const [editContent, setEditContent] = useState('')
+  const [showPreview, setShowPreview] = useState(false)
   const containerRef = useRef(null)
 
   useEffect(() => {
@@ -69,11 +72,15 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
     return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
   }
 
-  const handleSendMessage = async (e) => {
+  const handlePreviewMessage = (e) => {
     e.preventDefault()
     if (!isMember) { notifyError('Você precisa ser membro do grupo para enviar mensagens.'); return }
     if (!newMessage.trim()) { notifyError('Por favor, escreva uma mensagem.'); return }
+    setShowPreview(true)
+  }
 
+  const handleConfirmSend = async () => {
+    setShowPreview(false)
     const filteredMessage = filterProfanity(newMessage.trim())
     setNewMessage('')
 
@@ -104,6 +111,31 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
         })
       }
     }, 100)
+  }
+
+  const handleEditMessage = async (messageId) => {
+    if (!editContent.trim()) { notifyError('A mensagem não pode ficar vazia.'); return }
+    const filteredContent = filterProfanity(editContent.trim())
+    const success = await updateGroupMessage(messageId, filteredContent)
+    if (success) {
+      setMessages(prev => prev.map(m => m.id === messageId ? { ...m, content: filteredContent } : m))
+      setEditingMessageId(null)
+      setEditContent('')
+      notifySuccess('Mensagem editada!')
+    } else {
+      notifyError('Não foi possível editar a mensagem.')
+    }
+  }
+
+  const handleDeleteMessage = async (messageId) => {
+    if (!window.confirm('Excluir esta mensagem?')) return
+    const success = await deleteGroupMessage(messageId)
+    if (success) {
+      setMessages(prev => prev.filter(m => m.id !== messageId))
+      notifySuccess('Mensagem excluída!')
+    } else {
+      notifyError('Não foi possível excluir a mensagem.')
+    }
   }
 
   if (!isMember) {
@@ -162,21 +194,60 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
         ) : (
           messages.map(message => {
             const isOwnMessage = message.userId === user.id
+            const isEditing = editingMessageId === message.id
             return (
               <div key={message.id} className={`message-item ${isOwnMessage ? 'own-message' : ''}`}>
                 <div className="message-header">
                   <strong>{message.userName}</strong>
                   <span className="message-pronoun">({message.userPronoun})</span>
                 </div>
-                <div className="message-content">{message.content}</div>
-                <div className="message-time">{formatDate(message.createdAt)}</div>
+                {isEditing ? (
+                  <div className="message-edit-form">
+                    <input
+                      type="text"
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      className="message-edit-input"
+                      maxLength="300"
+                      autoFocus
+                    />
+                    <div className="message-edit-actions">
+                      <button onClick={() => handleEditMessage(message.id)} className="message-edit-save">Salvar</button>
+                      <button onClick={() => { setEditingMessageId(null); setEditContent('') }} className="message-edit-cancel">Cancelar</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="message-content">{message.content}</div>
+                )}
+                <div className="message-footer">
+                  <span className="message-time">{formatDate(message.createdAt)}</span>
+                  {isOwnMessage && !isEditing && (
+                    <div className="message-actions">
+                      <button onClick={() => { setEditingMessageId(message.id); setEditContent(message.content) }} className="message-action-btn" title="Editar">✏️</button>
+                      <button onClick={() => handleDeleteMessage(message.id)} className="message-action-btn delete" title="Excluir">🗑️</button>
+                    </div>
+                  )}
+                </div>
               </div>
             )
           })
         )}
       </div>
 
-      <form onSubmit={handleSendMessage} className="message-form">
+      {showPreview && (
+        <div className="message-preview-bar">
+          <div className="preview-content">
+            <span className="preview-label">Prévia:</span>
+            <span className="preview-text">{filterProfanity(newMessage.trim())}</span>
+          </div>
+          <div className="preview-actions">
+            <button onClick={() => setShowPreview(false)} className="preview-edit-btn">✏️ Editar</button>
+            <button onClick={handleConfirmSend} className="preview-send-btn">Enviar</button>
+          </div>
+        </div>
+      )}
+
+      <form onSubmit={handlePreviewMessage} className="message-form">
         <input
           type="text"
           value={newMessage}
@@ -184,8 +255,9 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
           placeholder="Digite sua mensagem..."
           className="message-input"
           maxLength="300"
+          disabled={showPreview}
         />
-        <button type="submit" className="send-button">Enviar</button>
+        <button type="submit" className="send-button" disabled={showPreview}>Enviar</button>
       </form>
     </div>
   )

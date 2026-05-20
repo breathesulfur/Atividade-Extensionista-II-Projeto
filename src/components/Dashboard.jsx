@@ -298,7 +298,7 @@ function Dashboard({ user, onLogout, initialGroupId }) {
         )
       }, 300 + index * 600)
     })
-  }, [currentUser.essencias_totais])
+  }, [currentUser.essencias_disponiveis])
 
   const handleLogoutClick = () => {
     setShowLogoutConfirm(true)

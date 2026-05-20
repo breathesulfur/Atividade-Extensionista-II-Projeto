@@ -366,6 +366,26 @@ export const sendGroupMessage = async (groupId, userId, content) => {
   return mapMessage(data)
 }
 
+export const updateGroupMessage = async (messageId, content) => {
+  const { error } = await supabase
+    .from('group_messages')
+    .update({ content })
+    .eq('id', messageId)
+
+  if (error) { console.error('Erro ao editar mensagem:', error); return false }
+  return true
+}
+
+export const deleteGroupMessage = async (messageId) => {
+  const { error } = await supabase
+    .from('group_messages')
+    .delete()
+    .eq('id', messageId)
+
+  if (error) { console.error('Erro ao deletar mensagem:', error); return false }
+  return true
+}
+
 export const subscribeToGroupMessages = (groupId, onMessage) => {
   const channel = supabase
     .channel(`group-chat-${groupId}`)
