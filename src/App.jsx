@@ -21,7 +21,6 @@ function App() {
     })
   }, [])
 
-  // Verifica sessão existente e escuta mudanças de auth
   useEffect(() => {
     let mounted = true
 

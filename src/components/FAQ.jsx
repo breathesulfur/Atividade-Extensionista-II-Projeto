@@ -15,7 +15,6 @@ function FAQ({ isOpen, onClose, onShowTour }) {
         </div>
 
         <div className="faq-body">
-          {/* Como funciona o app */}
           <section className="faq-section">
             <h3 className="faq-section-title">📱 Como funciona o app?</h3>
             <p className="faq-text">
@@ -37,7 +36,6 @@ function FAQ({ isOpen, onClose, onShowTour }) {
             )}
           </section>
 
-          {/* Como ganhar essências */}
           <section className="faq-section">
             <h3 className="faq-section-title">🔮 Como ganhar Essências?</h3>
             <p className="faq-text">
@@ -58,7 +56,6 @@ function FAQ({ isOpen, onClose, onShowTour }) {
             </p>
           </section>
 
-          {/* Como funcionam os Selos e os Títulos */}
           <section className="faq-section">
             <h3 className="faq-section-title">🌱 Como funcionam os Selos e os Títulos?</h3>
             
@@ -108,7 +105,6 @@ function FAQ({ isOpen, onClose, onShowTour }) {
             </div>
           </section>
 
-          {/* Créditos */}
           <section className="faq-section faq-credits">
             <p className="faq-credits-text">
               Criado com 💜 por <strong>Luiza C - 2026</strong>

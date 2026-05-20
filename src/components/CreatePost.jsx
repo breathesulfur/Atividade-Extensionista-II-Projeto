@@ -25,52 +25,36 @@ function CreatePost({ user, onCreatePost, onUserUpdate }) {
 
     setIsSubmitting(true)
 
-    // Filtra palavras ofensivas
     const filteredContent = filterProfanity(content.trim())
 
-    // Adiciona Essência ao usuário
     let updatedUser = addEssence(user, ESSENCE.CREATE_POST)
     onUserUpdate(updatedUser)
-    
-    // Notifica sobre essências ganhas
     notifyEssenceGained(ESSENCE.CREATE_POST, 'Criar postagem respeitosa')
-
-    // Cria a postagem
     onCreatePost(filteredContent)
 
-    // Verifica badges após criar postagem (com delay para garantir que a postagem foi salva)
     setTimeout(() => {
       const posts = getPosts()
       const groups = getGroups()
-      const messages = {}
-      const newBadges = checkBadges(updatedUser, posts, groups, messages)
-      
-      // Filtra apenas badges realmente novos
+      const newBadges = checkBadges(updatedUser, posts, groups, {})
+
       const userBadges = updatedUser.badges || []
       const trulyNewBadges = newBadges.filter(badge => !userBadges.includes(badge.id))
-      
-      // Se houver novos badges, adiciona ao usuário
+
       if (trulyNewBadges.length > 0) {
         const finalUser = {
           ...updatedUser,
           badges: [...userBadges, ...trulyNewBadges.map(b => b.id)]
         }
         onUserUpdate(finalUser)
-        
-        // Mostra notificação de novos badges (exceto REVEALED_ESSENCE que deve aparecer apenas ao completar perfil)
-        const badgesToNotify = trulyNewBadges.filter(badge => badge.id !== BADGES.REVEALED_ESSENCE.id)
-        badgesToNotify.forEach((badge, index) => {
-          setTimeout(() => {
-            notifyAchievement(
-              badge.name,
-              getActionMessage(badge.id)
-            )
-          }, 100 + (index * 500)) // Espaça as notificações
-        })
+
+        trulyNewBadges
+          .filter(badge => badge.id !== BADGES.REVEALED_ESSENCE.id)
+          .forEach((badge, index) => {
+            setTimeout(() => notifyAchievement(badge.name, getActionMessage(badge.id)), 100 + (index * 500))
+          })
       }
     }, 100)
 
-    // Limpa o formulário
     setContent('')
     setIsSubmitting(false)
   }

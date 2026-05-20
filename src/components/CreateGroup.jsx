@@ -7,7 +7,6 @@ import { updateProfile } from '../lib/db'
 import './CreateGroup.css'
 
 function CreateGroup({ user, onCreateGroup, onUserUpdate }) {
-  // Conta quantos grupos o usuário já criou
   const getUserCreatedGroupsCount = () => {
     const groups = getGroups()
     return groups.filter(g => g.createdBy === user.id).length
@@ -19,7 +18,6 @@ function CreateGroup({ user, onCreateGroup, onUserUpdate }) {
   })
   const [customGame, setCustomGame] = useState('')
 
-  // Lista de jogos populares
   const availableGames = [
     'League of Legends',
     'Valorant',
@@ -42,7 +40,6 @@ function CreateGroup({ user, onCreateGroup, onUserUpdate }) {
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => {
-      // Se mudou o jogo e não é mais "Outro", limpa o campo customizado
       if (name === 'game' && prev.game === 'Outro' && value !== 'Outro') {
         setCustomGame('')
       }
@@ -66,7 +63,6 @@ function CreateGroup({ user, onCreateGroup, onUserUpdate }) {
       return
     }
 
-    // Validação para jogo "Outro"
     if (formData.game === 'Outro') {
       if (!customGame.trim()) {
         notifyError('Por favor, digite o nome do jogo.')
@@ -84,16 +80,10 @@ function CreateGroup({ user, onCreateGroup, onUserUpdate }) {
       return
     }
 
-    // Conta quantos grupos o usuário já criou antes de criar o novo
     const groupsCreatedCount = getUserCreatedGroupsCount()
-    
-    // Determina a quantidade de essência: 10 para o primeiro grupo, 5 para os demais
     const essenceAmount = groupsCreatedCount === 0 ? ESSENCE.JOIN_GROUP : 5
-    
-    // Adiciona Essência ao usuário baseado no número de grupos criados
+
     let updatedUser = addEssence(user, essenceAmount)
-    
-    // Notifica sobre essências ganhas
     if (groupsCreatedCount === 0) {
       notifyEssenceGained(essenceAmount, 'Criar primeiro grupo')
     } else {
@@ -101,50 +91,37 @@ function CreateGroup({ user, onCreateGroup, onUserUpdate }) {
     }
     
     await updateProfile(user.id, updatedUser)
-
-    // Atualiza o usuário no componente pai
     onUserUpdate(updatedUser)
 
-    // Cria o grupo - usa o jogo customizado se "Outro" foi selecionado
     onCreateGroup({
       name: formData.name.trim(),
       game: formData.game === 'Outro' ? customGame.trim() : formData.game,
       description: formData.description.trim()
     })
 
-    // Verifica badges após criar grupo (com delay para garantir que o grupo foi salvo)
     setTimeout(() => {
       const posts = getPosts()
       const groups = getGroups()
-      const messages = {}
-      const newBadges = checkBadges(updatedUser, posts, groups, messages)
-      
-      // Filtra apenas badges realmente novos
+      const newBadges = checkBadges(updatedUser, posts, groups, {})
+
       const userBadges = updatedUser.badges || []
       const trulyNewBadges = newBadges.filter(badge => !userBadges.includes(badge.id))
-      
-      // Se houver novos badges, adiciona ao usuário
+
       if (trulyNewBadges.length > 0) {
         const finalUser = {
           ...updatedUser,
           badges: [...userBadges, ...trulyNewBadges.map(b => b.id)]
         }
         onUserUpdate(finalUser)
-        
-        // Mostra notificação de novos badges (exceto REVEALED_ESSENCE que deve aparecer apenas ao completar perfil)
-        const badgesToNotify = trulyNewBadges.filter(badge => badge.id !== BADGES.REVEALED_ESSENCE.id)
-        badgesToNotify.forEach((badge, index) => {
-          setTimeout(() => {
-            notifyAchievement(
-              badge.name,
-              getActionMessage(badge.id)
-            )
-          }, 100 + (index * 500)) // Espaça as notificações
-        })
+
+        trulyNewBadges
+          .filter(badge => badge.id !== BADGES.REVEALED_ESSENCE.id)
+          .forEach((badge, index) => {
+            setTimeout(() => notifyAchievement(badge.name, getActionMessage(badge.id)), 100 + (index * 500))
+          })
       }
     }, 100)
 
-    // Limpa o formulário
     setFormData({
       name: '',
       game: '',

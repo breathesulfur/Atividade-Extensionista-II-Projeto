@@ -15,7 +15,6 @@ function Feed({ user, onUserUpdate, onOpenGroup }) {
     setLoading(false)
   }, [])
 
-  // Carrega posts e assina realtime
   useEffect(() => {
     loadPosts()
     const unsubscribe = subscribeToPosts(loadPosts)
