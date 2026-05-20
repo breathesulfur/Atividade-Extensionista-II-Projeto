@@ -872,8 +872,30 @@
   }
 }
 
-.chat-share-button {
+.chat-invite-button {
   margin-left: auto;
+  padding: 8px 14px;
+  background: rgba(59, 130, 246, 0.1);
+  color: #3B82F6;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.chat-invite-button:hover {
+  background: #3B82F6;
+  color: white;
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.chat-share-button {
+  margin-left: 0;
   padding: 8px 14px;
   background: rgba(139, 92, 246, 0.1);
   color: var(--mystic-purple-dark);
@@ -895,6 +917,7 @@
 }
 
 @media (max-width: 640px) {
+  .chat-invite-button,
   .chat-share-button {
     padding: 6px 10px;
     font-size: 0.8rem;

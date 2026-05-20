@@ -35,6 +35,15 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
 
   const isMember = group.members?.includes(user.id) || false
 
+  const handleCopyInviteLink = () => {
+    const link = `${window.location.origin}/?group=${group.id}`
+    navigator.clipboard.writeText(link).then(() => {
+      notifySuccess('Link de convite copiado! 🔗')
+    }).catch(() => {
+      notifyError('Não foi possível copiar o link.')
+    })
+  }
+
   const handleShareGroup = async () => {
     if (!isMember) { notifyError('Entre no grupo antes de compartilhar.'); return }
     if (!window.confirm(`Compartilhar o grupo "${group.name}" no seu feed?`)) return
@@ -123,6 +132,14 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
             <span className="chat-members">👥 {group.members?.length || 0} membro{(group.members?.length || 0) !== 1 ? 's' : ''}</span>
           </div>
         </div>
+        <button
+          onClick={handleCopyInviteLink}
+          className="chat-invite-button"
+          aria-label="Copiar link de convite"
+          title="Copiar link de convite"
+        >
+          🔗 Convidar
+        </button>
         <button
           onClick={handleShareGroup}
           className="chat-share-button"

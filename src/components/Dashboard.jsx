@@ -154,15 +154,15 @@ function DailyEssenceProgressBar({ user }) {
   )
 }
 
-function Dashboard({ user, onLogout }) {
-  const [activeTab, setActiveTab] = useState('feed')
+function Dashboard({ user, onLogout, initialGroupId }) {
+  const [activeTab, setActiveTab] = useState(initialGroupId ? 'groups' : 'feed')
   const [currentUser, setCurrentUser] = useState(user)
   const [notifications, setNotifications] = useState([])
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [showFAQ, setShowFAQ] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
-  const [pendingGroupId, setPendingGroupId] = useState(null)
+  const [pendingGroupId, setPendingGroupId] = useState(initialGroupId || null)
   const tourSeenKey = `inclusivchat_welcome_seen_${user.id}`
   const [showTour, setShowTour] = useState(() => {
     try { return localStorage.getItem(tourSeenKey) !== '1' } catch { return false }

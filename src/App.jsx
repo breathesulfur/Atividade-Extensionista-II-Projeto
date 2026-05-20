@@ -14,6 +14,12 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [currentView, setCurrentView] = useState('login')
   const [notification, setNotification] = useState(null)
+  const [inviteGroupId, setInviteGroupId] = useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    const groupId = params.get('group')
+    if (groupId) window.history.replaceState({}, '', window.location.pathname)
+    return groupId
+  })
 
   useEffect(() => {
     setNotificationCallback((message, type, duration) => {
@@ -83,7 +89,7 @@ function App() {
           )}
         </>
       ) : (
-        <Dashboard user={user} onLogout={handleLogout} />
+        <Dashboard user={user} onLogout={handleLogout} initialGroupId={inviteGroupId} />
       )}
     </div>
   )
