@@ -35,7 +35,6 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
   const [editCommentText, setEditCommentText] = useState('')
   const emojiButtonRef = useRef(null)
 
-  // Usa authorProfile já embutido no post (vem do join Supabase)
   useEffect(() => {
     if (post.authorProfile) {
       setPostAuthor(post.authorProfile)
@@ -51,7 +50,6 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
     }
   }, [post.authorProfile, post.userId, post.userName, post.userPronoun, post.userAvatar, currentUser])
 
-  // Atualiza posição do modal quando necessário
   useEffect(() => {
     if (showEmojiPicker && emojiButtonRef.current) {
       const updatePosition = () => {
@@ -91,14 +89,11 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
     }
   }, [showEmojiPicker])
 
-  // Verifica se o usuário já curtiu (mantém compatibilidade)
   const isLiked = post.likes?.includes(currentUser.id) || false
 
-  // Obtém todas as reações do post (incluindo likes como ❤️ para compatibilidade)
   const getReactions = () => {
     const reactions = post.reactions || {}
     
-    // Migra likes antigos para reações
     if (post.likes && post.likes.length > 0 && !reactions['❤️']) {
       reactions['❤️'] = [...post.likes]
     }
@@ -106,19 +101,16 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
     return reactions
   }
 
-  // Verifica se o usuário já reagiu com um emoji específico
   const hasUserReacted = (emoji) => {
     const reactions = getReactions()
     return reactions[emoji]?.includes(currentUser.id) || false
   }
 
-  // Conta total de reações
   const getTotalReactions = () => {
     const reactions = getReactions()
     return Object.values(reactions).reduce((total, users) => total + users.length, 0)
   }
 
-  // Formata data
   const formatDate = (dateString) => {
     const date = new Date(dateString)
     const now = new Date()
@@ -177,12 +169,11 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
 
   const handleLike = () => handleReaction('❤️')
 
-  // Abre o seletor de emojis
   const handleOpenEmojiPicker = (forWhat) => {
     if (emojiButtonRef.current) {
       const rect = emojiButtonRef.current.getBoundingClientRect()
-      const modalHeight = 470 // altura aproximada do modal
-      const spacing = 10 // espaçamento entre botão e modal
+      const modalHeight = 470
+      const spacing = 10
       
       // Verifica se há espaço acima do botão
       const spaceAbove = rect.top
@@ -191,17 +182,13 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
       let top, left
       
       if (spaceAbove >= modalHeight + spacing) {
-        // Há espaço suficiente acima - posiciona acima
         top = rect.top - modalHeight - spacing
       } else if (spaceBelow >= modalHeight + spacing) {
-        // Há espaço abaixo - posiciona abaixo
         top = rect.bottom + spacing
       } else {
-        // Não há espaço suficiente - posiciona acima mas ajusta para caber na tela
         top = Math.max(10, rect.top - modalHeight - spacing)
       }
-      
-      // Centraliza horizontalmente considerando a largura do modal (320px)
+
       const modalWidth = 320
       left = Math.max(10, Math.min(rect.left - (modalWidth / 2) + (rect.width / 2), window.innerWidth - modalWidth - 10))
       
@@ -211,27 +198,23 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
     setShowEmojiPicker(true)
   }
 
-  // Abre modal de denúncia para postagem
   const handleReportPost = () => {
     setReportType('post')
     setReportCommentId(null)
     setShowReportModal(true)
   }
 
-  // Abre modal de denúncia para comentário
   const handleReportComment = (commentId) => {
     setReportType('comment')
     setReportCommentId(commentId)
     setShowReportModal(true)
   }
 
-  // Processa a denúncia após o usuário preencher o motivo
   const handleSubmitReport = async (reason, type, commentId) => {
     try {
       const reportTypeToUse = type || reportType
       const commentIdToUse = commentId !== undefined ? commentId : reportCommentId
       
-      // Salva denúncia no localStorage
       const reports = JSON.parse(localStorage.getItem('inclusivchat_reports') || '[]')
       const report = {
         id: Date.now().toString(),
@@ -247,14 +230,11 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
       reports.push(report)
       localStorage.setItem('inclusivchat_reports', JSON.stringify(reports))
 
-      // Adiciona Essência ao usuário por denunciar conteúdo
       let updatedUser = addEssence(currentUser, ESSENCE.REPORT_CONTENT)
       onUserUpdate(updatedUser)
       
-      // Notifica sobre essências ganhas
       notifyEssenceGained(ESSENCE.REPORT_CONTENT, 'Denunciar conteúdo ofensivo')
 
-      // Verifica badges (com delay para garantir que os dados foram atualizados)
       setTimeout(() => {
         const updatedPosts = getPosts()
         const updatedGroups = getGroups()
@@ -272,7 +252,6 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
             }
             onUserUpdate(finalUser)
             
-            // Mostra notificação de novos badges (exceto REVEALED_ESSENCE que deve aparecer apenas ao completar perfil)
             const badgesToNotify = trulyNewBadges.filter(badge => badge.id !== BADGES.REVEALED_ESSENCE.id)
             badgesToNotify.forEach((badge, index) => {
               setTimeout(() => {
@@ -394,7 +373,6 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
                   alt={post.userName}
                   className="author-avatar-img"
                   onError={(e) => {
-                    // Se a imagem falhar ao carregar, esconde e mostra a inicial
                     const avatarDiv = e.target.parentElement
                     e.target.style.display = 'none'
                     const fallback = avatarDiv.querySelector('.avatar-fallback')
@@ -490,7 +468,6 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
             )}
           </div>
           
-          {/* Mostra reações ativas */}
           <div className="reactions-display">
             {Object.entries(getReactions()).map(([emoji, users]) => {
               const userReacted = users.includes(currentUser.id)
@@ -603,7 +580,6 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
         </div>
       )}
 
-      {/* Modal de Denúncia */}
       <ReportModal
         isOpen={showReportModal}
         onClose={() => {

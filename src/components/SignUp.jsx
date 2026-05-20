@@ -34,7 +34,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
   const [customGame, setCustomGame] = useState('')
   const [customPronoun, setCustomPronoun] = useState('')
 
-  // Calcula etapa atual com base nos campos preenchidos
   const currentStep = (() => {
     if (formData.games.length > 0) return 3
     if (formData.pronoun && formData.state && formData.city) return 3
@@ -42,7 +41,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
     return 1
   })()
 
-  // Lista de jogos populares para seleção
   const availableGames = [
     'League of Legends',
     'Valorant',
@@ -62,7 +60,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
     'Project Zomboid'
   ]
 
-  // Lista de pronomes comuns
   const pronouns = [
     'Ela/Dela',
     'Ele/Dele',
@@ -71,7 +68,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
     'Outro'
   ]
 
-  // Estados brasileiros
   const states = [
     { value: 'AC', label: 'Acre' },
     { value: 'AL', label: 'Alagoas' },
@@ -102,7 +98,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
     { value: 'TO', label: 'Tocantins' }
   ]
 
-  // Cidades brasileiras - 10 cidades principais por estado
   const citiesByState = {
     'AC': ['Rio Branco', 'Cruzeiro do Sul', 'Sena Madureira', 'Tarauacá', 'Feijó', 'Brasiléia', 'Xapuri', 'Epitaciolândia', 'Mâncio Lima', 'Plácido de Castro'],
     'AL': ['Maceió', 'Arapiraca', 'Palmeira dos Índios', 'Rio Largo', 'Penedo', 'União dos Palmares', 'São Miguel dos Campos', 'Coruripe', 'Marechal Deodoro', 'Santana do Ipanema'],
@@ -135,16 +130,13 @@ function SignUp({ onSignUp, onBackToLogin }) {
 
   const availableCities = formData.state ? (citiesByState[formData.state] || []) : []
 
-  // Manipula mudanças nos campos do formulário
   const handleChange = (e) => {
     const { name, value } = e.target
 
-    // Limpa validação customizada do e-mail quando o usuário começar a digitar
     if (name === 'email') {
       e.target.setCustomValidity('')
     }
 
-    // Campo de plataforma (platforms.steam, platforms.epic, etc)
     if (name.startsWith('platforms.')) {
       const field = name.split('.')[1]
       setFormData(prev => ({
@@ -158,7 +150,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
     }
 
     setFormData(prev => {
-      // Se mudou o estado, limpa a cidade
       if (name === 'state') {
         return {
           ...prev,
@@ -166,7 +157,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
           city: ''
         }
       }
-      // Se mudou o pronome e não é "Outro", limpa o pronome customizado
       if (name === 'pronoun' && value !== 'Outro') {
         setCustomPronoun('')
       }
@@ -177,7 +167,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
     })
   }
 
-  // Manipula seleção de jogos
   const handleGameToggle = (game) => {
     setFormData(prev => ({
       ...prev,
@@ -187,7 +176,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
     }))
   }
 
-  // Adiciona jogo customizado
   const handleAddCustomGame = (e) => {
     e.preventDefault()
     const gameName = customGame.trim()
@@ -202,7 +190,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
     }
   }
 
-  // Remove jogo
   const handleRemoveGame = (gameToRemove) => {
     setFormData(prev => ({
       ...prev,
@@ -210,7 +197,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
     }))
   }
 
-  // Valida e submete o formulário
   const handleSubmit = async (e) => {
     e.preventDefault()
     
@@ -249,7 +235,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
       return
     }
 
-    // Se selecionou "Outro", valida o campo personalizado
     if (formData.pronoun === 'Outro' && !customPronoun.trim()) {
       notifyError('Por favor, informe seu pronome personalizado.')
       return
@@ -311,7 +296,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
         return
       }
 
-      // Mostra modal de sucesso
       setShowSuccessModal(true)
 
       setTimeout(async () => {
@@ -333,14 +317,12 @@ function SignUp({ onSignUp, onBackToLogin }) {
 
   return (
     <div className="signup-container">
-      {/* Modal de Sucesso */}
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={() => {}}
         message="Conta criada com sucesso!"
       />
 
-      {/* Overlay de Loading ao redirecionar */}
       {isRedirecting && (
         <div className="signup-loading-overlay">
           <LoadingSpinner size="large" text="Entrando..." />
@@ -356,7 +338,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
           </p>
         </div>
 
-        {/* Stepper de progresso */}
         <div className="signup-stepper" aria-label="Progresso do cadastro">
           {[
             { n: 1, label: 'Conta' },
@@ -374,7 +355,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
         </div>
 
         <form onSubmit={handleSubmit} className="signup-form">
-          {/* Campo de Nome */}
           <div className="form-group">
             <label htmlFor="name" className="form-label">
               Nome <span className="required-asterisk">*</span>
@@ -393,7 +373,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
             />
           </div>
 
-          {/* Campo de E-mail */}
           <div className="form-group">
             <label htmlFor="email" className="form-label">
               E-mail <span className="required-asterisk">*</span>
@@ -412,7 +391,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
             />
           </div>
 
-          {/* Campo de Senha */}
           <div className="form-group">
             <label htmlFor="password" className="form-label">
               Senha <span className="required-asterisk">*</span>
@@ -453,7 +431,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
             </div>
           </div>
 
-          {/* Campo de Confirmar Senha */}
           <div className="form-group">
             <label htmlFor="confirmPassword" className="form-label">
               Confirmar Senha <span className="required-asterisk">*</span>
@@ -494,13 +471,11 @@ function SignUp({ onSignUp, onBackToLogin }) {
             </div>
           </div>
 
-          {/* Divisor - Etapa 2: Perfil */}
           <div className="form-section-divider">
             <span className="form-section-badge">2</span>
             <span className="form-section-title">Seu Perfil</span>
           </div>
 
-          {/* Campo de Pronome */}
           <div className="form-group">
             <label htmlFor="pronoun" className="form-label">
               Pronome <span className="required-asterisk">*</span>
@@ -543,7 +518,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
             )}
           </div>
 
-          {/* Campo de Estado */}
           <div className="form-group">
             <label htmlFor="state" className="form-label">
               Estado <span className="required-asterisk">*</span>
@@ -567,7 +541,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
             </select>
           </div>
 
-          {/* Campo de Cidade */}
           <div className="form-group">
             <label htmlFor="city" className="form-label">
               Cidade <span className="required-asterisk">*</span>
@@ -608,13 +581,11 @@ function SignUp({ onSignUp, onBackToLogin }) {
             )}
           </div>
 
-          {/* Divisor - Etapa 3: Jogos */}
           <div className="form-section-divider">
             <span className="form-section-badge">3</span>
             <span className="form-section-title">Jogos Favoritos</span>
           </div>
 
-          {/* Seleção de Jogos */}
           <div className="form-group">
             <label className="form-label">
               Jogos de Interesse * (selecione pelo menos um)
@@ -634,7 +605,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
               ))}
             </div>
             
-            {/* Campo para adicionar jogos customizados */}
             <div className="custom-game-input-group">
               <input
                 type="text"
@@ -661,7 +631,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
               </button>
             </div>
             
-            {/* Lista de jogos selecionados */}
             {formData.games.length > 0 && (
               <div className="selected-games-list">
                 <p className="games-selected-info">
@@ -687,7 +656,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
             )}
           </div>
 
-          {/* Plataformas de Jogo (opcional) */}
           <div className="form-section-divider">
             <span className="form-section-badge">🎮</span>
             <span className="form-section-title">Plataformas de Jogo (opcional)</span>
@@ -783,7 +751,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
             </div>
           </div>
 
-          {/* Botão de Submit */}
           <button
             type="submit"
             className="signup-button"
@@ -797,7 +764,6 @@ function SignUp({ onSignUp, onBackToLogin }) {
           </button>
         </form>
 
-        {/* Link para voltar ao Login */}
         <div className="signup-footer">
           <p>
             Já tem uma conta?{' '}
