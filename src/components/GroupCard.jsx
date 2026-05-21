@@ -12,7 +12,7 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
   const [loading, setLoading] = useState(true)
   const [editingMessageId, setEditingMessageId] = useState(null)
   const [editContent, setEditContent] = useState('')
-  const [showPreview, setShowPreview] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
   const containerRef = useRef(null)
 
   // Carrega mensagens e assina realtime
@@ -41,19 +41,13 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
 
   const isMember = group.members?.includes(user.id) || false
 
-  const handleCopyInviteLink = () => {
-    const link = `${window.location.origin}/?group=${group.id}`
-    navigator.clipboard.writeText(link).then(() => {
-      notifySuccess('Link de convite copiado! 🔗')
-    }).catch(() => {
-      notifyError('Não foi possível copiar o link.')
-    })
-  }
-
   const handleShareGroup = async () => {
     if (!isMember) { notifyError('Entre no grupo antes de compartilhar.'); return }
-    if (!window.confirm(`Compartilhar o grupo "${group.name}" no seu feed?`)) return
+    setShowShareModal(true)
+  }
 
+  const handleConfirmShare = async () => {
+    setShowShareModal(false)
     const description = (group.description || '').trim()
     const summary = description ? `\n\n📝 ${description}` : ''
     const content = `🎮 Vem participar do grupo "${group.name}" (${group.game})!${summary}\n\n[group:${group.id}]`
@@ -75,15 +69,10 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
     return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
   }
 
-  const handlePreviewMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault()
     if (!isMember) { notifyError('Você precisa ser membro do grupo para enviar mensagens.'); return }
     if (!newMessage.trim()) { notifyError('Por favor, escreva uma mensagem.'); return }
-    setShowPreview(true)
-  }
-
-  const handleConfirmSend = async () => {
-    setShowPreview(false)
     const filteredMessage = filterProfanity(newMessage.trim())
     setNewMessage('')
 
@@ -169,14 +158,6 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
           </div>
         </div>
         <button
-          onClick={handleCopyInviteLink}
-          className="chat-invite-button"
-          aria-label="Copiar link de convite"
-          title="Copiar link de convite"
-        >
-          🔗 Convidar
-        </button>
-        <button
           onClick={handleShareGroup}
           className="chat-share-button"
           aria-label="Compartilhar grupo no feed"
@@ -238,20 +219,21 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
         )}
       </div>
 
-      {showPreview && (
-        <div className="message-preview-bar">
-          <div className="preview-content">
-            <span className="preview-label">Prévia:</span>
-            <span className="preview-text">{filterProfanity(newMessage.trim())}</span>
-          </div>
-          <div className="preview-actions">
-            <button onClick={() => setShowPreview(false)} className="preview-edit-btn">✏️ Editar</button>
-            <button onClick={handleConfirmSend} className="preview-send-btn">Enviar</button>
+      {showShareModal && (
+        <div className="share-modal-overlay" onClick={() => setShowShareModal(false)}>
+          <div className="share-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>📢 Compartilhar Grupo</h3>
+            <p>Compartilhar o grupo <strong>"{group.name}"</strong> no seu feed?</p>
+            <p className="share-modal-hint">Uma publicação será criada para que outros possam encontrar e entrar no grupo.</p>
+            <div className="share-modal-actions">
+              <button onClick={() => setShowShareModal(false)} className="share-modal-cancel">Cancelar</button>
+              <button onClick={handleConfirmShare} className="share-modal-confirm">Compartilhar</button>
+            </div>
           </div>
         </div>
       )}
 
-      <form onSubmit={handlePreviewMessage} className="message-form">
+      <form onSubmit={handleSendMessage} className="message-form">
         <input
           type="text"
           value={newMessage}
@@ -259,9 +241,8 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
           placeholder="Digite sua mensagem..."
           className="message-input"
           maxLength="300"
-          disabled={showPreview}
         />
-        <button type="submit" className="send-button" disabled={showPreview}>Enviar</button>
+        <button type="submit" className="send-button">Enviar</button>
       </form>
     </div>
   )

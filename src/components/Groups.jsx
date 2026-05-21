@@ -137,15 +137,6 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened }) {
   }
 
   // Filtra grupos por jogos de interesse do usuário
-  const handleCopyInviteLink = (groupId) => {
-    const link = `${window.location.origin}/?group=${groupId}`
-    navigator.clipboard.writeText(link).then(() => {
-      notifySuccess('Link de convite copiado! 🔗')
-    }).catch(() => {
-      notifyError('Não foi possível copiar o link.')
-    })
-  }
-
   const userGames = user.games || []
   const relevantGroups = groups.filter(group =>
     userGames.some(game => group.game.toLowerCase().includes(game.toLowerCase()))
@@ -222,13 +213,6 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened }) {
                     >
                       {group.members.includes(user.id) ? 'Sair' : 'Entrar'}
                     </button>
-                    <button
-                      onClick={() => handleCopyInviteLink(group.id)}
-                      className="invite-link-button"
-                      title="Copiar link de convite"
-                    >
-                      🔗
-                    </button>
                     {group.createdBy === user.id && (
                       <button
                         onClick={() => handleDeleteGroup(group.id)}
@@ -279,13 +263,6 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened }) {
                       }`}
                     >
                       {group.members.includes(user.id) ? 'Sair' : 'Entrar'}
-                    </button>
-                    <button
-                      onClick={() => handleCopyInviteLink(group.id)}
-                      className="invite-link-button"
-                      title="Copiar link de convite"
-                    >
-                      🔗
                     </button>
                     {group.createdBy === user.id && (
                       <button

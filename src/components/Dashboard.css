@@ -28,7 +28,6 @@
   box-shadow: 0 4px 20px var(--shadow-mystic);
   position: relative;
   z-index: 10;
-  overflow: hidden;
 }
 
 .header-decorations {

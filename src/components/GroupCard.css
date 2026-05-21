@@ -872,8 +872,8 @@
   }
 }
 
-.chat-invite-button,
 .chat-share-button {
+  margin-left: auto;
   padding: 8px 14px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
@@ -886,11 +886,6 @@
   white-space: nowrap;
 }
 
-.chat-invite-button {
-  margin-left: auto;
-}
-
-.chat-invite-button:hover,
 .chat-share-button:hover {
   background: rgba(255, 255, 255, 0.35);
   border-color: rgba(255, 255, 255, 0.5);
@@ -974,68 +969,87 @@
   color: var(--text-secondary);
 }
 
-.message-preview-bar {
+.share-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-md);
-  padding: var(--spacing-sm) var(--spacing-lg);
-  background: rgba(139, 92, 246, 0.08);
-  border-top: 1px solid rgba(139, 92, 246, 0.2);
-  flex-shrink: 0;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-md);
 }
 
-.preview-content {
-  flex: 1;
-  min-width: 0;
+.share-modal {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
 
-.preview-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--primary);
-  margin-right: var(--spacing-xs);
-}
-
-.preview-text {
-  font-size: 0.9rem;
+.share-modal h3 {
+  font-size: 1.3rem;
+  margin-bottom: var(--spacing-md);
   color: var(--text-primary);
-  word-break: break-word;
 }
 
-.preview-actions {
+.share-modal p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
+}
+
+.share-modal-hint {
+  font-size: 0.85rem !important;
+  opacity: 0.8;
+}
+
+.share-modal-actions {
   display: flex;
-  gap: var(--spacing-xs);
-  flex-shrink: 0;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+  justify-content: center;
 }
 
-.preview-edit-btn,
-.preview-send-btn {
-  padding: 6px 14px;
+.share-modal-cancel,
+.share-modal-confirm {
+  padding: 10px 24px;
   border: none;
   border-radius: var(--radius-md);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  font-family: inherit;
 }
 
-.preview-edit-btn {
+.share-modal-cancel {
   background: var(--border, #e5e7eb);
   color: var(--text-secondary);
 }
 
-.preview-send-btn {
+.share-modal-cancel:hover {
+  background: #d1d5db;
+}
+
+.share-modal-confirm {
   background: var(--primary);
   color: white;
 }
 
-.preview-send-btn:hover {
+.share-modal-confirm:hover {
   background: var(--primary-dark);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 640px) {
-  .chat-invite-button,
   .chat-share-button {
     padding: 6px 10px;
     font-size: 0.8rem;

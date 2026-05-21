@@ -67,9 +67,6 @@ function AvatarFrameSelector({ user, onFrameSelect }) {
                   <div className="lock-text">
                     {canUnlock ? 'Clique para desbloquear' : 'Bloqueado'}
                   </div>
-                  <div className="lock-cost">
-                    🔮 {frame.requiredEssence} Essências
-                  </div>
                 </div>
               )}
 
