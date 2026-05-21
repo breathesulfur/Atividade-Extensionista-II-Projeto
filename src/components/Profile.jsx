@@ -128,6 +128,7 @@ function Profile({ user, onUserUpdate }) {
       </div>
 
       <div className="profile-content">
+        {/* Seção Principal - Informações do Perfil */}
         <div className="profile-section profile-main-section">
           <AvatarFrame frameId={activeFrame} size="large">
             <div className="profile-avatar-large">
@@ -182,6 +183,7 @@ function Profile({ user, onUserUpdate }) {
           </div>
         </div>
 
+        {/* Estatísticas */}
         <div className="profile-section">
           <h3 className="section-title">Estatísticas</h3>
           <div className="stats-grid">
@@ -204,6 +206,7 @@ function Profile({ user, onUserUpdate }) {
           </div>
         </div>
 
+        {/* Jogos de Interesse */}
         <div className="profile-section">
           <h3 className="section-title">Jogos de Interesse</h3>
           <div className="games-list">
@@ -219,6 +222,7 @@ function Profile({ user, onUserUpdate }) {
           </div>
         </div>
 
+        {/* Redes Sociais */}
         {(user.socialMedia && (
           Object.values(user.socialMedia).some(value => value && value.trim())
         )) && (
@@ -268,6 +272,7 @@ function Profile({ user, onUserUpdate }) {
           </div>
         )}
 
+        {/* Plataformas de Jogo */}
         {(user.platforms && (
           Object.values(user.platforms).some(value => value && value.trim())
         )) && (
@@ -332,6 +337,7 @@ function Profile({ user, onUserUpdate }) {
           </div>
         )}
 
+        {/* Selos (Conquistas) */}
         <div className="profile-section">
           <h3 className="section-title">🏆 Conquistas</h3>
           <p className="section-subtitle" style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: 'var(--spacing-md)' }}>

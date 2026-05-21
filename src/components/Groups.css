@@ -284,7 +284,33 @@
   box-shadow: 0 4px 15px var(--shadow-mystic);
 }
 
-/* Botão de excluir grupo (apenas para criadores) */
+.invite-link-button {
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  border: 2px solid #3B82F6;
+  background: transparent;
+  color: #3B82F6;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.invite-link-button:hover {
+  background: #3B82F6;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.invite-link-button:active {
+  transform: translateY(0);
+}
+
 .delete-group-button {
   padding: var(--spacing-sm);
   border-radius: var(--radius-md);

@@ -58,9 +58,6 @@ function MysticTitleSelector({ user, onTitleSelect }) {
                   <div className="lock-text">
                     {canUnlock ? 'Clique para desbloquear' : 'Bloqueado'}
                   </div>
-                  <div className="lock-cost">
-                    🔮 {title.requiredEssence} Essências
-                  </div>
                 </div>
               )}
 

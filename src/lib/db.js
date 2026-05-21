@@ -1,5 +1,9 @@
 import { supabase } from './supabase'
 
+// ─────────────────────────────────────────────
+// Helpers de mapeamento
+// ─────────────────────────────────────────────
+
 const groupReactions = (rows) => {
   const result = {}
   for (const r of rows) {
@@ -117,7 +121,9 @@ const mapMessage = (row) => ({
   createdAt: row.created_at,
 })
 
+// ─────────────────────────────────────────────
 // Auth
+// ─────────────────────────────────────────────
 
 export const signIn = (email, password) =>
   supabase.auth.signInWithPassword({ email, password })
@@ -132,7 +138,9 @@ export const getSession = () => supabase.auth.getSession()
 export const onAuthStateChange = (callback) =>
   supabase.auth.onAuthStateChange(callback)
 
+// ─────────────────────────────────────────────
 // Perfil
+// ─────────────────────────────────────────────
 
 export const getProfile = async (userId, email) => {
   const { data, error } = await supabase
@@ -154,7 +162,9 @@ export const updateProfile = async (userId, userData) => {
   if (error) console.error('Erro ao atualizar perfil:', error)
 }
 
+// ─────────────────────────────────────────────
 // Posts
+// ─────────────────────────────────────────────
 
 const POST_SELECT = `
   *,
@@ -260,6 +270,7 @@ export const deleteComment = async (commentId) => {
   if (error) console.error('Erro ao deletar comentário:', error)
 }
 
+// Realtime: feed
 export const subscribeToPosts = (onRefresh) => {
   const channel = supabase
     .channel('public:posts-feed')
@@ -272,7 +283,9 @@ export const subscribeToPosts = (onRefresh) => {
   return () => supabase.removeChannel(channel)
 }
 
-// Grupos
+// ─────────────────────────────────────────────
+// Groups
+// ─────────────────────────────────────────────
 
 const GROUP_SELECT = `*, group_members (user_id)`
 
@@ -329,6 +342,7 @@ export const leaveGroup = async (groupId, userId) => {
   if (error) console.error('Erro ao sair do grupo:', error)
 }
 
+// Realtime: membros do grupo
 export const subscribeToGroupMembers = (groupId, onRefresh) => {
   const channel = supabase
     .channel(`group-members-${groupId}`)
@@ -342,7 +356,9 @@ export const subscribeToGroupMembers = (groupId, onRefresh) => {
   return () => supabase.removeChannel(channel)
 }
 
+// ─────────────────────────────────────────────
 // Mensagens de grupo
+// ─────────────────────────────────────────────
 
 export const fetchGroupMessages = async (groupId) => {
   const { data, error } = await supabase
@@ -366,6 +382,26 @@ export const sendGroupMessage = async (groupId, userId, content) => {
   return mapMessage(data)
 }
 
+export const updateGroupMessage = async (messageId, content) => {
+  const { error } = await supabase
+    .from('group_messages')
+    .update({ content })
+    .eq('id', messageId)
+
+  if (error) { console.error('Erro ao editar mensagem:', error); return false }
+  return true
+}
+
+export const deleteGroupMessage = async (messageId) => {
+  const { error } = await supabase
+    .from('group_messages')
+    .delete()
+    .eq('id', messageId)
+
+  if (error) { console.error('Erro ao deletar mensagem:', error); return false }
+  return true
+}
+
 export const subscribeToGroupMessages = (groupId, onMessage) => {
   const channel = supabase
     .channel(`group-chat-${groupId}`)
@@ -379,9 +415,12 @@ export const subscribeToGroupMessages = (groupId, onMessage) => {
   return () => supabase.removeChannel(channel)
 }
 
+// ─────────────────────────────────────────────
 // Notificações
+// ─────────────────────────────────────────────
 
 export const createNotification = async ({ userId, type, sourceUserId, sourceUserName, postId, groupId, message }) => {
+  // Não notifica a si mesmo
   if (userId === sourceUserId) return
 
   const { error } = await supabase.from('notifications').insert({
@@ -434,7 +473,9 @@ export const subscribeToNotifications = (userId, onNew) => {
   return () => supabase.removeChannel(channel)
 }
 
+// ─────────────────────────────────────────────
 // Feedback
+// ─────────────────────────────────────────────
 
 export const submitFeedback = async ({ userId, userName, rating, category, message }) => {
   const { error } = await supabase.from('feedback').insert({
