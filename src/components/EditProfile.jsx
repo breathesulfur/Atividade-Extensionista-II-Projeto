@@ -11,11 +11,14 @@ import AvatarFrameSelector from './AvatarFrameSelector'
 import MysticTitleSelector from './MysticTitleSelector'
 import './EditProfile.css'
 
+// Componente AccordionSection movido para fora para evitar recriação
+// Mantém conteúdo sempre montado para evitar perda de foco
 const AccordionSection = memo(({ id, icon, title, children, isOpen, hasError = false, warning = false, onToggle }) => {
   const handleToggle = (e) => {
     e.preventDefault()
     e.stopPropagation()
     onToggle(id)
+    // Remove o foco do botão após o clique para evitar outline visual indesejado
     if (e.currentTarget) {
       e.currentTarget.blur()
     }
@@ -37,7 +40,9 @@ const AccordionSection = memo(({ id, icon, title, children, isOpen, hasError = f
         </div>
         <span className={`accordion-arrow ${isOpen ? 'open' : ''}`}>▼</span>
       </button>
-      <div
+      {/* Sempre renderiza o conteúdo, mas usa CSS para esconder/mostrar */}
+      {/* Usa max-height e opacity para esconder, mantendo no DOM para evitar perda de foco */}
+      <div 
         id={`accordion-content-${id}`}
         className="accordion-content"
         role="region"
@@ -60,16 +65,24 @@ const AccordionSection = memo(({ id, icon, title, children, isOpen, hasError = f
 AccordionSection.displayName = 'AccordionSection'
 
 function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
+  // Snapshot imutável do usuário capturado na montagem inicial
+  // Este snapshot NÃO muda durante a edição, garantindo estabilidade
   const userSnapshotRef = useRef(null)
   
+  // Inicializa o snapshot apenas uma vez na montagem
   if (userSnapshotRef.current === null) {
     if (user) {
+      // Cria uma cópia profunda imutável do usuário
       userSnapshotRef.current = JSON.parse(JSON.stringify(user))
     }
   }
 
+  // Se não há snapshot e não há user, mostra loading
+  // Mas NUNCA desmonta o componente se já foi montado
   const userSnapshot = userSnapshotRef.current || {}
   
+  // Estado para rastrear o usuário atualizado em tempo real (apenas recompensas durante edição)
+  // Inicializado com o snapshot, não com a prop user
   const [currentUser, setCurrentUser] = useState(() => {
     if (userSnapshotRef.current) {
       return JSON.parse(JSON.stringify(userSnapshotRef.current))
@@ -77,6 +90,8 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     return {}
   })
   
+  // Obtém tema ativo e suas cores baseado apenas no currentUser (recompensas locais)
+  // NÃO depende mais da prop user
   const activeTheme = useMemo(() => {
     const themeId = currentUser?.activeTheme
     if (themeId && THEMES) {
@@ -88,6 +103,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     return null
   }, [currentUser?.activeTheme])
 
+  // Estilos do tema aplicados dinamicamente
   const themeStyles = useMemo(() => {
     if (!activeTheme) return {}
     return {
@@ -105,6 +121,8 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     }
   }, [activeTheme])
   
+  // Usa apenas o snapshot para inicializar formData
+  // NÃO depende mais da prop user
   const [formData, setFormData] = useState(() => {
     const snapshot = userSnapshotRef.current || {}
     return {
@@ -150,11 +168,15 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   
+  // Estado para controlar accordion (apenas uma seção aberta por vez)
+  // Foto de Perfil abre por padrão
   const [openSection, setOpenSection] = useState('avatar')
   const [lastErrorSection, setLastErrorSection] = useState(null)
   
+  // Estado para rastrear se houve alterações
   const [hasChanges, setHasChanges] = useState(false)
   
+  // Dados iniciais para comparação - baseado apenas no snapshot
   const initialFormData = useMemo(() => {
     const snapshot = userSnapshotRef.current || {}
     return {
@@ -184,8 +206,10 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
       },
       avatar: snapshot.avatar || snapshot.picture || ''
     }
-  }, [])
+  }, []) // Array vazio - calculado apenas uma vez na montagem
   
+  // Detecta alterações comparando com dados iniciais
+  // Usa apenas o snapshot inicial, não depende da prop user
   useEffect(() => {
     const formDataToCompare = { ...formData }
     if (!formDataToCompare.password) {
@@ -198,6 +222,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     delete initialToCompare.password
     delete initialToCompare.confirmPassword
     
+    // Compara com o snapshot inicial, não com a prop user
     const snapshot = userSnapshotRef.current || {}
     const hasFormChanges = JSON.stringify(formDataToCompare) !== JSON.stringify(initialToCompare) ||
       JSON.stringify({
@@ -212,38 +237,57 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     setHasChanges(hasFormChanges)
   }, [formData, currentUser, initialFormData])
 
+  // Ref para preservar posição de scroll ao abrir abas específicas
   const scrollPositionRef = useRef(null)
   const isRestoringScrollRef = useRef(false)
   
+  // Função toggleSection estável usando useCallback
+  // Preserva a posição de scroll ao abrir abas específicas
   const toggleSection = useCallback((sectionId) => {
+    // Abas que devem preservar o scroll ao abrir
     const tabsToPreserveScroll = ['social-media', 'platforms', 'rewards']
+    
+    // Se está abrindo uma das abas especificadas, salva a posição de scroll
     const isOpening = openSection !== sectionId
     const shouldPreserveScroll = isOpening && tabsToPreserveScroll.includes(sectionId)
     
     if (shouldPreserveScroll) {
+      // Salva a posição atual de scroll antes de atualizar o estado
       scrollPositionRef.current = window.pageYOffset || document.documentElement.scrollTop
       isRestoringScrollRef.current = true
     }
     
+    // Atualiza o estado
     setOpenSection(prev => prev === sectionId ? null : sectionId)
   }, [openSection])
   
+  // Efeito para restaurar a posição de scroll após abertura de abas específicas
   useEffect(() => {
+    // Abas que devem preservar o scroll
     const tabsToPreserveScroll = ['social-media', 'platforms', 'rewards']
+    
+    // Verifica se uma das abas foi aberta e há uma posição de scroll salva
     if (isRestoringScrollRef.current && scrollPositionRef.current !== null && tabsToPreserveScroll.includes(openSection)) {
+      // Usa requestAnimationFrame duplo para garantir que o DOM foi atualizado
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
+          // Restaura a posição de scroll preservada
           if (scrollPositionRef.current !== null && isRestoringScrollRef.current) {
             const savedPosition = scrollPositionRef.current
             const currentPosition = window.pageYOffset || document.documentElement.scrollTop
             
+            // Só restaura se a posição mudou significativamente (mais de 10px)
             if (Math.abs(currentPosition - savedPosition) > 10) {
+              // IMPORTANTE: Usa scrollTo apenas para restaurar a posição salva do usuário,
+              // NÃO para ir ao topo (0,0). Isso é diferente de window.scrollTo(0, 0) que foi proibido.
+              // Estamos preservando a posição atual do scroll, não forçando uma nova posição.
               window.scrollTo({
                 top: savedPosition,
                 behavior: 'instant'
               })
             }
             
+            // Limpa as refs após restaurar
             scrollPositionRef.current = null
             isRestoringScrollRef.current = false
           }
@@ -252,12 +296,14 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     }
   }, [openSection])
 
+  // Se houver erro em uma seção, abre automaticamente
   useEffect(() => {
     if (lastErrorSection && openSection !== lastErrorSection) {
       setOpenSection(lastErrorSection)
     }
   }, [lastErrorSection])
 
+  // Lista de jogos disponíveis
   const availableGames = [
     'League of Legends',
     'Valorant',
@@ -285,6 +331,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     'Outro'
   ]
 
+  // Estados brasileiros
   const states = [
     { value: 'AC', label: 'Acre' },
     { value: 'AL', label: 'Alagoas' },
@@ -315,6 +362,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     { value: 'TO', label: 'Tocantins' }
   ]
 
+  // Cidades brasileiras - 10 cidades principais por estado
   const citiesByState = {
     'AC': ['Rio Branco', 'Cruzeiro do Sul', 'Sena Madureira', 'Tarauacá', 'Feijó', 'Brasiléia', 'Xapuri', 'Epitaciolândia', 'Mâncio Lima', 'Plácido de Castro'],
     'AL': ['Maceió', 'Arapiraca', 'Palmeira dos Índios', 'Rio Largo', 'Penedo', 'União dos Palmares', 'São Miguel dos Campos', 'Coruripe', 'Marechal Deodoro', 'Santana do Ipanema'],
@@ -345,10 +393,12 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     'TO': ['Palmas', 'Araguaína', 'Gurupi', 'Porto Nacional', 'Paraíso do Tocantins', 'Colinas do Tocantins', 'Guaraí', 'Formoso do Araguaia', 'Dianópolis', 'Taguatinga']
   }
 
+  // Memoiza availableCities para evitar recálculo desnecessário
   const availableCities = useMemo(() => {
     return formData.state ? (citiesByState[formData.state] || []) : []
   }, [formData.state])
 
+  // Manipula mudanças nos campos (simplificado)
   const handleChange = (e) => {
     const { name, value } = e.target
     
@@ -372,6 +422,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
       }))
     } else {
       setFormData(prev => {
+        // Se mudou o estado, limpa a cidade
         if (name === 'state') {
           return {
             ...prev,
@@ -379,6 +430,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
             city: ''
           }
         }
+        // Se mudou o pronome e não é "Outro", limpa o pronome customizado
         if (name === 'pronoun' && value !== 'Outro') {
           setCustomPronoun('')
         }
@@ -390,14 +442,17 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     }
   }
 
+  // Manipula upload de foto
   const handleAvatarChange = (e) => {
     const file = e.target.files[0]
     if (file) {
+      // Valida tipo de arquivo
       if (!file.type.startsWith('image/')) {
         notifyError('Por favor, selecione uma imagem válida.')
         return
       }
 
+      // Valida tamanho (máximo 5MB)
       if (file.size > 5 * 1024 * 1024) {
         notifyError('A imagem deve ter no máximo 5MB.')
         return
@@ -416,6 +471,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     }
   }
 
+  // Manipula seleção de jogos (simplificado)
   const handleGameToggle = (game) => {
     setFormData(prev => ({
       ...prev,
@@ -425,6 +481,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     }))
   }
 
+  // Adiciona jogo customizado (simplificado)
   const handleAddCustomGame = (e) => {
     e.preventDefault()
     e.stopPropagation()
@@ -439,6 +496,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     }
   }
 
+  // Remove jogo (simplificado)
   const handleRemoveGame = (gameToRemove) => {
     setFormData(prev => ({
       ...prev,
@@ -446,14 +504,17 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     }))
   }
 
+  // Salva as alterações
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    setLastErrorSection(null)
+    setLastErrorSection(null) // Limpa erro anterior
 
+    // Obtém o snapshot uma única vez no início da função
     const snapshot = userSnapshotRef.current || {}
 
     try {
+      // Valida nome
       if (!formData.name || !formData.name.trim()) {
         notifyError('Por favor, informe seu nome.')
         setLastErrorSection('public-info')
@@ -462,6 +523,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         return
       }
 
+      // Valida email
       if (!formData.email || !formData.email.trim()) {
         notifyError('Por favor, informe seu e-mail.')
         setLastErrorSection('account-data')
@@ -478,6 +540,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         return
       }
 
+// Valida pronome personalizado se "Outro" foi selecionado
       if (formData.pronoun === 'Outro' && !customPronoun.trim()) {
         notifyError('Por favor, informe seu pronome personalizado.')
         setLastErrorSection('public-info')
@@ -486,6 +549,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         return
       }
 
+      // Valida senha se foi fornecida
       if (formData.password && formData.password.trim()) {
         if (formData.password.length < 6) {
           notifyError('A senha deve ter pelo menos 6 caracteres.')
@@ -503,30 +567,40 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         }
       }
 
+      // Simula delay de requisição
       await new Promise(resolve => setTimeout(resolve, 500))
 
+      // Usa currentUser (que inclui recompensas selecionadas durante edição) e o snapshot inicial
       let updatedUser = {
-        ...snapshot,
-        ...currentUser,
-        ...formData,
+        ...snapshot, // Base no snapshot inicial
+        ...currentUser, // Inclui recompensas selecionadas durante edição
+        ...formData, // Inclui dados do formulário
         pronoun: formData.pronoun === 'Outro' ? customPronoun.trim() : formData.pronoun,
-        picture: formData.avatar,
+        picture: formData.avatar, // Garante que picture também seja salvo
         updatedAt: new Date().toISOString()
       }
       
+      // Remove campos de senha do objeto (não devem ser salvos no user object)
       delete updatedUser.password
       delete updatedUser.confirmPassword
 
+      // Verifica se perfil foi completado (pronome + bio) para conceder Essência Revelada
+      // Compara com o snapshot inicial, não com a prop user
       const hadPronoun = snapshot.pronoun
       const hadBio = snapshot.bio && snapshot.bio.trim().length > 0
       const nowHasPronoun = formData.pronoun
       const nowHasBio = formData.bio && formData.bio.trim().length > 0
       
+      // Se completou o perfil agora (não tinha antes)
       if ((!hadPronoun && nowHasPronoun) || (!hadBio && nowHasBio)) {
         if (nowHasPronoun && nowHasBio) {
+          // Adiciona Essência por completar perfil
           updatedUser = addEssence(updatedUser, ESSENCE.COMPLETE_PROFILE)
+          
+          // Notifica sobre essências ganhas
           notifyEssenceGained(ESSENCE.COMPLETE_PROFILE, 'Completar perfil')
-
+          
+          // Verifica se deve conceder selo Essência Revelada
           const posts = getPosts()
           const groups = getGroups()
           const messages = {}
@@ -545,7 +619,10 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
 
       await updateProfile(snapshot.id, updatedUser)
 
+      // Mostra o modal de sucesso primeiro
       setShowSuccessModal(true)
+      
+      // Atualiza o usuário após mostrar o modal
       onSave(updatedUser)
     } catch (error) {
       console.error('Erro ao salvar perfil:', error)
@@ -557,12 +634,16 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
 
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false)
+    // Fecha o EditProfile após o modal ser fechado
     onCancel()
   }
 
+  // Handlers para recompensas (temas, molduras, títulos)
+  // Atualizam apenas o estado local currentUser, não dependem da prop user
   const handleThemeSelect = async (themeId, updatedUser) => {
     if (!updatedUser) return
     
+    // Se themeId for null, remove o tema ativo (retorna ao padrão)
     let userWithTheme
     if (themeId === null || themeId === undefined) {
       userWithTheme = {
@@ -570,11 +651,13 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         activeTheme: null
       }
     } else {
+      // Aplica o tema ao usuário atualizado
       userWithTheme = applyTheme(updatedUser, themeId)
     }
     
     setCurrentUser(userWithTheme)
 
+    // Propaga preview para o Dashboard (para que o fundo do app também mude)
     if (typeof onUserUpdate === 'function') {
       onUserUpdate(userWithTheme)
     }
@@ -592,6 +675,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
 
     setCurrentUser(updatedUser)
 
+    // Propaga preview para o Dashboard (moldura visível imediatamente)
     if (typeof onUserUpdate === 'function') {
       onUserUpdate(updatedUser)
     }
@@ -609,6 +693,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
 
     setCurrentUser(updatedUser)
 
+    // Propaga preview para o Dashboard (título visível imediatamente)
     if (typeof onUserUpdate === 'function') {
       onUserUpdate(updatedUser)
     }
@@ -621,6 +706,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     }
   }
 
+  // Se não há snapshot ainda, mostra loading mas mantém o componente montado
   if (!userSnapshotRef.current) {
     return (
       <div className="edit-profile">
@@ -634,6 +720,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
       className={`edit-profile ${activeTheme ? `theme-${activeTheme.id}` : ''}`}
       style={themeStyles}
     >
+      {/* Modal de Sucesso */}
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={handleCloseSuccessModal}
@@ -656,8 +743,9 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         onSubmit={handleSubmit} 
         className="edit-profile-form"
       >
-        <AccordionSection
-          id="avatar"
+        {/* Foto de Perfil */}
+        <AccordionSection 
+          id="avatar" 
           icon="📸" 
           title="Foto de Perfil"
           isOpen={openSection === 'avatar'}
@@ -692,8 +780,9 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
           </div>
         </AccordionSection>
 
-        <AccordionSection
-          id="account-data"
+        {/* Dados da Conta */}
+        <AccordionSection 
+          id="account-data" 
           icon="🔐" 
           title="Dados da Conta"
           isOpen={openSection === 'account-data' || (lastErrorSection === 'account-data')}
@@ -809,8 +898,9 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
           </div>
         </AccordionSection>
 
-        <AccordionSection
-          id="public-info"
+        {/* Informações Públicas */}
+        <AccordionSection 
+          id="public-info" 
           icon="🧾" 
           title="Informações Públicas"
           isOpen={openSection === 'public-info' || (lastErrorSection === 'public-info')}
@@ -951,6 +1041,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
             )}
           </div>
 
+          {/* Jogos de Interesse - dentro de Informações Públicas */}
           <div className="form-group" style={{ marginTop: 'var(--spacing-lg)' }}>
             <label className="form-label">Jogos de Interesse</label>
             <div className="games-grid">
@@ -967,6 +1058,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
               ))}
             </div>
             
+            {/* Campo para adicionar jogos customizados */}
             <div className="custom-game-input-group" style={{ marginTop: 'var(--spacing-md)' }}>
               <input
                 type="text"
@@ -995,6 +1087,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
               </button>
             </div>
             
+            {/* Lista de jogos selecionados */}
             {formData.games.length > 0 && (
               <div className="selected-games-list" style={{ marginTop: 'var(--spacing-md)' }}>
                 <p className="games-selected-info">
@@ -1021,8 +1114,9 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
           </div>
         </AccordionSection>
 
-        <AccordionSection
-          id="social-media"
+        {/* Redes Sociais */}
+        <AccordionSection 
+          id="social-media" 
           icon="🌐" 
           title="Redes Sociais"
           isOpen={openSection === 'social-media'}
@@ -1109,8 +1203,9 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
           </div>
         </AccordionSection>
 
-        <AccordionSection
-          id="platforms"
+        {/* Plataformas de Jogo - dentro de Redes Sociais */}
+        <AccordionSection 
+          id="platforms" 
           icon="🎮" 
           title="Plataformas de Jogo"
           isOpen={openSection === 'platforms'}
@@ -1213,8 +1308,9 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
           </div>
         </AccordionSection>
 
-        <AccordionSection
-          id="rewards"
+        {/* Recompensas */}
+        <AccordionSection 
+          id="rewards" 
           icon="🎨" 
           title="Recompensas"
           isOpen={openSection === 'rewards'}
@@ -1241,6 +1337,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         </AccordionSection>
       </form>
 
+      {/* Botões de Ação - Sticky */}
       <div className="form-actions-sticky">
         <button
           type="button"

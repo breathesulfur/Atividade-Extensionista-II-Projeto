@@ -15,6 +15,7 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
   const [showPreview, setShowPreview] = useState(false)
   const containerRef = useRef(null)
 
+  // Carrega mensagens e assina realtime
   useEffect(() => {
     let mounted = true
 
@@ -22,6 +23,7 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
       if (mounted) { setMessages(data); setLoading(false) }
     })
 
+    // Realtime: nova mensagem inserida por outro usuário
     const unsubscribe = subscribeToGroupMessages(group.id, async () => {
       const data = await fetchGroupMessages(group.id)
       if (mounted) setMessages(data)
@@ -30,6 +32,7 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
     return () => { mounted = false; unsubscribe() }
   }, [group.id])
 
+  // Scroll para o fim quando mensagens chegam
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight
@@ -99,6 +102,7 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
       }
     }
 
+    // Gamificação: verifica badges
     setTimeout(() => {
       const posts = getPosts()
       const newBadges = checkBadges(user, posts, [group], { [group.id]: messages })

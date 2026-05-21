@@ -1,3 +1,9 @@
+/**
+ * Sistema de gamificação - Essência, Selos e Temas
+ * Focado em comportamentos saudáveis, empatia e pertencimento
+ */
+
+// Definição de Selos (Badges) disponíveis
 export const BADGES = {
   GENTLE_VOICE: {
     id: 'gentle_voice',
@@ -43,6 +49,11 @@ export const BADGES = {
   }
 }
 
+/**
+ * Retorna a mensagem da ação realizada baseada no badge
+ * @param {string} badgeId - ID do badge
+ * @returns {string} - Mensagem da ação realizada
+ */
 export const getActionMessage = (badgeId) => {
   const actionMessages = {
     'gentle_voice': 'Fez sua primeira postagem',
@@ -55,6 +66,7 @@ export const getActionMessage = (badgeId) => {
   return actionMessages[badgeId] || BADGES[Object.keys(BADGES).find(key => BADGES[key].id === badgeId)]?.name || 'Nova conquista desbloqueada'
 }
 
+// Temas visuais desbloqueáveis
 export const THEMES = {
   SERENE_MOON: {
     id: 'serene_moon',
@@ -154,6 +166,10 @@ export const THEMES = {
   }
 }
 
+/**
+ * Pontos de Essência baseado em ações
+ * Nome: Essência (não "pontos")
+ */
 export const ESSENCE = {
   CREATE_POST: 10,        // Postagem respeitosa (sem denúncias por 48h)
   SUPPORTIVE_COMMENT: 5,   // Comentário com apoio
@@ -163,8 +179,14 @@ export const ESSENCE = {
   DAILY_LOGIN: 10          // Login por 3 dias consecutivos
 }
 
+/**
+ * Limite diário de Essências que podem ser ganhas
+ */
 export const DAILY_ESSENCE_LIMIT = 50
 
+/**
+ * Cooldowns em minutos para cada tipo de ação
+ */
 export const ACTION_COOLDOWNS = {
   CREATE_POST: 30,         // 30 minutos entre postagens
   SUPPORTIVE_COMMENT: 10,  // 10 minutos entre comentários
@@ -174,30 +196,47 @@ export const ACTION_COOLDOWNS = {
   DAILY_LOGIN: 0           // Sem cooldown (verificado por sistema de dias consecutivos)
 }
 
+/**
+ * Mínimo de caracteres para que um comentário gere Essência
+ */
 export const MIN_COMMENT_LENGTH_FOR_ESSENCE = 10
 
+/**
+ * Adiciona Essência ao usuário
+ * Respeita limite diário e separa essencias_totais de essencias_disponiveis
+ * @param {Object} user - Dados do usuário
+ * @param {number} essence - Essência a adicionar
+ * @returns {Object} - Usuário atualizado
+ */
 export const addEssence = (user, essence) => {
+  // Inicializa contadores se não existirem (migração para novos usuários)
   const essenciasTotais = user.essencias_totais ?? (user.essence || user.points || 0)
   const essenciasDisponiveis = user.essencias_disponiveis ?? (user.essence || user.points || 0)
-
+  
+  // Verifica limite diário
   const today = new Date().toDateString()
   const dailyEssence = user.dailyEssence || {}
   const todayEssence = dailyEssence[today] || 0
   
   if (todayEssence >= DAILY_ESSENCE_LIMIT) {
+    // Limite diário atingido, não adiciona às disponíveis, mas registra a ação
     return {
       ...user,
       essencias_totais: essenciasTotais + essence,
-      essencia: essenciasDisponiveis,
-      points: essenciasDisponiveis
+      essencia: essenciasDisponiveis, // Mantém compatibilidade
+      points: essenciasDisponiveis // Mantém compatibilidade
     }
   }
-
+  
+  // Calcula quanto pode ser adicionado hoje
   const remainingDaily = DAILY_ESSENCE_LIMIT - todayEssence
   const essenceToAdd = Math.min(essence, remainingDaily)
   
-  const newEssenciasTotais = essenciasTotais + essence
-  const newEssenciasDisponiveis = essenciasDisponiveis + essenceToAdd
+  // Atualiza contadores
+  const newEssenciasTotais = essenciasTotais + essence // Sempre incrementa total
+  const newEssenciasDisponiveis = essenciasDisponiveis + essenceToAdd // Incrementa disponível apenas dentro do limite
+  
+  // Atualiza registro diário
   const updatedDailyEssence = {
     ...dailyEssence,
     [today]: todayEssence + essenceToAdd
@@ -207,12 +246,18 @@ export const addEssence = (user, essence) => {
     ...user,
     essencias_totais: newEssenciasTotais,
     essencias_disponiveis: newEssenciasDisponiveis,
-    essencia: newEssenciasDisponiveis,
-    points: newEssenciasDisponiveis,
+    essencia: newEssenciasDisponiveis, // Mantém compatibilidade (usa disponível)
+    points: newEssenciasDisponiveis, // Mantém compatibilidade
     dailyEssence: updatedDailyEssence
   }
 }
 
+/**
+ * Verifica se pode realizar uma ação baseado em cooldown
+ * @param {Object} user - Dados do usuário
+ * @param {string} actionType - Tipo de ação (CREATE_POST, SUPPORTIVE_COMMENT, etc)
+ * @returns {Object} - { canPerform: boolean, cooldownRemaining: number (em minutos) }
+ */
 export const canPerformAction = (user, actionType) => {
   const cooldown = ACTION_COOLDOWNS[actionType]
   if (!cooldown || cooldown === 0) {
@@ -227,7 +272,7 @@ export const canPerformAction = (user, actionType) => {
   }
   
   const now = new Date().getTime()
-  const elapsed = (now - new Date(lastActionTime).getTime()) / (1000 * 60)
+  const elapsed = (now - new Date(lastActionTime).getTime()) / (1000 * 60) // minutos
   const cooldownRemaining = Math.max(0, cooldown - elapsed)
   
   return {
@@ -236,6 +281,12 @@ export const canPerformAction = (user, actionType) => {
   }
 }
 
+/**
+ * Registra uma ação realizada
+ * @param {Object} user - Dados do usuário
+ * @param {string} actionType - Tipo de ação
+ * @returns {Object} - Usuário atualizado
+ */
 export const registerAction = (user, actionType) => {
   const lastActions = user.lastActions || {}
   return {
@@ -247,7 +298,16 @@ export const registerAction = (user, actionType) => {
   }
 }
 
+/**
+ * Adiciona Essência verificando cooldown e limite diário
+ * Esta função combina verificação de cooldown, registro de ação e adição de Essências
+ * @param {Object} user - Dados do usuário
+ * @param {number} essence - Essência a adicionar
+ * @param {string} actionType - Tipo de ação (CREATE_POST, SUPPORTIVE_COMMENT, etc)
+ * @returns {Object} - { user: Object, success: boolean, message?: string }
+ */
 export const addEssenceWithChecks = (user, essence, actionType) => {
+  // Verifica cooldown
   const { canPerform, cooldownRemaining } = canPerformAction(user, actionType)
   
   if (!canPerform) {
@@ -268,24 +328,42 @@ export const addEssenceWithChecks = (user, essence, actionType) => {
   }
 }
 
+/**
+ * Subtrai Essência do usuário (apenas de essencias_disponiveis)
+ * Usado apenas ao desbloquear recompensas cosméticas (temas e molduras)
+ * @param {Object} user - Dados do usuário
+ * @param {number} essence - Essência a subtrair
+ * @returns {Object} - Usuário atualizado
+ */
 export const subtractEssence = (user, essence) => {
+  // Usa essencias_disponiveis, com fallback para compatibilidade
   const essenciasDisponiveis = user.essencias_disponiveis ?? (user.essence || user.points || 0)
   const essenciasTotais = user.essencias_totais ?? essenciasDisponiveis
-  const newEssenciasDisponiveis = Math.max(0, essenciasDisponiveis - essence)
-
+  
+  const newEssenciasDisponiveis = Math.max(0, essenciasDisponiveis - essence) // Não permite valores negativos
+  
   return {
     ...user,
-    essencias_totais: essenciasTotais,
+    essencias_totais: essenciasTotais, // Total nunca diminui
     essencias_disponiveis: newEssenciasDisponiveis,
-    essencia: newEssenciasDisponiveis,
-    points: newEssenciasDisponiveis
+    essencia: newEssenciasDisponiveis, // Mantém compatibilidade (usa disponível)
+    points: newEssenciasDisponiveis // Mantém compatibilidade
   }
 }
 
+/**
+ * Verifica e concede selos baseado nas ações do usuário
+ * @param {Object} user - Dados do usuário (já com essência atualizada)
+ * @param {Array} posts - Todas as postagens
+ * @param {Array} groups - Todos os grupos
+ * @param {Object} messages - Todas as mensagens
+ * @returns {Array} - Array de novos selos conquistados (apenas os que o usuário ainda não tem)
+ */
 export const checkBadges = (user, posts, groups, messages) => {
   const newBadges = []
   const userBadges = user.badges || []
 
+  // Conta ações do usuário
   const userPosts = posts.filter(p => p.userId === user.id)
   const userComments = posts.reduce((count, post) => {
     return count + (post.comments?.filter(c => c.userId === user.id).length || 0)
@@ -293,15 +371,20 @@ export const checkBadges = (user, posts, groups, messages) => {
   const userGroups = groups.filter(g => g.members?.includes(user.id))
   const userCreatedGroups = groups.filter(g => g.createdBy === user.id)
 
+  // 🪶 Voz Gentil - Criar postagem respeitosa (sem denúncias por 48h)
+  // Simplificado: primeira postagem sem denúncias
   if (userPosts.length >= 1 && !userBadges.includes(BADGES.GENTLE_VOICE.id)) {
+    // Verifica se há denúncias (simplificado - em produção seria verificado por moderação)
     const hasReports = userPosts.some(post => post.reports && post.reports.length > 0)
     if (!hasReports) {
       newBadges.push(BADGES.GENTLE_VOICE)
     }
   }
 
+  // 💜 Aura de Apoio - Comentar com apoio (comentário com curtidas e zero denúncias)
   if (userComments >= 1 && !userBadges.includes(BADGES.SUPPORT_AURA.id)) {
-    const commentsWithLikes = posts.some(post =>
+    // Verifica se comentários têm curtidas (simplificado)
+    const commentsWithLikes = posts.some(post => 
       post.comments?.some(c => c.userId === user.id && c.likes && c.likes.length > 0)
     )
     if (commentsWithLikes) {
@@ -309,25 +392,32 @@ export const checkBadges = (user, posts, groups, messages) => {
     }
   }
 
+  // 🛡️ Guardião do Espaço - Denunciar conteúdo ofensivo corretamente
+  // Simplificado: usuário que criou grupos (representa moderação ativa)
   if (userCreatedGroups.length >= 1 && !userBadges.includes(BADGES.SPACE_GUARDIAN.id)) {
     newBadges.push(BADGES.SPACE_GUARDIAN)
   }
 
+  // 🫂 Círculo de Pertencimento - Participar de grupos inclusivos
   if (userGroups.length >= 1 && !userBadges.includes(BADGES.BELONGING_CIRCLE.id)) {
     newBadges.push(BADGES.BELONGING_CIRCLE)
   }
 
+  // 🔮 Essência Revelada - Completar perfil (pronomes + bio)
   if (user.pronoun && user.bio && user.bio.trim().length > 0 && !userBadges.includes(BADGES.REVEALED_ESSENCE.id)) {
     newBadges.push(BADGES.REVEALED_ESSENCE)
   }
 
+  // 🕯️ Ritual Diário - Login por 3 dias consecutivos
   const lastLogins = user.lastLoginDates || []
   if (lastLogins.length >= 3 && !userBadges.includes(BADGES.DAILY_RITUAL.id)) {
+    // Verifica se há 3 dias consecutivos
     const sortedLogins = lastLogins
       .map(date => new Date(date).getTime())
       .sort((a, b) => b - a)
       .slice(0, 3)
     
+    // Verifica se são consecutivos
     const isConsecutive = sortedLogins.every((date, index) => {
       if (index === 0) return true
       const daysDiff = (sortedLogins[index - 1] - date) / (1000 * 60 * 60 * 24)
@@ -342,22 +432,36 @@ export const checkBadges = (user, posts, groups, messages) => {
   return newBadges
 }
 
+/**
+ * Verifica se o usuário pode desbloquear um tema
+ * @param {Object} user - Dados do usuário
+ * @param {string} themeId - ID do tema
+ * @returns {boolean} - Se o tema pode ser desbloqueado
+ */
 export const canUnlockTheme = (user, themeId) => {
   const theme = THEMES[themeId.toUpperCase().replace('-', '_')] || Object.values(THEMES).find(t => t.id === themeId)
   if (!theme) return false
-
+  
+  // Usa essencias_disponiveis para desbloqueio de recompensas cosméticas
   const essenciasDisponiveis = user.essencias_disponiveis ?? (user.essence || user.points || 0)
   const unlockedThemes = user.unlockedThemes || []
   
   return essenciasDisponiveis >= theme.requiredEssence && !unlockedThemes.includes(themeId)
 }
 
+/**
+ * Desbloqueia um tema para o usuário
+ * @param {Object} user - Dados do usuário
+ * @param {string} themeId - ID do tema
+ * @returns {Object} - Usuário atualizado
+ */
 export const unlockTheme = (user, themeId) => {
   const unlockedThemes = user.unlockedThemes || []
   if (!unlockedThemes.includes(themeId)) {
     const theme = THEMES[Object.keys(THEMES).find(key => THEMES[key].id === themeId)] || Object.values(THEMES).find(t => t.id === themeId)
     if (!theme) return user
-
+    
+    // Subtrai as essências necessárias
     let updatedUser = subtractEssence(user, theme.requiredEssence)
     
     return {
@@ -368,6 +472,12 @@ export const unlockTheme = (user, themeId) => {
   return user
 }
 
+/**
+ * Aplica um tema ao perfil do usuário
+ * @param {Object} user - Dados do usuário
+ * @param {string} themeId - ID do tema
+ * @returns {Object} - Usuário atualizado
+ */
 export const applyTheme = (user, themeId) => {
   const unlockedThemes = user.unlockedThemes || []
   if (unlockedThemes.includes(themeId)) {
@@ -379,9 +489,15 @@ export const applyTheme = (user, themeId) => {
   return user
 }
 
+/**
+ * Recompensas por marcos de Essência (50, 100, 150, etc.)
+ */
 export const REWARD_MILESTONE = 50
 export const REWARD_BONUS = 10
 
+/**
+ * Molduras de Avatar (Recompensas Cosméticas)
+ */
 export const AVATAR_FRAMES = {
   LUNAR_FRAME: {
     id: 'lunar_frame',
@@ -489,6 +605,9 @@ export const MYSTIC_TITLES = {
   }
 }
 
+/**
+ * Mensagens Narrativas Exclusivas
+ */
 export const NARRATIVE_MESSAGES = {
   COMMUNITY_CAREGIVER: {
     id: 'community_caregiver',
@@ -510,6 +629,9 @@ export const NARRATIVE_MESSAGES = {
   }
 }
 
+/**
+ * Recompensas Coletivas para Grupos
+ */
 export const GROUP_REWARDS = {
   WELCOMING_SHIELD: {
     id: 'welcoming_shield',
@@ -519,7 +641,7 @@ export const GROUP_REWARDS = {
       minPositiveInteractions: 50,
       zeroConfirmedReports: true,
       minActiveMembers: 5,
-      timePeriod: 7
+      timePeriod: 7 // dias
     }
   },
   COLLECTIVE_THEME: {
@@ -531,29 +653,43 @@ export const GROUP_REWARDS = {
       zeroConfirmedReports: true,
       minActiveMembers: 10
     },
-    duration: 24
+    duration: 24 // horas
   }
 }
 
+/**
+ * Verifica se o usuário pode desbloquear uma moldura de avatar
+ * Usa essencias_disponiveis (saldo atual)
+ */
 export const canUnlockAvatarFrame = (user, frameId) => {
   const frame = Object.values(AVATAR_FRAMES).find(f => f.id === frameId)
   if (!frame) return false
 
+  // Usa essencias_disponiveis para desbloqueio de recompensas cosméticas
   const essenciasDisponiveis = user.essencias_disponiveis ?? (user.essence || user.points || 0)
   const unlockedFrames = user.unlockedAvatarFrames || []
-
+  
+  // Se já está desbloqueada, não pode desbloquear novamente
   if (unlockedFrames.includes(frameId)) return false
+
+  // Verifica se tem essências disponíveis suficientes
   if (essenciasDisponiveis < frame.requiredEssence) return false
 
+  // Verifica outras condições de desbloqueio (simplificado para demonstração)
+  // Em produção, verificaria comentários de apoio, participação em grupos, etc.
   return true
 }
 
+/**
+ * Desbloqueia uma moldura de avatar
+ */
 export const unlockAvatarFrame = (user, frameId) => {
   const unlockedFrames = user.unlockedAvatarFrames || []
   if (!unlockedFrames.includes(frameId)) {
     const frame = Object.values(AVATAR_FRAMES).find(f => f.id === frameId)
     if (!frame) return user
-
+    
+    // Subtrai as essências necessárias
     let updatedUser = subtractEssence(user, frame.requiredEssence)
     
     return {
@@ -564,23 +700,36 @@ export const unlockAvatarFrame = (user, frameId) => {
   return user
 }
 
+/**
+ * Verifica se o usuário pode desbloquear um título místico (baseado em essencias_disponiveis)
+ * Títulos consomem Essências disponíveis para desbloqueio
+ */
 export const canUnlockMysticTitle = (user, titleId) => {
   const title = Object.values(MYSTIC_TITLES).find(t => t.id === titleId)
   if (!title) return false
 
+  // Usa essencias_disponiveis para verificar desbloqueio de títulos
   const essenciasDisponiveis = user.essencias_disponiveis ?? (user.essence || user.points || 0)
   const unlockedTitles = user.unlockedMysticTitles || []
 
+  // Se já está desbloqueado, não pode desbloquear novamente
   if (unlockedTitles.includes(titleId)) return false
+
+  // Verifica se tem essências disponíveis suficientes
   return essenciasDisponiveis >= title.requiredEssence
 }
 
+/**
+ * Desbloqueia um título místico
+ * Títulos consomem Essências disponíveis ao desbloquear
+ */
 export const unlockMysticTitle = (user, titleId) => {
   const unlockedTitles = user.unlockedMysticTitles || []
   if (!unlockedTitles.includes(titleId)) {
     const title = Object.values(MYSTIC_TITLES).find(t => t.id === titleId)
     if (!title) return user
 
+    // Consome essências disponíveis ao desbloquear título
     let updatedUser = subtractEssence(user, title.requiredEssence)
 
     return {
@@ -591,18 +740,23 @@ export const unlockMysticTitle = (user, titleId) => {
   return user
 }
 
+/**
+ * Verifica e concede destaque temporário no perfil (24h)
+ */
 export const checkProfileHighlight = (user) => {
   const now = new Date()
   const highlightExpiresAt = user.profileHighlightExpiresAt
 
+  // Se já tem destaque ativo, retorna
   if (highlightExpiresAt && new Date(highlightExpiresAt) > now) {
     return user
   }
 
+  // Condições para destaque (simplificado - denúncia correta ou ações positivas)
   const hasPositiveAction = user.positiveActionsThisWeek >= 5 || user.correctReportsCount > 0
 
   if (hasPositiveAction) {
-    const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+    const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000) // 24 horas
     return {
       ...user,
       hasProfileHighlight: true,
@@ -613,11 +767,15 @@ export const checkProfileHighlight = (user) => {
   return user
 }
 
+/**
+ * Verifica recompensas coletivas de um grupo
+ */
 export const checkGroupRewards = (group, posts, reports) => {
   const now = new Date()
   const groupCreatedAt = new Date(group.createdAt)
   const daysSinceCreation = Math.floor((now - groupCreatedAt) / (1000 * 60 * 60 * 24))
 
+  // Conta interações positivas do grupo (posts + comentários com reações positivas)
   const groupPosts = posts.filter(p => p.groupId === group.id)
   const positiveInteractions = groupPosts.reduce((count, post) => {
     const reactionsCount = Object.values(post.reactions || {}).reduce((sum, users) => sum + users.length, 0)
@@ -625,7 +783,8 @@ export const checkGroupRewards = (group, posts, reports) => {
     return count + reactionsCount + commentsCount
   }, 0)
 
-  const groupReports = reports.filter(r =>
+  // Verifica denúncias confirmadas
+  const groupReports = reports.filter(r => 
     r.type === 'post' && groupPosts.some(p => p.id === r.postId) ||
     r.type === 'comment' && groupPosts.some(p => 
       p.comments?.some(c => c.id === r.commentId)
@@ -635,7 +794,8 @@ export const checkGroupRewards = (group, posts, reports) => {
 
   const rewards = group.rewards || []
 
-  if (positiveInteractions >= 50 &&
+  // Selo de Grupo Acolhedor
+  if (positiveInteractions >= 50 && 
       confirmedReports.length === 0 && 
       (group.members?.length || 0) >= 5 &&
       daysSinceCreation >= 7 &&
@@ -646,7 +806,8 @@ export const checkGroupRewards = (group, posts, reports) => {
     }
   }
 
-  if (positiveInteractions >= 100 &&
+  // Tema Coletivo Temporário
+  if (positiveInteractions >= 100 && 
       confirmedReports.length === 0 && 
       (group.members?.length || 0) >= 10 &&
       !rewards.includes(GROUP_REWARDS.COLLECTIVE_THEME.id)) {
@@ -661,5 +822,8 @@ export const checkGroupRewards = (group, posts, reports) => {
   return group
 }
 
+/**
+ * Mantém compatibilidade com código antigo
+ */
 export const POINTS = ESSENCE
 export const addPoints = addEssence
