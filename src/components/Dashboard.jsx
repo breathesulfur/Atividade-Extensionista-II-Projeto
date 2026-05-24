@@ -426,7 +426,8 @@ function Dashboard({ user, onLogout, initialGroupId }) {
               aria-label="Enviar Feedback"
               title="Enviar Feedback"
             >
-              💜 Feedback
+              <span aria-hidden="true">💜</span>
+              <span className="btn-label-text">Feedback</span>
             </button>
             <button
               onClick={() => setShowFAQ(true)}
@@ -434,7 +435,8 @@ function Dashboard({ user, onLogout, initialGroupId }) {
               aria-label="Abrir FAQ"
               title="Perguntas Frequentes"
             >
-              ❓ FAQ
+              <span aria-hidden="true">❓</span>
+              <span className="btn-label-text">FAQ</span>
             </button>
             <button
               onClick={handleLogoutClick}

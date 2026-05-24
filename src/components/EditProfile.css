@@ -879,6 +879,8 @@
   .form-actions-sticky {
     flex-direction: column-reverse;
     padding: var(--spacing-md);
+    /* FIX P1 (#4): respeita safe-area-inset-bottom em iPhones com home indicator */
+    padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
     margin-left: calc(-1 * var(--spacing-md));
     margin-right: calc(-1 * var(--spacing-md));
     max-width: 100%;
@@ -887,6 +889,8 @@
   .form-actions-sticky .cancel-btn,
   .form-actions-sticky .save-btn {
     width: 100%;
+    /* FIX P1 (#4): touch target mínimo WCAG 2.5.5 */
+    min-height: 44px;
   }
 
   .avatar-preview,

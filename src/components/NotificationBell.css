@@ -11,6 +11,12 @@
   padding: 4px 8px;
   border-radius: 8px;
   transition: background 0.2s;
+  /* FIX P1 (#4): touch target mínimo WCAG 2.5.5 (44x44px) */
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bell-button:hover {
