@@ -9,7 +9,7 @@ import FAQ from './FAQ'
 import Tour from './Tour'
 import NotificationBell from './NotificationBell'
 import FeedbackForm from './FeedbackForm'
-import { updateProfile } from '../lib/db'
+import { updateProfile, getProfile } from '../lib/db'
 import { setNotificationCallback, notifyEssenceGained, notifyAchievement } from '../utils/notifications'
 import { addEssence, DAILY_ESSENCE_LIMIT, THEMES, MYSTIC_TITLES, canUnlockMysticTitle, unlockMysticTitle } from '../utils/gamification'
 import './Dashboard.css'
@@ -165,14 +165,42 @@ function Dashboard({ user, onLogout, initialGroupId }) {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
   const [pendingGroupId, setPendingGroupId] = useState(initialGroupId || null)
+  // FIX P2 (#6): estado para abrir perfil de outros usuários (clique no nome/foto)
+  const [viewedProfile, setViewedProfile] = useState(null)
+  const [profileLoading, setProfileLoading] = useState(false)
   const tourSeenKey = `inclusivchat_welcome_seen_${user.id}`
   const [showTour, setShowTour] = useState(() => {
     try { return localStorage.getItem(tourSeenKey) !== '1' } catch { return false }
   })
 
   const handleOpenGroup = (groupId) => {
+    setViewedProfile(null)
     setPendingGroupId(groupId)
     setActiveTab('groups')
+  }
+
+  // FIX P2 (#6): abre o perfil de outro usuário (ou redireciona para o
+  // próprio perfil se for o do próprio currentUser).
+  const handleOpenProfile = async (userId) => {
+    if (!userId) return
+    if (userId === currentUser.id) {
+      setViewedProfile(null)
+      setActiveTab('profile')
+      return
+    }
+    setProfileLoading(true)
+    try {
+      const profile = await getProfile(userId)
+      if (profile) setViewedProfile(profile)
+    } finally {
+      setProfileLoading(false)
+    }
+  }
+
+  // Trocar de aba sempre fecha qualquer perfil de outro usuário aberto
+  const handleTabChange = (tab) => {
+    setViewedProfile(null)
+    setActiveTab(tab)
   }
   const previousEssenceRef = useRef(user.essence || user.points || 0)
   const processedMilestonesRef = useRef(new Set([Math.floor((user.essence || user.points || 0) / 50)]))
@@ -410,7 +438,16 @@ function Dashboard({ user, onLogout, initialGroupId }) {
           <div className="header-right">
             <div className="user-info">
               <div className="user-name-container">
-                <span className="user-name">{currentUser.name}</span>
+                {/* FIX P2 (#6): clique no nome próprio abre o perfil */}
+                <button
+                  type="button"
+                  className="user-name user-name-button"
+                  onClick={() => handleTabChange('profile')}
+                  aria-label="Abrir meu perfil"
+                  title="Abrir meu perfil"
+                >
+                  {currentUser.name}
+                </button>
                 <span className="user-pronoun">({currentUser.pronoun})</span>
                 {/* Barra compacta de progresso diário */}
                 <DailyEssenceProgressBar user={currentUser} />
@@ -457,23 +494,23 @@ function Dashboard({ user, onLogout, initialGroupId }) {
       {/* Navegação */}
       <nav className="dashboard-nav">
         <button
-          className={`nav-button ${activeTab === 'feed' ? 'active' : ''}`}
-          onClick={() => setActiveTab('feed')}
-          aria-pressed={activeTab === 'feed'}
+          className={`nav-button ${activeTab === 'feed' && !viewedProfile ? 'active' : ''}`}
+          onClick={() => handleTabChange('feed')}
+          aria-pressed={activeTab === 'feed' && !viewedProfile}
         >
           <span>📰</span> Feed
         </button>
         <button
-          className={`nav-button ${activeTab === 'groups' ? 'active' : ''}`}
-          onClick={() => setActiveTab('groups')}
-          aria-pressed={activeTab === 'groups'}
+          className={`nav-button ${activeTab === 'groups' && !viewedProfile ? 'active' : ''}`}
+          onClick={() => handleTabChange('groups')}
+          aria-pressed={activeTab === 'groups' && !viewedProfile}
         >
           <span>🎯</span> Grupos
         </button>
         <button
-          className={`nav-button ${activeTab === 'profile' ? 'active' : ''}`}
-          onClick={() => setActiveTab('profile')}
-          aria-pressed={activeTab === 'profile'}
+          className={`nav-button ${activeTab === 'profile' && !viewedProfile ? 'active' : ''}`}
+          onClick={() => handleTabChange('profile')}
+          aria-pressed={activeTab === 'profile' && !viewedProfile}
         >
           <span>🙋</span> Perfil
         </button>
@@ -481,19 +518,39 @@ function Dashboard({ user, onLogout, initialGroupId }) {
 
       {/* Conteúdo */}
              <main className={`dashboard-content ${currentUser.activeTheme ? `theme-${currentUser.activeTheme}` : ''}`}>
-               {activeTab === 'feed' && (
-                 <Feed user={currentUser} onUserUpdate={setCurrentUser} onOpenGroup={handleOpenGroup} />
-               )}
-               {activeTab === 'groups' && (
-                 <Groups
-                   user={currentUser}
-                   onUserUpdate={setCurrentUser}
-                   targetGroupId={pendingGroupId}
-                   onGroupOpened={() => setPendingGroupId(null)}
+               {profileLoading ? (
+                 <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--spacing-xl)' }}>
+                   <LoadingSpinner size="large" text="Carregando perfil..." />
+                 </div>
+               ) : viewedProfile ? (
+                 <Profile
+                   user={viewedProfile}
+                   isOwnProfile={false}
+                   onBack={() => setViewedProfile(null)}
                  />
-               )}
-               {activeTab === 'profile' && (
-                 <Profile user={currentUser} onUserUpdate={setCurrentUser} />
+               ) : (
+                 <>
+                   {activeTab === 'feed' && (
+                     <Feed
+                       user={currentUser}
+                       onUserUpdate={setCurrentUser}
+                       onOpenGroup={handleOpenGroup}
+                       onOpenProfile={handleOpenProfile}
+                     />
+                   )}
+                   {activeTab === 'groups' && (
+                     <Groups
+                       user={currentUser}
+                       onUserUpdate={setCurrentUser}
+                       targetGroupId={pendingGroupId}
+                       onGroupOpened={() => setPendingGroupId(null)}
+                       onOpenProfile={handleOpenProfile}
+                     />
+                   )}
+                   {activeTab === 'profile' && (
+                     <Profile user={currentUser} onUserUpdate={setCurrentUser} />
+                   )}
+                 </>
                )}
              </main>
 

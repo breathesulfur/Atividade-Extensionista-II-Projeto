@@ -117,6 +117,36 @@
   font-size: 0.9rem;
 }
 
+/* FIX P2 (#6): nome do autor da mensagem no chat é clicável → abre perfil */
+.message-author-button {
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  transition: background 0.18s ease;
+}
+
+.message-author-button:hover {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.message-author-button:hover strong {
+  text-decoration: underline;
+}
+
+.message-author-button:focus-visible {
+  outline: 2px solid var(--mystic-purple);
+  outline-offset: 2px;
+}
+
 .message-header strong {
   font-weight: 600;
 }
