@@ -44,7 +44,10 @@
   background: white;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  z-index: 1000;
+  /* FIX P0 (#8): valor alto e explícito dentro do contexto do .dashboard-header
+     (z-100). O contexto pai garante que o dropdown fique acima do .dashboard-nav
+     (z-10) ao estender abaixo do header. Defesa em profundidade. */
+  z-index: 10000;
   overflow: hidden;
   display: flex;
   flex-direction: column;
