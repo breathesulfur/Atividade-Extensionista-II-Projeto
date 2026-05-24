@@ -26,10 +26,11 @@
   color: white;
   padding: var(--spacing-md) var(--spacing-lg);
   box-shadow: 0 4px 20px var(--shadow-mystic);
-  position: relative;
-  /* FIX P0 (#8): header acima do nav (z-10) para que o dropdown do sino
-     (filho do header, position: absolute) não seja coberto pelo nav ao
-     estender abaixo do header. Mantido < notifications-container (10500). */
+  /* FIX P1 (#10): header sticky no topo ao rolar a página.
+     Mantém z-index 100 (acima do nav) para que dropdown do sino e
+     decorações funcionem. Conteúdo abaixo continua scrollável. */
+  position: sticky;
+  top: 0;
   z-index: 100;
 }
 
