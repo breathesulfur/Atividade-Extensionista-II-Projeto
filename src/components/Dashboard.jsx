@@ -406,7 +406,13 @@ function Dashboard({ user, onLogout, initialGroupId }) {
       <header className="dashboard-header">
         <HeaderDecorations />
         <div className="header-content">
-          <Logo size="medium" showText={true} variant="light" />
+          <Logo
+            size="medium"
+            showText={true}
+            variant="light"
+            onClick={() => setActiveTab('feed')}
+            ariaLabel="InclusivChat — voltar ao feed"
+          />
           <div className="header-right">
             <div className="user-info">
               <div className="user-name-container">

@@ -4,6 +4,31 @@
   gap: var(--spacing-sm);
 }
 
+/* FIX P2 (#5): logo clicável quando recebe onClick — vira atalho para o feed */
+.logo-clickable {
+  cursor: pointer;
+  user-select: none;
+  border-radius: var(--radius-md);
+  padding: 4px 6px;
+  margin: -4px -6px;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.logo-clickable:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.logo-clickable:active {
+  transform: translateY(0);
+}
+
+.logo-clickable:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.25);
+}
+
 .logo-icon {
   flex-shrink: 0;
   filter: drop-shadow(0 2px 8px rgba(139, 92, 246, 0.3));
