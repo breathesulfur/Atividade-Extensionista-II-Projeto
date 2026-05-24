@@ -549,19 +549,19 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         return
       }
 
-      // Valida senha se foi fornecida
+      // Valida senha se foi fornecida (seção dedicada "Alterar Senha")
       if (formData.password && formData.password.trim()) {
         if (formData.password.length < 6) {
           notifyError('A senha deve ter pelo menos 6 caracteres.')
-          setLastErrorSection('account-data')
-          setOpenSection('account-data')
+          setLastErrorSection('password-change')
+          setOpenSection('password-change')
           setLoading(false)
           return
         }
         if (formData.password !== formData.confirmPassword) {
           notifyError('As senhas não coincidem.')
-          setLastErrorSection('account-data')
-          setOpenSection('account-data')
+          setLastErrorSection('password-change')
+          setOpenSection('password-change')
           setLoading(false)
           return
         }
@@ -780,21 +780,21 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
           </div>
         </AccordionSection>
 
-        {/* Dados da Conta */}
-        <AccordionSection 
-          id="account-data" 
-          icon="🔐" 
+        {/* Dados da Conta — apenas e-mail (campo identificador) */}
+        <AccordionSection
+          id="account-data"
+          icon="🔐"
           title="Dados da Conta"
           isOpen={openSection === 'account-data' || (lastErrorSection === 'account-data')}
           hasError={lastErrorSection === 'account-data'}
           warning={true}
           onToggle={toggleSection}
         >
-          <div className="account-data-warning" style={{ 
-            background: 'rgba(255, 193, 7, 0.1)', 
-            border: '1px solid rgba(255, 193, 7, 0.3)', 
-            borderRadius: 'var(--radius-md)', 
-            padding: 'var(--spacing-md)', 
+          <div className="account-data-warning" style={{
+            background: 'rgba(255, 193, 7, 0.1)',
+            border: '1px solid rgba(255, 193, 7, 0.3)',
+            borderRadius: 'var(--radius-md)',
+            padding: 'var(--spacing-md)',
             marginBottom: 'var(--spacing-md)',
             fontSize: '0.9rem',
             color: 'var(--text-secondary)'
@@ -817,7 +817,37 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
               disabled={loading}
             />
           </div>
+          <p style={{
+            fontSize: '0.85rem',
+            color: 'var(--text-secondary)',
+            marginTop: 'var(--spacing-sm)',
+            fontStyle: 'italic'
+          }}>
+            Para trocar a senha, abra a seção <strong>“Alterar Senha”</strong> abaixo.
+          </p>
+        </AccordionSection>
 
+        {/* Alterar Senha — seção dedicada, colapsada por padrão */}
+        <AccordionSection
+          id="password-change"
+          icon="🔑"
+          title="Alterar Senha"
+          isOpen={openSection === 'password-change' || (lastErrorSection === 'password-change')}
+          hasError={lastErrorSection === 'password-change'}
+          warning={true}
+          onToggle={toggleSection}
+        >
+          <div className="account-data-warning" style={{
+            background: 'rgba(255, 193, 7, 0.1)',
+            border: '1px solid rgba(255, 193, 7, 0.3)',
+            borderRadius: 'var(--radius-md)',
+            padding: 'var(--spacing-md)',
+            marginBottom: 'var(--spacing-md)',
+            fontSize: '0.9rem',
+            color: 'var(--text-secondary)'
+          }}>
+            🔒 Preencha apenas se quiser definir uma nova senha. Deixe em branco para manter a atual.
+          </div>
           <div className="form-group">
             <label htmlFor="password" className="form-label">
               Nova Senha
