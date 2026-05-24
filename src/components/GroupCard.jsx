@@ -4,9 +4,12 @@ import { getPosts } from '../utils/storage'
 import { filterProfanity } from '../utils/profanityFilter'
 import { checkBadges, getActionMessage, BADGES } from '../utils/gamification'
 import { notifyError, notifyAchievement, notifySuccess } from '../utils/notifications'
+import GroupMembersModal from './GroupMembersModal'
 import './GroupCard.css'
 
-function GroupCard({ group, user, onBack, onUserUpdate }) {
+function GroupCard({ group, user, onBack, onUserUpdate, onOpenProfile }) {
+  // FIX P2 (#7): controla a abertura do modal de membros do grupo
+  const [showMembersModal, setShowMembersModal] = useState(false)
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
   const [loading, setLoading] = useState(true)
@@ -154,7 +157,16 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
           <h2>{group.name}</h2>
           <div className="chat-header-meta">
             <span className="chat-game">{group.game}</span>
-            <span className="chat-members">👥 {group.members?.length || 0} membro{(group.members?.length || 0) !== 1 ? 's' : ''}</span>
+            {/* FIX P2 (#7): badge de membros agora é clicável → abre modal com lista */}
+            <button
+              type="button"
+              className="chat-members chat-members-button"
+              onClick={() => setShowMembersModal(true)}
+              aria-label="Ver membros do grupo"
+              title="Ver membros do grupo"
+            >
+              👥 {group.members?.length || 0} membro{(group.members?.length || 0) !== 1 ? 's' : ''}
+            </button>
           </div>
         </div>
         <button
@@ -244,6 +256,17 @@ function GroupCard({ group, user, onBack, onUserUpdate }) {
         />
         <button type="submit" className="send-button">Enviar</button>
       </form>
+
+      {/* FIX P2 (#7): Modal de listagem de membros do grupo */}
+      <GroupMembersModal
+        isOpen={showMembersModal}
+        onClose={() => setShowMembersModal(false)}
+        memberIds={group.members || []}
+        groupName={group.name}
+        createdBy={group.createdBy}
+        currentUserId={user.id}
+        onOpenProfile={onOpenProfile}
+      />
     </div>
   )
 }
