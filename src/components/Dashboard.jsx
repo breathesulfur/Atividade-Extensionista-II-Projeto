@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import Feed from './Feed'
 import Groups from './Groups'
 import Profile from './Profile'
+import Rewards from './Rewards'
 import Logo from './Logo'
 import Notification from './Notification'
 import LoadingSpinner from './LoadingSpinner'
@@ -470,6 +471,14 @@ function Dashboard({ user, onLogout, initialGroupId }) {
         >
           <span>🎯</span> Grupos
         </button>
+        {/* FIX P2 (#9): aba dedicada de Recompensas, antes acessível apenas via Editar Perfil */}
+        <button
+          className={`nav-button ${activeTab === 'rewards' ? 'active' : ''}`}
+          onClick={() => setActiveTab('rewards')}
+          aria-pressed={activeTab === 'rewards'}
+        >
+          <span>🎁</span> Recompensas
+        </button>
         <button
           className={`nav-button ${activeTab === 'profile' ? 'active' : ''}`}
           onClick={() => setActiveTab('profile')}
@@ -491,6 +500,9 @@ function Dashboard({ user, onLogout, initialGroupId }) {
                    targetGroupId={pendingGroupId}
                    onGroupOpened={() => setPendingGroupId(null)}
                  />
+               )}
+               {activeTab === 'rewards' && (
+                 <Rewards user={currentUser} onUserUpdate={setCurrentUser} />
                )}
                {activeTab === 'profile' && (
                  <Profile user={currentUser} onUserUpdate={setCurrentUser} />
