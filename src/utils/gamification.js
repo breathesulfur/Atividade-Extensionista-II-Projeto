@@ -701,27 +701,40 @@ export const unlockAvatarFrame = (user, frameId) => {
 }
 
 /**
- * Verifica se o usuário pode desbloquear um título místico (baseado em essencias_disponiveis)
- * Títulos consomem Essências disponíveis para desbloqueio
+ * Verifica se o usuário pode desbloquear um título místico.
+ *
+ * FIX bug pós-QA: títulos agora são recompensas (marcos), não compras.
+ * O requiredEssence é apenas o threshold de liberação; o saldo não é
+ * consumido ao desbloquear (ver unlockMysticTitle).
  */
 export const canUnlockMysticTitle = (user, titleId) => {
   const title = Object.values(MYSTIC_TITLES).find(t => t.id === titleId)
   if (!title) return false
 
-  // Usa essencias_disponiveis para verificar desbloqueio de títulos
+  // Usa essencias_disponiveis para verificar threshold de liberação do título
   const essenciasDisponiveis = user.essencias_disponiveis ?? (user.essence || user.points || 0)
   const unlockedTitles = user.unlockedMysticTitles || []
 
   // Se já está desbloqueado, não pode desbloquear novamente
   if (unlockedTitles.includes(titleId)) return false
 
-  // Verifica se tem essências disponíveis suficientes
+  // Verifica se atingiu o threshold de essências (gatilho, não custo)
   return essenciasDisponiveis >= title.requiredEssence
 }
 
 /**
- * Desbloqueia um título místico
- * Títulos consomem Essências disponíveis ao desbloquear
+ * Desbloqueia um título místico.
+ *
+ * FIX bug pós-QA: títulos eram desbloqueados automaticamente pelo
+ * useEffect do Dashboard quando o usuário atingia o threshold de essências
+ * E o unlockMysticTitle CONSUMIA o saldo inteiro via subtractEssence,
+ * zerando as essências do usuário sem qualquer pedido de confirmação.
+ *
+ * Novo design: títulos são *recompensas* (marcos de progresso), não
+ * compras. O requiredEssence funciona apenas como gatilho de liberação;
+ * o saldo NÃO é consumido. Compras explícitas (temas e molduras de
+ * avatar) continuam usando subtractEssence em seus próprios fluxos
+ * via "Aplicar" no Recompensas.
  */
 export const unlockMysticTitle = (user, titleId) => {
   const unlockedTitles = user.unlockedMysticTitles || []
@@ -729,11 +742,9 @@ export const unlockMysticTitle = (user, titleId) => {
     const title = Object.values(MYSTIC_TITLES).find(t => t.id === titleId)
     if (!title) return user
 
-    // Consome essências disponíveis ao desbloquear título
-    let updatedUser = subtractEssence(user, title.requiredEssence)
-
+    // NÃO consome mais essências — título é recompensa pelo marco atingido.
     return {
-      ...updatedUser,
+      ...user,
       unlockedMysticTitles: [...unlockedTitles, titleId]
     }
   }
