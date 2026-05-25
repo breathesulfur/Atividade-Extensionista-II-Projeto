@@ -177,6 +177,11 @@ function Dashboard({ user, onLogout, initialGroupId }) {
   const previousEssenceRef = useRef(user.essence || user.points || 0)
   const processedMilestonesRef = useRef(new Set([Math.floor((user.essence || user.points || 0) / 50)]))
   const dailyLimitNotificationRef = useRef(false)
+  // FIX QA: rastreia títulos já notificados para evitar duplicidade
+  // (React.StrictMode em dev dispara cada useEffect 2x na montagem).
+  // Inicializa com os títulos JÁ desbloqueados — assim não notifica de novo
+  // após refresh/login.
+  const notifiedTitlesRef = useRef(new Set(user.unlockedMysticTitles || []))
 
   // Calcula variáveis CSS do tema ativo para injetar em toda a árvore de componentes
   const themeStyles = useMemo(() => {
@@ -297,10 +302,17 @@ function Dashboard({ user, onLogout, initialGroupId }) {
 
   // Verifica e concede títulos místicos automaticamente quando essências totais aumentam
   useEffect(() => {
+    // FIX QA: filtra também por notifiedTitlesRef para evitar duplicidade
+    // (StrictMode em dev / re-renders inesperados).
     const newTitles = Object.values(MYSTIC_TITLES).filter(title =>
-      canUnlockMysticTitle(currentUser, title.id)
+      canUnlockMysticTitle(currentUser, title.id) &&
+      !notifiedTitlesRef.current.has(title.id)
     )
     if (newTitles.length === 0) return
+
+    // Marca como notificado ANTES de processar — torna esta passagem do
+    // efeito idempotente (se React re-executar, o ref já contém os ids).
+    newTitles.forEach(t => notifiedTitlesRef.current.add(t.id))
 
     let updatedUser = currentUser
     newTitles.forEach(title => {
