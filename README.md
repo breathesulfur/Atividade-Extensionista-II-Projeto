@@ -125,12 +125,27 @@ npm install
 
 ### Variáveis de Ambiente
 
-Crie um arquivo `.env` na raiz do projeto:
+> ⚠️ **Importante:** `npm run dev` deve apontar para um projeto Supabase
+> **separado** do de produção (homologação). Caso contrário, qualquer
+> ação local (criar post, ganhar essência) escreve no banco real.
+> Veja [`docs/AMBIENTES.md`](docs/AMBIENTES.md) para o setup completo
+> dos dois projetos Supabase (prod e staging).
+
+Use o template `.env.example` como referência:
+
+```bash
+# Para desenvolvimento local (aponta para staging)
+cp .env.example .env.development.local
+
+# Para produção (geralmente as vars vão direto no Vercel)
+cp .env.example .env.production
+```
+
+Edite cada arquivo com as credenciais do projeto Supabase correspondente:
 
 ```env
-# Supabase
-VITE_SUPABASE_URL=sua_url_do_projeto_supabase
-VITE_SUPABASE_ANON_KEY=sua_anon_key_do_supabase
+VITE_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+VITE_SUPABASE_ANON_KEY=YOUR_ANON_PUBLIC_KEY
 
 # EmailJS (recuperação de senha)
 VITE_EMAILJS_SERVICE_ID=seu_service_id
@@ -141,6 +156,8 @@ VITE_EMAILJS_PUBLIC_KEY=sua_public_key
 Onde encontrar:
 - **Supabase**: Dashboard → Project Settings → API
 - **EmailJS**: [emailjs.com](https://www.emailjs.com) → Account → API Keys
+
+> Todos os `.env*` (exceto `.env.example`) são ignorados pelo Git.
 
 ### Schema do Banco
 
