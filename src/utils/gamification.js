@@ -253,6 +253,22 @@ export const addEssence = (user, essence) => {
 }
 
 /**
+ * Calcula quantas essências foram efetivamente ganhas entre dois snapshots
+ * do user. Útil para decidir se a notificação "+N Essências" deve ser exibida
+ * — ela só faz sentido se addEssence realmente aumentou o saldo (ou seja,
+ * o limite diário não bloqueou o ganho).
+ *
+ * @param {Object} oldUser - usuário antes do addEssence
+ * @param {Object} newUser - usuário retornado por addEssence
+ * @returns {number} essências adicionadas a essencias_disponiveis (>= 0)
+ */
+export const getEssenceGained = (oldUser, newUser) => {
+  const oldDisponiveis = oldUser?.essencias_disponiveis ?? oldUser?.essence ?? oldUser?.points ?? 0
+  const newDisponiveis = newUser?.essencias_disponiveis ?? newUser?.essence ?? newUser?.points ?? 0
+  return Math.max(0, newDisponiveis - oldDisponiveis)
+}
+
+/**
  * Verifica se pode realizar uma ação baseado em cooldown
  * @param {Object} user - Dados do usuário
  * @param {string} actionType - Tipo de ação (CREATE_POST, SUPPORTIVE_COMMENT, etc)

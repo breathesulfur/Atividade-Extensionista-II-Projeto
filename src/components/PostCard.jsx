@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { filterProfanity } from '../utils/profanityFilter'
-import { addEssence, addEssenceWithChecks, ESSENCE, checkBadges, getActionMessage, BADGES, MIN_COMMENT_LENGTH_FOR_ESSENCE } from '../utils/gamification'
+import { addEssence, addEssenceWithChecks, ESSENCE, checkBadges, getActionMessage, BADGES, MIN_COMMENT_LENGTH_FOR_ESSENCE, getEssenceGained } from '../utils/gamification'
 import { toggleReaction as dbToggleReaction, addComment as dbAddComment, updateComment, deleteComment, createNotification } from '../lib/db'
 import { getPosts, getGroups } from '../utils/storage'
 import { notifyError, notifyAchievement, notifySuccess, notifyEssenceGained } from '../utils/notifications'
@@ -247,12 +247,13 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
       reports.push(report)
       localStorage.setItem('inclusivchat_reports', JSON.stringify(reports))
 
-      // Adiciona Essência ao usuário por denunciar conteúdo
+      // Adiciona Essência ao usuário por denunciar conteúdo (limite diário interno)
       let updatedUser = addEssence(currentUser, ESSENCE.REPORT_CONTENT)
       onUserUpdate(updatedUser)
-      
-      // Notifica sobre essências ganhas
-      notifyEssenceGained(ESSENCE.REPORT_CONTENT, 'Denunciar conteúdo ofensivo')
+
+      // FIX QA: só notifica se houve ganho real
+      const gained = getEssenceGained(currentUser, updatedUser)
+      if (gained > 0) notifyEssenceGained(gained, 'Denunciar conteúdo ofensivo')
 
       // Verifica badges (com delay para garantir que os dados foram atualizados)
       setTimeout(() => {
@@ -342,7 +343,9 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
       const result = addEssenceWithChecks(currentUser, ESSENCE.SUPPORTIVE_COMMENT, 'SUPPORTIVE_COMMENT')
       if (result.success) {
         updatedUser = result.user
-        notifyEssenceGained(ESSENCE.SUPPORTIVE_COMMENT, 'Fazer comentário de apoio')
+        // FIX QA: só notifica se houve ganho real (cooldown OK mas limite diário pode bloquear)
+        const gained = getEssenceGained(currentUser, updatedUser)
+        if (gained > 0) notifyEssenceGained(gained, 'Fazer comentário de apoio')
       }
     }
     onUserUpdate(updatedUser)

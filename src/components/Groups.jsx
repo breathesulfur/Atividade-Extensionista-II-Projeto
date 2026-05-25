@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import GroupCard from './GroupCard'
 import CreateGroup from './CreateGroup'
 import { fetchGroups, createGroup as dbCreateGroup, deleteGroup as dbDeleteGroup, joinGroup, leaveGroup, createNotification } from '../lib/db'
-import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES } from '../utils/gamification'
+import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES, getEssenceGained } from '../utils/gamification'
 import { getPosts } from '../utils/storage'
 import { notifyAchievement, notifyEssenceGained, notifySuccess, notifyError } from '../utils/notifications'
 import './Groups.css'
@@ -115,7 +115,9 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened }) {
       if (isNewGroup) {
         let updatedUser = addEssence(user, ESSENCE.JOIN_GROUP)
         updatedUser = { ...updatedUser, joinedGroups: [...joinedGroups, groupId] }
-        notifyEssenceGained(ESSENCE.JOIN_GROUP, 'Participar de grupo inclusivo')
+        // FIX QA: só notifica se houve ganho real (respeita limite diário)
+        const gained = getEssenceGained(user, updatedUser)
+        if (gained > 0) notifyEssenceGained(gained, 'Participar de grupo inclusivo')
 
         setTimeout(() => {
           const posts = getPosts()

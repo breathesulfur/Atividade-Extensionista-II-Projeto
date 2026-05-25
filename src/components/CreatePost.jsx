@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { filterProfanity } from '../utils/profanityFilter'
-import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES } from '../utils/gamification'
+import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES, getEssenceGained } from '../utils/gamification'
 import { getPosts, getGroups } from '../utils/storage'
 import { notifyError, notifyAchievement, notifyEssenceGained } from '../utils/notifications'
 import { validateTextarea } from '../utils/validation'
@@ -28,12 +28,14 @@ function CreatePost({ user, onCreatePost, onUserUpdate }) {
     // Filtra palavras ofensivas
     const filteredContent = filterProfanity(content.trim())
 
-    // Adiciona Essência ao usuário
+    // Adiciona Essência ao usuário (respeita limite diário internamente)
     let updatedUser = addEssence(user, ESSENCE.CREATE_POST)
     onUserUpdate(updatedUser)
-    
-    // Notifica sobre essências ganhas
-    notifyEssenceGained(ESSENCE.CREATE_POST, 'Criar postagem respeitosa')
+
+    // FIX QA: só notifica se realmente houve ganho — não dispara "+10 Essências"
+    // quando o limite diário já foi atingido
+    const gained = getEssenceGained(user, updatedUser)
+    if (gained > 0) notifyEssenceGained(gained, 'Criar postagem respeitosa')
 
     // Cria a postagem
     onCreatePost(filteredContent)
