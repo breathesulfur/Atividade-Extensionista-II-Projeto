@@ -107,6 +107,29 @@
   font-size: 1rem;
 }
 
+/* FIX P2 (#6): nome do usuário no header é clicável → abre o perfil */
+.user-name-button {
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 4px 6px;
+  margin: -4px -6px;
+  border-radius: var(--radius-sm);
+  transition: background 0.18s ease;
+}
+
+.user-name-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  text-decoration: underline;
+}
+
+.user-name-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
 .user-pronoun {
   font-size: 0.9rem;
   opacity: 0.9;

@@ -21,7 +21,7 @@ import {
 } from './SocialIcons'
 import './Profile.css'
 
-function Profile({ user, onUserUpdate }) {
+function Profile({ user, onUserUpdate, isOwnProfile = true, onBack }) {
   const [isEditing, setIsEditing] = useState(false)
 
   // Obtém tema ativo e suas cores
@@ -120,10 +120,10 @@ function Profile({ user, onUserUpdate }) {
     setIsEditing(false)
   }
 
-  // Se estiver editando, mostra a tela de edição
-  if (isEditing) {
+  // Se estiver editando, mostra a tela de edição (apenas no próprio perfil)
+  if (isEditing && isOwnProfile) {
     return (
-      <div 
+      <div
         className={`profile ${activeTheme ? `profile-theme-${activeTheme.id} theme-${activeTheme.id}` : ''}`}
         style={themeStyles}
       >
@@ -139,19 +139,35 @@ function Profile({ user, onUserUpdate }) {
 
   // Tela de visualização do perfil
   return (
-    <div 
+    <div
       className={`profile ${activeTheme ? `profile-theme-${activeTheme.id} theme-${activeTheme.id}` : ''}`}
       style={themeStyles}
     >
       <div className="profile-header">
-        <h2>Meu Perfil</h2>
-        <button
-          onClick={() => setIsEditing(true)}
-          className="edit-profile-button"
-          aria-label="Editar perfil"
-        >
-          ✏️ Editar Perfil
-        </button>
+        {/* FIX P2 (#6): perfil de outro usuário mostra "← Voltar"; o próprio mostra "Editar" */}
+        {isOwnProfile ? (
+          <>
+            <h2>Meu Perfil</h2>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="edit-profile-button"
+              aria-label="Editar perfil"
+            >
+              ✏️ Editar Perfil
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={onBack}
+              className="profile-back-button"
+              aria-label="Voltar"
+            >
+              ← Voltar
+            </button>
+            <h2>Perfil de {user.name || 'Usuário'}</h2>
+          </>
+        )}
       </div>
 
       <div className="profile-content">

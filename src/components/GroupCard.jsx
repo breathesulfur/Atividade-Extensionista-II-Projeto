@@ -195,8 +195,17 @@ function GroupCard({ group, user, onBack, onUserUpdate, onOpenProfile }) {
             return (
               <div key={message.id} className={`message-item ${isOwnMessage ? 'own-message' : ''}`}>
                 <div className="message-header">
-                  <strong>{message.userName}</strong>
-                  <span className="message-pronoun">({message.userPronoun})</span>
+                  {/* FIX P2 (#6): nome do autor da mensagem é clicável → abre perfil */}
+                  <button
+                    type="button"
+                    className="message-author-button"
+                    onClick={() => onOpenProfile && onOpenProfile(message.userId)}
+                    aria-label={`Abrir perfil de ${message.userName}`}
+                    title={`Abrir perfil de ${message.userName}`}
+                  >
+                    <strong>{message.userName}</strong>
+                    <span className="message-pronoun">({message.userPronoun})</span>
+                  </button>
                 </div>
                 {isEditing ? (
                   <div className="message-edit-form">
