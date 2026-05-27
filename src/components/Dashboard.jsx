@@ -572,6 +572,7 @@ function Dashboard({ user, onLogout, initialGroupId }) {
                      )}
                    </>
                  )}
+             </main>
 
       {/* Footer com créditos */}
       <footer className="dashboard-footer">
