@@ -1,11 +1,11 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { BADGES, THEMES, unlockTheme, AVATAR_FRAMES, MYSTIC_TITLES, checkProfileHighlight } from '../utils/gamification'
 import EditProfile from './EditProfile'
 import ThemeSelector from './ThemeSelector'
 import AvatarFrameSelector from './AvatarFrameSelector'
 import MysticTitleSelector from './MysticTitleSelector'
 import AvatarFrame from './AvatarFrame'
-import { getPosts, getGroups } from '../utils/storage'
+import { fetchPosts, fetchGroups } from '../lib/db'
 import {
   InstagramIcon,
   TwitterIcon,
@@ -73,15 +73,42 @@ function Profile({ user, onUserUpdate, isOwnProfile = true, onBack }) {
     ? Object.values(MYSTIC_TITLES).find(t => t.id === activeTitleId)
     : null
 
-  // Estatísticas do usuário
-  const posts = getPosts()
-  const groups = getGroups()
-  const userPosts = posts.filter(p => p.userId === user.id)
-  const userComments = posts.reduce((count, post) => {
-    return count + (post.comments?.filter(c => c.userId === user.id).length || 0)
-  }, 0)
-  const totalLikes = userPosts.reduce((count, post) => count + (post.likes?.length || 0), 0)
-  const userGroups = groups.filter(g => g.createdBy === user.id)
+  // Estatísticas do usuário — busca do Supabase (antes lia localStorage vazio,
+  // o que mantinha todos os contadores em 0 mesmo após ações)
+  const [stats, setStats] = useState({
+    posts: 0,
+    comments: 0,
+    likes: 0,
+    groups: 0,
+  })
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      const [posts, groups] = await Promise.all([fetchPosts(), fetchGroups()])
+      if (cancelled) return
+
+      const userPosts = posts.filter((p) => p.userId === user.id)
+      const userComments = posts.reduce((count, post) => {
+        return count + (post.comments?.filter((c) => c.userId === user.id).length || 0)
+      }, 0)
+      const totalLikes = userPosts.reduce(
+        (count, post) => count + (post.likes?.length || 0),
+        0
+      )
+      const userGroups = groups.filter((g) => g.createdBy === user.id)
+
+      setStats({
+        posts: userPosts.length,
+        comments: userComments,
+        likes: totalLikes,
+        groups: userGroups.length,
+      })
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [user.id])
 
   // Salva alterações do perfil
   const handleSaveProfile = (updatedUser) => {
@@ -204,19 +231,19 @@ function Profile({ user, onUserUpdate, isOwnProfile = true, onBack }) {
           <h3 className="section-title">Estatísticas</h3>
           <div className="stats-grid">
             <div className="stat-card">
-              <div className="stat-value">{userPosts.length}</div>
+              <div className="stat-value">{stats.posts}</div>
               <div className="stat-label">Postagens</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">{userComments}</div>
+              <div className="stat-value">{stats.comments}</div>
               <div className="stat-label">Comentários</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">{totalLikes}</div>
+              <div className="stat-value">{stats.likes}</div>
               <div className="stat-label">Curtidas Recebidas</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">{userGroups.length}</div>
+              <div className="stat-value">{stats.groups}</div>
               <div className="stat-label">Grupos Criados</div>
             </div>
           </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import Feed from './Feed'
 import Groups from './Groups'
 import Profile from './Profile'
+import Rewards from './Rewards'
 import Logo from './Logo'
 import Notification from './Notification'
 import LoadingSpinner from './LoadingSpinner'
@@ -434,7 +435,13 @@ function Dashboard({ user, onLogout, initialGroupId }) {
       <header className="dashboard-header">
         <HeaderDecorations />
         <div className="header-content">
-          <Logo size="medium" showText={true} variant="light" />
+          <Logo
+            size="medium"
+            showText={true}
+            variant="light"
+            onClick={() => setActiveTab('feed')}
+            ariaLabel="InclusivChat — voltar ao feed"
+          />
           <div className="header-right">
             <div className="user-info">
               <div className="user-name-container">
@@ -463,7 +470,8 @@ function Dashboard({ user, onLogout, initialGroupId }) {
               aria-label="Enviar Feedback"
               title="Enviar Feedback"
             >
-              💜 Feedback
+              <span aria-hidden="true">💜</span>
+              <span className="btn-label-text">Feedback</span>
             </button>
             <button
               onClick={() => setShowFAQ(true)}
@@ -471,7 +479,8 @@ function Dashboard({ user, onLogout, initialGroupId }) {
               aria-label="Abrir FAQ"
               title="Perguntas Frequentes"
             >
-              ❓ FAQ
+              <span aria-hidden="true">❓</span>
+              <span className="btn-label-text">FAQ</span>
             </button>
             <button
               onClick={handleLogoutClick}
@@ -507,6 +516,14 @@ function Dashboard({ user, onLogout, initialGroupId }) {
         >
           <span>🎯</span> Grupos
         </button>
+        {/* FIX P2 (#9): aba dedicada de Recompensas, antes acessível apenas via Editar Perfil */}
+        <button
+          className={`nav-button ${activeTab === 'rewards' ? 'active' : ''}`}
+          onClick={() => setActiveTab('rewards')}
+          aria-pressed={activeTab === 'rewards'}
+        >
+          <span>🎁</span> Recompensas
+        </button>
         <button
           className={`nav-button ${activeTab === 'profile' && !viewedProfile ? 'active' : ''}`}
           onClick={() => handleTabChange('profile')}
@@ -528,31 +545,33 @@ function Dashboard({ user, onLogout, initialGroupId }) {
                    isOwnProfile={false}
                    onBack={() => setViewedProfile(null)}
                  />
-               ) : (
-                 <>
-                   {activeTab === 'feed' && (
-                     <Feed
-                       user={currentUser}
-                       onUserUpdate={setCurrentUser}
-                       onOpenGroup={handleOpenGroup}
-                       onOpenProfile={handleOpenProfile}
-                     />
-                   )}
-                   {activeTab === 'groups' && (
-                     <Groups
-                       user={currentUser}
-                       onUserUpdate={setCurrentUser}
-                       targetGroupId={pendingGroupId}
-                       onGroupOpened={() => setPendingGroupId(null)}
-                       onOpenProfile={handleOpenProfile}
-                     />
-                   )}
-                   {activeTab === 'profile' && (
-                     <Profile user={currentUser} onUserUpdate={setCurrentUser} />
-                   )}
-                 </>
-               )}
-             </main>
+                 ) : (
+                   <>
+                     {activeTab === 'feed' && (
+                       <Feed
+                         user={currentUser}
+                         onUserUpdate={setCurrentUser}
+                         onOpenGroup={handleOpenGroup}
+                         onOpenProfile={handleOpenProfile}
+                       />
+                     )}
+                     {activeTab === 'groups' && (
+                       <Groups
+                         user={currentUser}
+                         onUserUpdate={setCurrentUser}
+                         targetGroupId={pendingGroupId}
+                         onGroupOpened={() => setPendingGroupId(null)}
+                         onOpenProfile={handleOpenProfile}
+                       />
+                     )}
+                     {activeTab === 'rewards' && (
+                       <Rewards user={currentUser} onUserUpdate={setCurrentUser} />
+                     )}
+                     {activeTab === 'profile' && (
+                       <Profile user={currentUser} onUserUpdate={setCurrentUser} />
+                     )}
+                   </>
+                 )}
 
       {/* Footer com créditos */}
       <footer className="dashboard-footer">
