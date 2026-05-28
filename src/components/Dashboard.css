@@ -492,16 +492,31 @@
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
 }
 
-/* FIX bug pós-QA: o logo preserva as cores arco-íris do design original
-   em todos os temas. Antes usávamos brightness(0) invert(1) que
-   transformava o SVG em branco puro (perdendo o arco-íris); agora
-   aplicamos apenas drop-shadows sutis para garantir contraste contra
-   qualquer header temático, sem alterar as cores originais. */
-[class*="theme-"] .dashboard-header .logo-icon {
+/* FIX QA: padroniza o ícone do logo dentro de QUALQUER header (com ou
+   sem tema). Antes só [class*="theme-"] tinha a regra, e o default
+   ainda rodava a animação gentleGlow do Logo.css que mudava o filter
+   ciclicamente — fazendo a logo "respirar" e parecer de tamanhos
+   diferentes em screenshots de temas distintos. Agora:
+   1. Dimensões fixas (width/height/min-* explícitos) → sem layout shift
+   2. Animação desativada → posição/tamanho constantes
+   3. Filter único para todos → halo idêntico em qualquer tema
+   4. Preserva as cores arco-íris originais do SVG */
+.dashboard-header .logo-icon {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px;
+  min-height: 48px;
+  flex-shrink: 0;
   filter:
     drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35))
     drop-shadow(0 0 10px rgba(255, 255, 255, 0.55)) !important;
   animation: none !important;
+}
+
+/* Container do logo no header: alinhamento vertical estável */
+.dashboard-header .logo-container {
+  align-items: center;
+  flex-shrink: 0;
 }
 
 /* ── 🌙 Lua Serena — âmbar dourado ── */
