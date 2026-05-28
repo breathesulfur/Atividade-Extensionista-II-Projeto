@@ -169,8 +169,17 @@ function Dashboard({ user, onLogout, initialGroupId }) {
   // FIX P2 (#6): estado para abrir perfil de outros usuários (clique no nome/foto)
   const [viewedProfile, setViewedProfile] = useState(null)
   const [profileLoading, setProfileLoading] = useState(false)
+  // FIX QA: o tour de boas-vindas agora consulta o campo has_seen_welcome
+  // do perfil (Supabase) como fonte primária. O localStorage continua sendo
+  // usado como cache local pra evitar exibição entre cliques no mesmo
+  // ambiente, mas previews do Vercel (com subdomínios diferentes) e
+  // qualquer relogin agora respeitam o estado persistido no BD.
   const tourSeenKey = `inclusivchat_welcome_seen_${user.id}`
   const [showTour, setShowTour] = useState(() => {
+    // Se o BD já marcou como visto, não mostra
+    if (user.hasSeenWelcome) return false
+    // Caso contrário, respeita o cache local (caso usuário já tenha
+    // fechado nesta sessão mas o salvamento no BD ainda esteja em voo)
     try { return localStorage.getItem(tourSeenKey) !== '1' } catch { return false }
   })
 
@@ -419,7 +428,15 @@ function Dashboard({ user, onLogout, initialGroupId }) {
           user={currentUser}
           onClose={() => {
             setShowTour(false)
+            // Cache local imediato (UX rápida)
             try { localStorage.setItem(tourSeenKey, '1') } catch {}
+            // FIX QA: persiste no BD pra que o tour não reapareça em
+            // previews diferentes ou após relogin
+            const updatedUser = { ...currentUser, hasSeenWelcome: true }
+            setCurrentUser(updatedUser)
+            updateProfile(currentUser.id, updatedUser).catch(err => {
+              console.error('Erro ao salvar hasSeenWelcome:', err)
+            })
           }}
         />
       )}
