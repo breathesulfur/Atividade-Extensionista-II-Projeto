@@ -185,6 +185,7 @@ function Dashboard({ user, onLogout, initialGroupId }) {
   // brevemente para chamar atenção do usuário.
   const handleOpenPost = (postId) => {
     if (!postId) return
+    setViewedProfile(null)
     setActiveTab('feed')
     // Aguarda o Feed montar antes de tentar localizar o post no DOM
     setTimeout(() => {
@@ -195,6 +196,8 @@ function Dashboard({ user, onLogout, initialGroupId }) {
         setTimeout(() => el.classList.remove('post-highlight'), 2200)
       }
     }, 250)
+  }
+
   // FIX P2 (#6): abre o perfil de outro usuário (ou redireciona para o
   // próprio perfil se for o do próprio currentUser).
   const handleOpenProfile = async (userId) => {
