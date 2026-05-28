@@ -81,7 +81,13 @@ function Rewards({ user, onUserUpdate }) {
       style={themeStyles}
     >
       <header className="rewards-header">
-        <h2>🎁 Recompensas</h2>
+        {/* FIX QA: emoji em <span> separado para não ser "pintado" pelo
+            gradient text-clip aplicado ao h2 — assim mantém as cores
+            originais 🎁 (laranja/rosa) em vez de ficar roxo monocromático. */}
+        <h2>
+          <span className="rewards-header-icon" aria-hidden="true">🎁</span>
+          Recompensas
+        </h2>
         <p className="rewards-subtitle">
           Personalize seu perfil com temas, molduras e títulos místicos
           desbloqueados pelo seu acúmulo de Essências.
