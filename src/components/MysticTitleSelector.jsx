@@ -47,9 +47,9 @@ function MysticTitleSelector({ user, onTitleSelect }) {
               <div className="title-info">
                 <div className="title-name">{title.name}</div>
                 <div className="title-description">{title.description}</div>
-                <div className="title-requirement">
-                  🔮 {title.requiredEssence} Essências
-                </div>
+                {/* FIX QA: removido o display "🔮 N Essências". Títulos
+                    são desbloqueados por comportamento ao longo do tempo
+                    (vide FAQ), não por threshold de essência. */}
               </div>
               
               {!isUnlocked && (

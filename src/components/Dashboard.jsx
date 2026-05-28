@@ -12,7 +12,7 @@ import NotificationBell from './NotificationBell'
 import FeedbackForm from './FeedbackForm'
 import { updateProfile, getProfile } from '../lib/db'
 import { setNotificationCallback, notifyEssenceGained, notifyAchievement } from '../utils/notifications'
-import { addEssence, DAILY_ESSENCE_LIMIT, THEMES, MYSTIC_TITLES, canUnlockMysticTitle, unlockMysticTitle } from '../utils/gamification'
+import { addEssence, DAILY_ESSENCE_LIMIT, THEMES } from '../utils/gamification'
 import './Dashboard.css'
 
 // Decorações mescladas de todos os temas no header
@@ -351,31 +351,13 @@ function Dashboard({ user, onLogout, initialGroupId }) {
     previousEssenceRef.current = currentEssence
   }, [currentUser.essence, currentUser.points])
 
-  // Verifica e concede títulos místicos automaticamente quando essências totais aumentam
-  useEffect(() => {
-    const newTitles = Object.values(MYSTIC_TITLES).filter(title =>
-      canUnlockMysticTitle(currentUser, title.id)
-    )
-    if (newTitles.length === 0) return
-
-    let updatedUser = currentUser
-    newTitles.forEach(title => {
-      updatedUser = unlockMysticTitle(updatedUser, title.id)
-    })
-
-    updateProfile(updatedUser.id, updatedUser)
-    setCurrentUser(updatedUser)
-
-    newTitles.forEach((title, index) => {
-      setTimeout(() => {
-        notifyAchievement(
-          `${title.icon} Título desbloqueado: ${title.name}`,
-          title.description,
-          6000
-        )
-      }, 300 + index * 600)
-    })
-  }, [currentUser.essencias_disponiveis])
+  // FIX QA: removida a lógica de auto-unlock de títulos por threshold de
+  // essências. Segundo o FAQ ("Os Títulos são desbloqueados ao longo do
+  // tempo, a partir da combinação de diferentes ações positivas"), eles
+  // são RECOMPENSAS POR COMPORTAMENTO, não compras automáticas. Os títulos
+  // permanecem bloqueados até serem liberados por um mecanismo futuro
+  // (badges, ações cumulativas, etc.). A função unlockMysticTitle segue
+  // disponível para a liberação manual quando o mecanismo for implementado.
 
   // Abre o modal de confirmação de logout
   const handleLogoutClick = () => {
