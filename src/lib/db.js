@@ -52,7 +52,9 @@ const toDbProfile = (user) => ({
   avatar: user.avatar || null,
   games: user.games || [],
   platforms: user.platforms || {},
-  essence: user.essence || user.points || 0,
+  // Prioriza essencias_disponiveis (saldo atual após gastos/ganhos),
+  // depois essence/points. Usa ?? em vez de || para aceitar 0 como valor válido.
+  essence: user.essencias_disponiveis ?? user.essence ?? user.points ?? 0,
   badges: user.badges || [],
   last_login_dates: user.lastLoginDates || [],
   last_daily_login_essence_date: user.lastDailyLoginEssenceDate || null,

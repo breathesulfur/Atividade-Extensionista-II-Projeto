@@ -39,7 +39,7 @@ function getGameMeta(gameName) {
   return { icon: '🎮', color: '#8B5CF6' }
 }
 
-function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened }) {
+function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened, onOpenProfile }) {
   const [groups, setGroups] = useState([])
   const [showCreateGroup, setShowCreateGroup] = useState(false)
   const [selectedGroup, setSelectedGroup] = useState(null)
@@ -152,6 +152,7 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened }) {
         user={user}
         onBack={() => setSelectedGroup(null)}
         onUserUpdate={onUserUpdate}
+        onOpenProfile={onOpenProfile}
       />
     )
   }

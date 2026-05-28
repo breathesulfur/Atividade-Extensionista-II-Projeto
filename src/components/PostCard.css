@@ -59,6 +59,55 @@
   gap: var(--spacing-md);
 }
 
+/* FIX P2 (#6): autor da postagem (avatar + nome) é clicável → abre perfil */
+.post-author-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  margin: -4px;
+  border-radius: var(--radius-md);
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+  color: inherit;
+  transition: background 0.18s ease;
+}
+
+.post-author-button:hover {
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.post-author-button:focus-visible {
+  outline: 2px solid var(--mystic-purple);
+  outline-offset: 2px;
+}
+
+/* FIX P2 (#6): nome do comentarista é clicável → abre perfil */
+.comment-author-button {
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  cursor: pointer;
+  color: inherit;
+  transition: background 0.18s ease;
+}
+
+.comment-author-button:hover {
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.comment-author-button:hover strong {
+  text-decoration: underline;
+}
+
+.comment-author-button:focus-visible {
+  outline: 2px solid var(--mystic-purple);
+  outline-offset: 2px;
+}
+
 .author-avatar {
   width: 48px;
   height: 48px;

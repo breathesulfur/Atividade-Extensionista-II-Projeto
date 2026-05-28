@@ -1,12 +1,30 @@
 import React from 'react'
 import './Logo.css'
 
-function Logo({ size = 'medium', showText = true, variant = 'light' }) {
+function Logo({ size = 'medium', showText = true, variant = 'light', onClick = null, ariaLabel = null }) {
   const sizes = { small: 32, medium: 48, large: 64 }
   const s = sizes[size] || sizes.medium
 
+  const isClickable = typeof onClick === 'function'
+
+  // Suporta ativação por teclado quando o logo é interativo
+  const handleKeyDown = (e) => {
+    if (!isClickable) return
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onClick(e)
+    }
+  }
+
   return (
-    <div className={`logo-container logo-${variant}`}>
+    <div
+      className={`logo-container logo-${variant} ${isClickable ? 'logo-clickable' : ''}`}
+      onClick={isClickable ? onClick : undefined}
+      onKeyDown={isClickable ? handleKeyDown : undefined}
+      role={isClickable ? 'button' : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      aria-label={isClickable ? (ariaLabel || 'Ir para o feed') : undefined}
+    >
       <svg
         width={s}
         height={s}

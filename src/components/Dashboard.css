@@ -26,10 +26,11 @@
   color: white;
   padding: var(--spacing-md) var(--spacing-lg);
   box-shadow: 0 4px 20px var(--shadow-mystic);
-  position: relative;
-  /* FIX P0 (#8): header acima do nav (z-10) para que o dropdown do sino
-     (filho do header, position: absolute) não seja coberto pelo nav ao
-     estender abaixo do header. Mantido < notifications-container (10500). */
+  /* FIX P1 (#10): header sticky no topo ao rolar a página.
+     Mantém z-index 100 (acima do nav) para que dropdown do sino e
+     decorações funcionem. Conteúdo abaixo continua scrollável. */
+  position: sticky;
+  top: 0;
   z-index: 100;
 }
 
@@ -104,6 +105,29 @@
 .user-name {
   font-weight: 600;
   font-size: 1rem;
+}
+
+/* FIX P2 (#6): nome do usuário no header é clicável → abre o perfil */
+.user-name-button {
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 4px 6px;
+  margin: -4px -6px;
+  border-radius: var(--radius-sm);
+  transition: background 0.18s ease;
+}
+
+.user-name-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  text-decoration: underline;
+}
+
+.user-name-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
 }
 
 .user-pronoun {
@@ -915,19 +939,56 @@
   .header-right {
     width: 100%;
     justify-content: space-between;
+    gap: var(--spacing-sm);
+  }
+
+  /* FIX P1 (#4): reduz padding do header para liberar área útil em telas pequenas */
+  .dashboard-header {
+    padding: var(--spacing-sm) var(--spacing-md);
   }
 
   .dashboard-nav {
     padding: var(--spacing-sm);
   }
 
+  /* FIX P1 (#4): touch targets mínimos de 44x44 (WCAG 2.5.5) */
   .nav-button {
     flex: 1;
     min-width: 100px;
+    min-height: 44px;
+  }
+
+  .faq-button-header,
+  .logout-button {
+    min-height: 44px;
+    padding: var(--spacing-sm) var(--spacing-md);
   }
 
   .dashboard-content {
     padding: var(--spacing-md);
+  }
+}
+
+/* FIX P1 (#4): em telas muito estreitas (< 480px), colapsa labels dos botões
+   FAQ/Feedback para emoji apenas. O texto (.btn-label-text) é ocultado
+   visualmente mas permanece acessível via aria-label/title do button. */
+@media (max-width: 480px) {
+  .faq-button-header {
+    padding: var(--spacing-sm);
+    min-width: 44px;
+    gap: 0;
+  }
+  .faq-button-header .btn-label-text {
+    /* ocultação visualmente acessível */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 }
 

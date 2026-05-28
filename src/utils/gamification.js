@@ -223,31 +223,31 @@ export const addEssence = (user, essence) => {
     return {
       ...user,
       essencias_totais: essenciasTotais + essence,
-      essencia: essenciasDisponiveis, // Mantém compatibilidade
-      points: essenciasDisponiveis // Mantém compatibilidade
+      essence: essenciasDisponiveis,   // Campo persistido no BD (precisa ser sempre sincronizado)
+      points: essenciasDisponiveis,    // Mantém compatibilidade legada
     }
   }
-  
+
   // Calcula quanto pode ser adicionado hoje
   const remainingDaily = DAILY_ESSENCE_LIMIT - todayEssence
   const essenceToAdd = Math.min(essence, remainingDaily)
-  
+
   // Atualiza contadores
   const newEssenciasTotais = essenciasTotais + essence // Sempre incrementa total
   const newEssenciasDisponiveis = essenciasDisponiveis + essenceToAdd // Incrementa disponível apenas dentro do limite
-  
+
   // Atualiza registro diário
   const updatedDailyEssence = {
     ...dailyEssence,
     [today]: todayEssence + essenceToAdd
   }
-  
+
   return {
     ...user,
     essencias_totais: newEssenciasTotais,
     essencias_disponiveis: newEssenciasDisponiveis,
-    essencia: newEssenciasDisponiveis, // Mantém compatibilidade (usa disponível)
-    points: newEssenciasDisponiveis, // Mantém compatibilidade
+    essence: newEssenciasDisponiveis, // FIX P0: campo persistido no BD (antes era "essencia" com typo, nunca atualizava "essence")
+    points: newEssenciasDisponiveis,  // Mantém compatibilidade legada
     dailyEssence: updatedDailyEssence
   }
 }
@@ -341,13 +341,13 @@ export const subtractEssence = (user, essence) => {
   const essenciasTotais = user.essencias_totais ?? essenciasDisponiveis
   
   const newEssenciasDisponiveis = Math.max(0, essenciasDisponiveis - essence) // Não permite valores negativos
-  
+
   return {
     ...user,
     essencias_totais: essenciasTotais, // Total nunca diminui
     essencias_disponiveis: newEssenciasDisponiveis,
-    essencia: newEssenciasDisponiveis, // Mantém compatibilidade (usa disponível)
-    points: newEssenciasDisponiveis // Mantém compatibilidade
+    essence: newEssenciasDisponiveis, // FIX P0: precisa atualizar o campo persistido no BD
+    points: newEssenciasDisponiveis,  // Mantém compatibilidade legada
   }
 }
 
