@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import GroupCard from './GroupCard'
 import CreateGroup from './CreateGroup'
+import LoadingSpinner from './LoadingSpinner'
 import { fetchGroups, createGroup as dbCreateGroup, deleteGroup as dbDeleteGroup, joinGroup, leaveGroup, createNotification } from '../lib/db'
 import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES } from '../utils/gamification'
 import { getPosts } from '../utils/storage'
@@ -43,10 +44,14 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened, onOpenProfil
   const [groups, setGroups] = useState([])
   const [showCreateGroup, setShowCreateGroup] = useState(false)
   const [selectedGroup, setSelectedGroup] = useState(null)
+  // FIX bug pós-QA: estado de loading para evitar "flash" da empty-state
+  // (que aparecia entre o mount inicial com groups=[] e a resolução do fetch).
+  const [loading, setLoading] = useState(true)
 
   const loadGroups = async () => {
     const data = await fetchGroups()
     setGroups(data)
+    setLoading(false)
   }
 
   useEffect(() => { loadGroups() }, [])
@@ -178,7 +183,15 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened, onOpenProfil
       )}
 
       <div className="groups-container">
-        {relevantGroups.length > 0 && (
+        {/* FIX bug pós-QA: mostra spinner enquanto carrega — sem isto a
+            empty-state piscava antes dos grupos reais aparecerem. */}
+        {loading && (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--spacing-xl)' }}>
+            <LoadingSpinner size="large" text="Carregando grupos..." />
+          </div>
+        )}
+
+        {!loading && relevantGroups.length > 0 && (
           <div className="groups-section">
             <h3 className="section-title">
               🎯 Grupos dos seus jogos favoritos
@@ -231,7 +244,7 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened, onOpenProfil
           </div>
         )}
 
-        {otherGroups.length > 0 && (
+        {!loading && otherGroups.length > 0 && (
           <div className="groups-section">
             <h3 className="section-title">🎮 Outros Grupos</h3>
             <div className="groups-grid">
@@ -282,7 +295,7 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened, onOpenProfil
           </div>
         )}
 
-        {groups.length === 0 && (
+        {!loading && groups.length === 0 && (
           <div className="empty-state">
             <p>Nenhum grupo criado ainda. Crie o primeiro grupo de jogo! 🎮</p>
           </div>

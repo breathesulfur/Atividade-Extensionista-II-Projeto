@@ -17,7 +17,11 @@
   pointer-events: none;
 }
 
-.notifications-container > * {
+/* FIX bug pós-QA: o seletor > * só aplicava pointer-events:auto aos
+   filhos diretos (.notification), deixando .notification-close (neto)
+   sem captura de clique em alguns navegadores. Aplicando para toda a
+   subárvore para garantir que o botão "✕" sempre feche o toast. */
+.notifications-container * {
   pointer-events: auto;
 }
 

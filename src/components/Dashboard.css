@@ -492,9 +492,15 @@
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
 }
 
-/* Logo sempre visível em qualquer header temático */
+/* FIX bug pós-QA: o logo preserva as cores arco-íris do design original
+   em todos os temas. Antes usávamos brightness(0) invert(1) que
+   transformava o SVG em branco puro (perdendo o arco-íris); agora
+   aplicamos apenas drop-shadows sutis para garantir contraste contra
+   qualquer header temático, sem alterar as cores originais. */
 [class*="theme-"] .dashboard-header .logo-icon {
-  filter: brightness(0) invert(1) drop-shadow(0 2px 8px rgba(0,0,0,0.20)) !important;
+  filter:
+    drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35))
+    drop-shadow(0 0 10px rgba(255, 255, 255, 0.55)) !important;
   animation: none !important;
 }
 
