@@ -180,6 +180,24 @@ function Dashboard({ user, onLogout, initialGroupId }) {
     setActiveTab('groups')
   }
 
+  // FIX QA: abrir publicação a partir de uma notificação do sino —
+  // navega para o feed e rola até o post correspondente, destacando-o
+  // brevemente para chamar atenção do usuário.
+  const handleOpenPost = (postId) => {
+    if (!postId) return
+    setViewedProfile(null)
+    setActiveTab('feed')
+    // Aguarda o Feed montar antes de tentar localizar o post no DOM
+    setTimeout(() => {
+      const el = document.getElementById(`post-${postId}`)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        el.classList.add('post-highlight')
+        setTimeout(() => el.classList.remove('post-highlight'), 2200)
+      }
+    }, 250)
+  }
+
   // FIX P2 (#6): abre o perfil de outro usuário (ou redireciona para o
   // próprio perfil se for o do próprio currentUser).
   const handleOpenProfile = async (userId) => {
@@ -463,7 +481,11 @@ function Dashboard({ user, onLogout, initialGroupId }) {
                 🔮 {currentUser.essence || currentUser.points || 0} Essências
               </div>
             </div>
-            <NotificationBell user={currentUser} />
+            <NotificationBell
+              user={currentUser}
+              onOpenPost={handleOpenPost}
+              onOpenGroup={handleOpenGroup}
+            />
             <button
               onClick={() => setShowFeedback(true)}
               className="faq-button-header"

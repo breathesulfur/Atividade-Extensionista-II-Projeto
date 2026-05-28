@@ -378,7 +378,7 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
   }
 
   return (
-    <div className="post-card">
+    <div id={`post-${post.id}`} className="post-card">
       <div className="post-header">
         {/* FIX P2 (#6): autor (avatar + nome) clicável → abre perfil */}
         <button
