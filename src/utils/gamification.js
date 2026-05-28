@@ -703,23 +703,27 @@ export const unlockAvatarFrame = (user, frameId) => {
 /**
  * Verifica se o usuário pode desbloquear um título místico.
  *
- * FIX bug pós-QA: títulos agora são recompensas (marcos), não compras.
- * O requiredEssence é apenas o threshold de liberação; o saldo não é
- * consumido ao desbloquear (ver unlockMysticTitle).
+ * FIX QA: removido o critério de threshold de essências. Conforme o FAQ
+ * ("Títulos são desbloqueados ao longo do tempo, a partir da combinação
+ * de diferentes ações positivas"), títulos são RECOMPENSAS POR
+ * COMPORTAMENTO, não compras automáticas. Esta função agora retorna
+ * sempre false — títulos permanecem bloqueados até serem liberados via
+ * um mecanismo futuro (ações cumulativas, badges combinadas, decisão
+ * manual etc.). Permanece exportada para preservar o contrato com o
+ * MysticTitleSelector, que mostrará todos os títulos como bloqueados
+ * (overlay 🔒).
  */
 export const canUnlockMysticTitle = (user, titleId) => {
   const title = Object.values(MYSTIC_TITLES).find(t => t.id === titleId)
   if (!title) return false
 
-  // Usa essencias_disponiveis para verificar threshold de liberação do título
-  const essenciasDisponiveis = user.essencias_disponiveis ?? (user.essence || user.points || 0)
+  // Mantém a guarda contra "desbloquear de novo" caso a função seja
+  // chamada por engano em um título já desbloqueado.
   const unlockedTitles = user.unlockedMysticTitles || []
-
-  // Se já está desbloqueado, não pode desbloquear novamente
   if (unlockedTitles.includes(titleId)) return false
 
-  // Verifica se atingiu o threshold de essências (gatilho, não custo)
-  return essenciasDisponiveis >= title.requiredEssence
+  // Sem critério automático no momento — sempre bloqueado.
+  return false
 }
 
 /**
