@@ -1090,3 +1090,189 @@
   background: linear-gradient(90deg, #FF9EB2 0%, #FF7A92 100%) !important;
   box-shadow: 0 1px 4px rgba(255, 158, 178, 0.5);
 }
+
+/* ============================================================================
+   FIX QA: padroniza botões e títulos secundários por tema
+   ============================================================================
+   Antes: botões "Editar Perfil", "+ Criar Grupo", "Enviar" (chat) e
+   textos do header do chat caíam em var(--theme-text) escuro sobre
+   fundos coloridos — baixo contraste, parecendo "apagados".
+
+   Agora: aplica o MESMO padrão visual dos .nav-button (gradiente
+   colorido do tema + texto branco + sombra + text-shadow), garantindo
+   legibilidade e coerência visual entre os 6 temas.
+   ============================================================================ */
+
+/* ── 🌙 Lua Serena (#C8A000 → #E8C030) ── */
+.theme-serene_moon .edit-profile-button,
+.theme-serene_moon .create-group-button,
+.theme-serene_moon .send-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #C8A000 0%, #E8C030 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(200, 160, 0, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-serene_moon .edit-profile-button:hover,
+.theme-serene_moon .create-group-button:hover,
+.theme-serene_moon .send-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(200, 160, 0, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-serene_moon .chat-header h2,
+.theme-serene_moon .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-serene_moon .chat-game,
+.theme-serene_moon .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-serene_moon .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #C8A000 0%, #E8C030 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+
+/* ── 🌲 Floresta Encantada (#2A6040 → #3E8058) ── */
+.theme-pink_aura .edit-profile-button,
+.theme-pink_aura .create-group-button,
+.theme-pink_aura .send-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #2A6040 0%, #3E8058 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(42, 96, 64, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-pink_aura .edit-profile-button:hover,
+.theme-pink_aura .create-group-button:hover,
+.theme-pink_aura .send-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(42, 96, 64, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-pink_aura .chat-header h2,
+.theme-pink_aura .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-pink_aura .chat-game,
+.theme-pink_aura .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-pink_aura .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #2A6040 0%, #3E8058 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+
+/* ── ☁️ Céu Suave (#4090B8 → #68B8D8) ── */
+.theme-soft_sky .edit-profile-button,
+.theme-soft_sky .create-group-button,
+.theme-soft_sky .send-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #4090B8 0%, #68B8D8 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(64, 144, 184, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-soft_sky .edit-profile-button:hover,
+.theme-soft_sky .create-group-button:hover,
+.theme-soft_sky .send-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(64, 144, 184, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-soft_sky .chat-header h2,
+.theme-soft_sky .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-soft_sky .chat-game,
+.theme-soft_sky .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-soft_sky .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #4090B8 0%, #68B8D8 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+
+/* ── ❤️‍🔥 Coração Mágico (#B01830 → #D83050) ── */
+.theme-pink_mist .edit-profile-button,
+.theme-pink_mist .create-group-button,
+.theme-pink_mist .send-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #B01830 0%, #D83050 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(176, 24, 48, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-pink_mist .edit-profile-button:hover,
+.theme-pink_mist .create-group-button:hover,
+.theme-pink_mist .send-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(176, 24, 48, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-pink_mist .chat-header h2,
+.theme-pink_mist .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-pink_mist .chat-game,
+.theme-pink_mist .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-pink_mist .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #B01830 0%, #D83050 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+
+/* ── 🌅 Amanhecer Lilás (#7060C0 → #9080E0) ── */
+.theme-lilac_dawn .edit-profile-button,
+.theme-lilac_dawn .create-group-button,
+.theme-lilac_dawn .send-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #7060C0 0%, #9080E0 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(112, 96, 192, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-lilac_dawn .edit-profile-button:hover,
+.theme-lilac_dawn .create-group-button:hover,
+.theme-lilac_dawn .send-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(112, 96, 192, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-lilac_dawn .chat-header h2,
+.theme-lilac_dawn .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-lilac_dawn .chat-game,
+.theme-lilac_dawn .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-lilac_dawn .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #7060C0 0%, #9080E0 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+
+/* ── 🌸 Pétala Rosa (#D04878 → #F068A0) ── */
+.theme-petal .edit-profile-button,
+.theme-petal .create-group-button,
+.theme-petal .send-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #D04878 0%, #F068A0 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(208, 72, 120, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-petal .edit-profile-button:hover,
+.theme-petal .create-group-button:hover,
+.theme-petal .send-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(208, 72, 120, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-petal .chat-header h2,
+.theme-petal .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-petal .chat-game,
+.theme-petal .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-petal .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #D04878 0%, #F068A0 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
