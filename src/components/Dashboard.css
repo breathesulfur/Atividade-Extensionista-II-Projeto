@@ -1019,16 +1019,19 @@
    Cores que se destacam em cada header
    ======================================== */
 
+/* FIX QA: barra diária com complementar do tema (header dourado → roxo).
+   Antes a barra era dourada sobre header dourado e desaparecia visualmente. */
 .dashboard.theme-serene_moon .daily-essence-text {
-  color: #FFD700 !important;
+  color: #FFFFFF !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45) !important;
 }
 .dashboard.theme-serene_moon .daily-essence-bar-compact-container {
-  background: rgba(255, 215, 0, 0.25) !important;
-  border-color: rgba(255, 215, 0, 0.45) !important;
+  background: rgba(91, 33, 182, 0.25) !important;
+  border-color: rgba(91, 33, 182, 0.55) !important;
 }
 .dashboard.theme-serene_moon .daily-essence-bar-compact-fill {
-  background: linear-gradient(90deg, #FFD700 0%, #FFC107 100%) !important;
-  box-shadow: 0 1px 4px rgba(255, 215, 0, 0.5);
+  background: linear-gradient(90deg, #7C3AED 0%, #A78BFA 100%) !important;
+  box-shadow: 0 1px 4px rgba(124, 58, 237, 0.55) !important;
 }
 
 .dashboard.theme-pink_aura .daily-essence-text {
@@ -1043,16 +1046,18 @@
   box-shadow: 0 1px 4px rgba(255, 133, 179, 0.5);
 }
 
+/* FIX QA: barra diária com complementar do tema (header azul → coral/laranja). */
 .dashboard.theme-soft_sky .daily-essence-text {
-  color: #7DD3FC !important;
+  color: #FFFFFF !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
 }
 .dashboard.theme-soft_sky .daily-essence-bar-compact-container {
-  background: rgba(125, 211, 252, 0.25) !important;
-  border-color: rgba(125, 211, 252, 0.45) !important;
+  background: rgba(255, 140, 66, 0.25) !important;
+  border-color: rgba(255, 140, 66, 0.55) !important;
 }
 .dashboard.theme-soft_sky .daily-essence-bar-compact-fill {
-  background: linear-gradient(90deg, #5CC8F0 0%, #38B0DE 100%) !important;
-  box-shadow: 0 1px 4px rgba(92, 200, 240, 0.5);
+  background: linear-gradient(90deg, #F97316 0%, #FB923C 100%) !important;
+  box-shadow: 0 1px 4px rgba(249, 115, 22, 0.55) !important;
 }
 
 .dashboard.theme-pink_mist .daily-essence-text {
@@ -1067,26 +1072,30 @@
   box-shadow: 0 1px 4px rgba(107, 203, 119, 0.5);
 }
 
+/* FIX QA: barra diária com complementar do tema (header lilás → dourado/amarelo). */
 .dashboard.theme-lilac_dawn .daily-essence-text {
-  color: #D4B5FF !important;
+  color: #FFFFFF !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
 }
 .dashboard.theme-lilac_dawn .daily-essence-bar-compact-container {
-  background: rgba(212, 181, 255, 0.25) !important;
-  border-color: rgba(212, 181, 255, 0.45) !important;
+  background: rgba(251, 191, 36, 0.25) !important;
+  border-color: rgba(251, 191, 36, 0.55) !important;
 }
 .dashboard.theme-lilac_dawn .daily-essence-bar-compact-fill {
-  background: linear-gradient(90deg, #C4A6FF 0%, #A87EFF 100%) !important;
-  box-shadow: 0 1px 4px rgba(196, 166, 255, 0.5);
+  background: linear-gradient(90deg, #F59E0B 0%, #FCD34D 100%) !important;
+  box-shadow: 0 1px 4px rgba(245, 158, 11, 0.55) !important;
 }
 
+/* FIX QA: barra diária com complementar do tema (header rosa → verde-água/teal). */
 .dashboard.theme-petal .daily-essence-text {
-  color: #FFA8B8 !important;
+  color: #FFFFFF !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
 }
 .dashboard.theme-petal .daily-essence-bar-compact-container {
-  background: rgba(255, 168, 184, 0.25) !important;
-  border-color: rgba(255, 168, 184, 0.45) !important;
+  background: rgba(20, 184, 166, 0.25) !important;
+  border-color: rgba(20, 184, 166, 0.55) !important;
 }
 .dashboard.theme-petal .daily-essence-bar-compact-fill {
-  background: linear-gradient(90deg, #FF9EB2 0%, #FF7A92 100%) !important;
-  box-shadow: 0 1px 4px rgba(255, 158, 178, 0.5);
+  background: linear-gradient(90deg, #14B8A6 0%, #5EEAD4 100%) !important;
+  box-shadow: 0 1px 4px rgba(20, 184, 166, 0.55) !important;
 }
