@@ -1090,3 +1090,392 @@
   background: linear-gradient(90deg, #FF9EB2 0%, #FF7A92 100%) !important;
   box-shadow: 0 1px 4px rgba(255, 158, 178, 0.5);
 }
+
+/* ============================================================================
+   FIX QA: padroniza botões e títulos secundários por tema
+   ============================================================================
+   Antes: botões "Editar Perfil", "+ Criar Grupo", "Enviar" (chat),
+   "+ Nova Postagem" (feed), "← Voltar" (chat), bolha do próprio usuário
+   no chat e textos do header do chat caíam em var(--theme-text) escuro
+   sobre fundos coloridos — baixo contraste, parecendo "apagados".
+
+   Agora: aplica o MESMO padrão visual dos .nav-button (gradiente
+   colorido do tema + texto branco + sombra + text-shadow), garantindo
+   legibilidade e coerência visual entre os 6 temas.
+
+   Caso especial — .back-button: vive dentro do .chat-header (que já é
+   colorido pelo tema), então usa branco translúcido em vez de gradiente
+   pra contrastar com o fundo do header.
+   ============================================================================ */
+
+/* ── 🌙 Lua Serena (#C8A000 → #E8C030) ── */
+.theme-serene_moon .edit-profile-button,
+.theme-serene_moon .create-group-button,
+.theme-serene_moon .send-button,
+.theme-serene_moon .create-post-button,
+.theme-serene_moon .comment-submit,
+.theme-serene_moon .submit-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #C8A000 0%, #E8C030 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(200, 160, 0, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-serene_moon .edit-profile-button:hover,
+.theme-serene_moon .create-group-button:hover,
+.theme-serene_moon .send-button:hover:not(:disabled),
+.theme-serene_moon .create-post-button:hover,
+.theme-serene_moon .comment-submit:hover,
+.theme-serene_moon .submit-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(200, 160, 0, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-serene_moon .chat-header h2,
+.theme-serene_moon .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-serene_moon .chat-game,
+.theme-serene_moon .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-serene_moon .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #C8A000 0%, #E8C030 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+/* Bolha de mensagem do próprio usuário — gradiente do tema + texto branco */
+.theme-serene_moon .message-item.own-message {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #C8A000 0%, #E8C030 100%) !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(200, 160, 0, 0.40) !important;
+}
+.theme-serene_moon .message-item.own-message strong,
+.theme-serene_moon .message-item.own-message .message-content,
+.theme-serene_moon .message-item.own-message .message-pronoun,
+.theme-serene_moon .message-item.own-message .message-time,
+.theme-serene_moon .message-item.own-message .message-author-button {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+  opacity: 1 !important;
+}
+/* Botão voltar no chat — branco translúcido (chat-header já é colorido) */
+.theme-serene_moon .back-button {
+  background: rgba(255, 255, 255, 0.20) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important;
+}
+.theme-serene_moon .back-button:hover {
+  background: rgba(255, 255, 255, 0.32) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+}
+
+/* ── 🌲 Floresta Encantada (#2A6040 → #3E8058) ── */
+.theme-pink_aura .edit-profile-button,
+.theme-pink_aura .create-group-button,
+.theme-pink_aura .send-button,
+.theme-pink_aura .create-post-button,
+.theme-pink_aura .comment-submit,
+.theme-pink_aura .submit-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #2A6040 0%, #3E8058 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(42, 96, 64, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-pink_aura .edit-profile-button:hover,
+.theme-pink_aura .create-group-button:hover,
+.theme-pink_aura .send-button:hover:not(:disabled),
+.theme-pink_aura .create-post-button:hover,
+.theme-pink_aura .comment-submit:hover,
+.theme-pink_aura .submit-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(42, 96, 64, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-pink_aura .chat-header h2,
+.theme-pink_aura .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-pink_aura .chat-game,
+.theme-pink_aura .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-pink_aura .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #2A6040 0%, #3E8058 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+/* Bolha de mensagem do próprio usuário — gradiente do tema + texto branco */
+.theme-pink_aura .message-item.own-message {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #2A6040 0%, #3E8058 100%) !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(42, 96, 64, 0.40) !important;
+}
+.theme-pink_aura .message-item.own-message strong,
+.theme-pink_aura .message-item.own-message .message-content,
+.theme-pink_aura .message-item.own-message .message-pronoun,
+.theme-pink_aura .message-item.own-message .message-time,
+.theme-pink_aura .message-item.own-message .message-author-button {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+  opacity: 1 !important;
+}
+/* Botão voltar no chat — branco translúcido (chat-header já é colorido) */
+.theme-pink_aura .back-button {
+  background: rgba(255, 255, 255, 0.20) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important;
+}
+.theme-pink_aura .back-button:hover {
+  background: rgba(255, 255, 255, 0.32) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+}
+
+/* ── ☁️ Céu Suave (#4090B8 → #68B8D8) ── */
+.theme-soft_sky .edit-profile-button,
+.theme-soft_sky .create-group-button,
+.theme-soft_sky .send-button,
+.theme-soft_sky .create-post-button,
+.theme-soft_sky .comment-submit,
+.theme-soft_sky .submit-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #4090B8 0%, #68B8D8 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(64, 144, 184, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-soft_sky .edit-profile-button:hover,
+.theme-soft_sky .create-group-button:hover,
+.theme-soft_sky .send-button:hover:not(:disabled),
+.theme-soft_sky .create-post-button:hover,
+.theme-soft_sky .comment-submit:hover,
+.theme-soft_sky .submit-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(64, 144, 184, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-soft_sky .chat-header h2,
+.theme-soft_sky .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-soft_sky .chat-game,
+.theme-soft_sky .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-soft_sky .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #4090B8 0%, #68B8D8 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+/* Bolha de mensagem do próprio usuário — gradiente do tema + texto branco */
+.theme-soft_sky .message-item.own-message {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #4090B8 0%, #68B8D8 100%) !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(64, 144, 184, 0.40) !important;
+}
+.theme-soft_sky .message-item.own-message strong,
+.theme-soft_sky .message-item.own-message .message-content,
+.theme-soft_sky .message-item.own-message .message-pronoun,
+.theme-soft_sky .message-item.own-message .message-time,
+.theme-soft_sky .message-item.own-message .message-author-button {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+  opacity: 1 !important;
+}
+/* Botão voltar no chat — branco translúcido (chat-header já é colorido) */
+.theme-soft_sky .back-button {
+  background: rgba(255, 255, 255, 0.20) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important;
+}
+.theme-soft_sky .back-button:hover {
+  background: rgba(255, 255, 255, 0.32) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+}
+
+/* ── ❤️‍🔥 Coração Mágico (#B01830 → #D83050) ── */
+.theme-pink_mist .edit-profile-button,
+.theme-pink_mist .create-group-button,
+.theme-pink_mist .send-button,
+.theme-pink_mist .create-post-button,
+.theme-pink_mist .comment-submit,
+.theme-pink_mist .submit-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #B01830 0%, #D83050 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(176, 24, 48, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-pink_mist .edit-profile-button:hover,
+.theme-pink_mist .create-group-button:hover,
+.theme-pink_mist .send-button:hover:not(:disabled),
+.theme-pink_mist .create-post-button:hover,
+.theme-pink_mist .comment-submit:hover,
+.theme-pink_mist .submit-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(176, 24, 48, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-pink_mist .chat-header h2,
+.theme-pink_mist .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-pink_mist .chat-game,
+.theme-pink_mist .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-pink_mist .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #B01830 0%, #D83050 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+/* Bolha de mensagem do próprio usuário — gradiente do tema + texto branco */
+.theme-pink_mist .message-item.own-message {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #B01830 0%, #D83050 100%) !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(176, 24, 48, 0.40) !important;
+}
+.theme-pink_mist .message-item.own-message strong,
+.theme-pink_mist .message-item.own-message .message-content,
+.theme-pink_mist .message-item.own-message .message-pronoun,
+.theme-pink_mist .message-item.own-message .message-time,
+.theme-pink_mist .message-item.own-message .message-author-button {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+  opacity: 1 !important;
+}
+/* Botão voltar no chat — branco translúcido (chat-header já é colorido) */
+.theme-pink_mist .back-button {
+  background: rgba(255, 255, 255, 0.20) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important;
+}
+.theme-pink_mist .back-button:hover {
+  background: rgba(255, 255, 255, 0.32) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+}
+
+/* ── 🌅 Amanhecer Lilás (#7060C0 → #9080E0) ── */
+.theme-lilac_dawn .edit-profile-button,
+.theme-lilac_dawn .create-group-button,
+.theme-lilac_dawn .send-button,
+.theme-lilac_dawn .create-post-button,
+.theme-lilac_dawn .comment-submit,
+.theme-lilac_dawn .submit-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #7060C0 0%, #9080E0 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(112, 96, 192, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-lilac_dawn .edit-profile-button:hover,
+.theme-lilac_dawn .create-group-button:hover,
+.theme-lilac_dawn .send-button:hover:not(:disabled),
+.theme-lilac_dawn .create-post-button:hover,
+.theme-lilac_dawn .comment-submit:hover,
+.theme-lilac_dawn .submit-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(112, 96, 192, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-lilac_dawn .chat-header h2,
+.theme-lilac_dawn .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-lilac_dawn .chat-game,
+.theme-lilac_dawn .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-lilac_dawn .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #7060C0 0%, #9080E0 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+/* Bolha de mensagem do próprio usuário — gradiente do tema + texto branco */
+.theme-lilac_dawn .message-item.own-message {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #7060C0 0%, #9080E0 100%) !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(112, 96, 192, 0.40) !important;
+}
+.theme-lilac_dawn .message-item.own-message strong,
+.theme-lilac_dawn .message-item.own-message .message-content,
+.theme-lilac_dawn .message-item.own-message .message-pronoun,
+.theme-lilac_dawn .message-item.own-message .message-time,
+.theme-lilac_dawn .message-item.own-message .message-author-button {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+  opacity: 1 !important;
+}
+/* Botão voltar no chat — branco translúcido (chat-header já é colorido) */
+.theme-lilac_dawn .back-button {
+  background: rgba(255, 255, 255, 0.20) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important;
+}
+.theme-lilac_dawn .back-button:hover {
+  background: rgba(255, 255, 255, 0.32) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+}
+
+/* ── 🌸 Pétala Rosa (#D04878 → #F068A0) ── */
+.theme-petal .edit-profile-button,
+.theme-petal .create-group-button,
+.theme-petal .send-button,
+.theme-petal .create-post-button,
+.theme-petal .comment-submit,
+.theme-petal .submit-button {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #D04878 0%, #F068A0 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(208, 72, 120, 0.40) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+.theme-petal .edit-profile-button:hover,
+.theme-petal .create-group-button:hover,
+.theme-petal .send-button:hover:not(:disabled),
+.theme-petal .create-post-button:hover,
+.theme-petal .comment-submit:hover,
+.theme-petal .submit-button:hover:not(:disabled) {
+  box-shadow: 0 4px 18px rgba(208, 72, 120, 0.55) !important;
+  transform: translateY(-1px);
+}
+.theme-petal .chat-header h2,
+.theme-petal .chat-header-info h2 { color: white !important; text-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+.theme-petal .chat-game,
+.theme-petal .chat-description { color: rgba(255,255,255,0.92) !important; text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important; }
+.theme-petal .game-tag {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #D04878 0%, #F068A0 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+}
+/* Bolha de mensagem do próprio usuário — gradiente do tema + texto branco */
+.theme-petal .message-item.own-message {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
+              linear-gradient(135deg, #D04878 0%, #F068A0 100%) !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 12px rgba(208, 72, 120, 0.40) !important;
+}
+.theme-petal .message-item.own-message strong,
+.theme-petal .message-item.own-message .message-content,
+.theme-petal .message-item.own-message .message-pronoun,
+.theme-petal .message-item.own-message .message-time,
+.theme-petal .message-item.own-message .message-author-button {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+  opacity: 1 !important;
+}
+/* Botão voltar no chat — branco translúcido (chat-header já é colorido) */
+.theme-petal .back-button {
+  background: rgba(255, 255, 255, 0.20) !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25) !important;
+}
+.theme-petal .back-button:hover {
+  background: rgba(255, 255, 255, 0.32) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+}
