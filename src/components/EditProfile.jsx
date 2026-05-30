@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback, memo } from '
 import LoadingSpinner from './LoadingSpinner'
 import SuccessModal from './SuccessModal'
 import { notifyError, notifyEssenceGained } from '../utils/notifications'
-import { addEssence, ESSENCE, checkBadges, BADGES, THEMES } from '../utils/gamification'
+import { addEssence, ESSENCE, checkBadges, BADGES, THEMES, applyTheme, getEssenceGained } from '../utils/gamification'
 import { getPosts, getGroups } from '../utils/storage'
 import { updateProfile } from '../lib/db'
 import { validateRequiredField, validateEmail, validateSelect, validatePassword, validateConfirmPassword } from '../utils/validation'
@@ -593,11 +593,13 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
       // Se completou o perfil agora (não tinha antes)
       if ((!hadPronoun && nowHasPronoun) || (!hadBio && nowHasBio)) {
         if (nowHasPronoun && nowHasBio) {
-          // Adiciona Essência por completar perfil
+          // Adiciona Essência por completar perfil (respeita limite diário)
+          const beforeEssence = updatedUser
           updatedUser = addEssence(updatedUser, ESSENCE.COMPLETE_PROFILE)
-          
-          // Notifica sobre essências ganhas
-          notifyEssenceGained(ESSENCE.COMPLETE_PROFILE, 'Completar perfil')
+
+          // FIX QA: só notifica se houve ganho real
+          const gained = getEssenceGained(beforeEssence, updatedUser)
+          if (gained > 0) notifyEssenceGained(gained, 'Completar perfil')
           
           // Verifica se deve conceder selo Essência Revelada
           const posts = getPosts()

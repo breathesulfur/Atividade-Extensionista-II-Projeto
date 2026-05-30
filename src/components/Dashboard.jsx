@@ -12,7 +12,7 @@ import NotificationBell from './NotificationBell'
 import FeedbackForm from './FeedbackForm'
 import { updateProfile, getProfile } from '../lib/db'
 import { setNotificationCallback, notifyEssenceGained, notifyAchievement } from '../utils/notifications'
-import { addEssence, DAILY_ESSENCE_LIMIT, THEMES } from '../utils/gamification'
+import { addEssence, DAILY_ESSENCE_LIMIT, THEMES, MYSTIC_TITLES, canUnlockMysticTitle, unlockMysticTitle, getEssenceGained } from '../utils/gamification'
 import './Dashboard.css'
 
 // Decorações mescladas de todos os temas no header
@@ -332,18 +332,21 @@ function Dashboard({ user, onLogout, initialGroupId }) {
       // Marca este marco como processado ANTES de processar (evita reprocessar)
       processedMilestonesRef.current.add(currentMilestone)
       
-      // Adiciona o bônus de essências ao usuário
+      // Adiciona o bônus de essências ao usuário (limite diário interno)
       const updatedUser = addEssence(currentUser, bonusAmount)
-      
+      // FIX QA: só notifica se houve ganho real (limite diário pode ter bloqueado)
+      const gained = getEssenceGained(currentUser, updatedUser)
+
       // Atualiza o usuário de forma assíncrona para evitar conflitos
       setTimeout(() => {
         updateProfile(updatedUser.id, updatedUser)
         setCurrentUser(updatedUser)
-        
-        // Notifica sobre o bônus usando o sistema padrão de notificações
-        setTimeout(() => {
-          notifyEssenceGained(bonusAmount, `🌟 Bônus por alcançar ${milestoneEssence} Essências`)
-        }, 300)
+
+        if (gained > 0) {
+          setTimeout(() => {
+            notifyEssenceGained(gained, `🌟 Bônus por alcançar ${milestoneEssence} Essências`)
+          }, 300)
+        }
       }, 100)
     }
     

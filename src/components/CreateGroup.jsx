@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES } from '../utils/gamification'
+import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES, getEssenceGained } from '../utils/gamification'
 import { getPosts, getGroups } from '../utils/storage'
 import { notifyError, notifyAchievement, notifyEssenceGained } from '../utils/notifications'
 import { validateRequiredField, validateSelect, validateTextarea } from '../utils/validation'
@@ -92,12 +92,11 @@ function CreateGroup({ user, onCreateGroup, onUserUpdate }) {
     
     // Adiciona Essência ao usuário baseado no número de grupos criados
     let updatedUser = addEssence(user, essenceAmount)
-    
-    // Notifica sobre essências ganhas
-    if (groupsCreatedCount === 0) {
-      notifyEssenceGained(essenceAmount, 'Criar primeiro grupo')
-    } else {
-      notifyEssenceGained(essenceAmount, 'Criar grupo adicional')
+
+    // FIX QA: só notifica se houve ganho real (não dispara quando limite diário cheio)
+    const gained = getEssenceGained(user, updatedUser)
+    if (gained > 0) {
+      notifyEssenceGained(gained, groupsCreatedCount === 0 ? 'Criar primeiro grupo' : 'Criar grupo adicional')
     }
     
     await updateProfile(user.id, updatedUser)
