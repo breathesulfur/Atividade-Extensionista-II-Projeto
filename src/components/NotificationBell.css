@@ -11,6 +11,12 @@
   padding: 4px 8px;
   border-radius: 8px;
   transition: background 0.2s;
+  /* FIX P1 (#4): touch target mínimo WCAG 2.5.5 (44x44px) */
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .bell-button:hover {
@@ -105,6 +111,20 @@
 
 .notification-item.unread {
   background: #faf5ff;
+}
+
+/* FIX QA: notificação clicável (com post_id ou group_id) ganha hover/focus */
+.notification-item.navigable {
+  cursor: pointer;
+}
+
+.notification-item.navigable:hover {
+  background: #f3edff;
+}
+
+.notification-item.navigable:focus-visible {
+  outline: 2px solid #8B5CF6;
+  outline-offset: -2px;
 }
 
 .notification-item.unread::before {

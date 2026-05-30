@@ -21,7 +21,7 @@ function extractGroupRef(content) {
   }
 }
 
-function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenGroup }) {
+function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenGroup, onOpenProfile }) {
   const [commentText, setCommentText] = useState('')
   const [showComments, setShowComments] = useState(false)
   const [postAuthor, setPostAuthor] = useState(null)
@@ -381,13 +381,20 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
   }
 
   return (
-    <div className="post-card">
+    <div id={`post-${post.id}`} className="post-card">
       <div className="post-header">
-        <div className="post-author">
-          <AvatarFrame 
-            frameId={postAuthor?.activeAvatarFrame && postAuthor?.unlockedAvatarFrames?.includes(postAuthor.activeAvatarFrame) 
-              ? postAuthor.activeAvatarFrame 
-              : null} 
+        {/* FIX P2 (#6): autor (avatar + nome) clicável → abre perfil */}
+        <button
+          type="button"
+          className="post-author post-author-button"
+          onClick={() => onOpenProfile && onOpenProfile(post.userId)}
+          aria-label={`Abrir perfil de ${post.userName}`}
+          title={`Abrir perfil de ${post.userName}`}
+        >
+          <AvatarFrame
+            frameId={postAuthor?.activeAvatarFrame && postAuthor?.unlockedAvatarFrames?.includes(postAuthor.activeAvatarFrame)
+              ? postAuthor.activeAvatarFrame
+              : null}
             size="small"
           >
             <div className="author-avatar">
@@ -405,7 +412,7 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
                   }}
                 />
               ) : null}
-              <span 
+              <span
                 className="avatar-fallback"
                 style={{ display: (postAuthor?.avatar || postAuthor?.picture) ? 'none' : 'flex' }}
               >
@@ -422,7 +429,7 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
               </div>
             )}
           </div>
-        </div>
+        </button>
         <div className="post-header-actions">
           <div className="post-date">{formatDate(post.createdAt)}</div>
           <div className="post-actions-buttons">
@@ -527,10 +534,17 @@ function PostCard({ post, currentUser, onUpdate, onDelete, onUserUpdate, onOpenG
               post.comments.map(comment => (
                 <div key={comment.id} className="comment-item">
                   <div className="comment-header">
-                    <div className="comment-author">
+                    {/* FIX P2 (#6): nome do comentarista é clicável → abre perfil */}
+                    <button
+                      type="button"
+                      className="comment-author comment-author-button"
+                      onClick={() => onOpenProfile && onOpenProfile(comment.userId)}
+                      aria-label={`Abrir perfil de ${comment.userName}`}
+                      title={`Abrir perfil de ${comment.userName}`}
+                    >
                       <strong>{comment.userName}</strong>
                       <span className="comment-pronoun">({comment.userPronoun})</span>
-                    </div>
+                    </button>
                     <div className="comment-actions">
                       <div className="comment-date">{formatDate(comment.createdAt)}{comment.updatedAt && ' (editado)'}</div>
                       {comment.userId === currentUser.id ? (

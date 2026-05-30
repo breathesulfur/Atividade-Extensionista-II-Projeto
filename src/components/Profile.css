@@ -41,6 +41,32 @@
   box-shadow: 0 8px 25px var(--shadow-mystic);
 }
 
+/* FIX P2 (#6): botão "← Voltar" mostrado quando visualizando o perfil de outro usuário */
+.profile-back-button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+  min-height: 44px;
+}
+
+.profile-back-button:hover {
+  background: var(--surface);
+  border-color: var(--mystic-purple);
+  color: var(--mystic-purple);
+}
+
+.profile-back-button:focus-visible {
+  outline: 2px solid var(--mystic-purple);
+  outline-offset: 2px;
+}
+
 .profile-content {
   display: flex;
   flex-direction: column;

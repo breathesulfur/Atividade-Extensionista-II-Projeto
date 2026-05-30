@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import Feed from './Feed'
 import Groups from './Groups'
 import Profile from './Profile'
+import Rewards from './Rewards'
 import Logo from './Logo'
 import Notification from './Notification'
 import LoadingSpinner from './LoadingSpinner'
@@ -9,7 +10,7 @@ import FAQ from './FAQ'
 import Tour from './Tour'
 import NotificationBell from './NotificationBell'
 import FeedbackForm from './FeedbackForm'
-import { updateProfile } from '../lib/db'
+import { updateProfile, getProfile } from '../lib/db'
 import { setNotificationCallback, notifyEssenceGained, notifyAchievement } from '../utils/notifications'
 import { addEssence, DAILY_ESSENCE_LIMIT, THEMES, MYSTIC_TITLES, canUnlockMysticTitle, unlockMysticTitle, getEssenceGained } from '../utils/gamification'
 import './Dashboard.css'
@@ -165,14 +166,69 @@ function Dashboard({ user, onLogout, initialGroupId }) {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
   const [pendingGroupId, setPendingGroupId] = useState(initialGroupId || null)
+  // FIX P2 (#6): estado para abrir perfil de outros usuários (clique no nome/foto)
+  const [viewedProfile, setViewedProfile] = useState(null)
+  const [profileLoading, setProfileLoading] = useState(false)
+  // FIX QA: o tour de boas-vindas agora consulta o campo has_seen_welcome
+  // do perfil (Supabase) como fonte primária. O localStorage continua sendo
+  // usado como cache local pra evitar exibição entre cliques no mesmo
+  // ambiente, mas previews do Vercel (com subdomínios diferentes) e
+  // qualquer relogin agora respeitam o estado persistido no BD.
   const tourSeenKey = `inclusivchat_welcome_seen_${user.id}`
   const [showTour, setShowTour] = useState(() => {
+    // Se o BD já marcou como visto, não mostra
+    if (user.hasSeenWelcome) return false
+    // Caso contrário, respeita o cache local (caso usuário já tenha
+    // fechado nesta sessão mas o salvamento no BD ainda esteja em voo)
     try { return localStorage.getItem(tourSeenKey) !== '1' } catch { return false }
   })
 
   const handleOpenGroup = (groupId) => {
+    setViewedProfile(null)
     setPendingGroupId(groupId)
     setActiveTab('groups')
+  }
+
+  // FIX QA: abrir publicação a partir de uma notificação do sino —
+  // navega para o feed e rola até o post correspondente, destacando-o
+  // brevemente para chamar atenção do usuário.
+  const handleOpenPost = (postId) => {
+    if (!postId) return
+    setViewedProfile(null)
+    setActiveTab('feed')
+    // Aguarda o Feed montar antes de tentar localizar o post no DOM
+    setTimeout(() => {
+      const el = document.getElementById(`post-${postId}`)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        el.classList.add('post-highlight')
+        setTimeout(() => el.classList.remove('post-highlight'), 2200)
+      }
+    }, 250)
+  }
+
+  // FIX P2 (#6): abre o perfil de outro usuário (ou redireciona para o
+  // próprio perfil se for o do próprio currentUser).
+  const handleOpenProfile = async (userId) => {
+    if (!userId) return
+    if (userId === currentUser.id) {
+      setViewedProfile(null)
+      setActiveTab('profile')
+      return
+    }
+    setProfileLoading(true)
+    try {
+      const profile = await getProfile(userId)
+      if (profile) setViewedProfile(profile)
+    } finally {
+      setProfileLoading(false)
+    }
+  }
+
+  // Trocar de aba sempre fecha qualquer perfil de outro usuário aberto
+  const handleTabChange = (tab) => {
+    setViewedProfile(null)
+    setActiveTab(tab)
   }
   const previousEssenceRef = useRef(user.essence || user.points || 0)
   const processedMilestonesRef = useRef(new Set([Math.floor((user.essence || user.points || 0) / 50)]))
@@ -298,31 +354,13 @@ function Dashboard({ user, onLogout, initialGroupId }) {
     previousEssenceRef.current = currentEssence
   }, [currentUser.essence, currentUser.points])
 
-  // Verifica e concede títulos místicos automaticamente quando essências totais aumentam
-  useEffect(() => {
-    const newTitles = Object.values(MYSTIC_TITLES).filter(title =>
-      canUnlockMysticTitle(currentUser, title.id)
-    )
-    if (newTitles.length === 0) return
-
-    let updatedUser = currentUser
-    newTitles.forEach(title => {
-      updatedUser = unlockMysticTitle(updatedUser, title.id)
-    })
-
-    updateProfile(updatedUser.id, updatedUser)
-    setCurrentUser(updatedUser)
-
-    newTitles.forEach((title, index) => {
-      setTimeout(() => {
-        notifyAchievement(
-          `${title.icon} Título desbloqueado: ${title.name}`,
-          title.description,
-          6000
-        )
-      }, 300 + index * 600)
-    })
-  }, [currentUser.essencias_disponiveis])
+  // FIX QA: removida a lógica de auto-unlock de títulos por threshold de
+  // essências. Segundo o FAQ ("Os Títulos são desbloqueados ao longo do
+  // tempo, a partir da combinação de diferentes ações positivas"), eles
+  // são RECOMPENSAS POR COMPORTAMENTO, não compras automáticas. Os títulos
+  // permanecem bloqueados até serem liberados por um mecanismo futuro
+  // (badges, ações cumulativas, etc.). A função unlockMysticTitle segue
+  // disponível para a liberação manual quando o mecanismo for implementado.
 
   // Abre o modal de confirmação de logout
   const handleLogoutClick = () => {
@@ -375,7 +413,15 @@ function Dashboard({ user, onLogout, initialGroupId }) {
           user={currentUser}
           onClose={() => {
             setShowTour(false)
+            // Cache local imediato (UX rápida)
             try { localStorage.setItem(tourSeenKey, '1') } catch {}
+            // FIX QA: persiste no BD pra que o tour não reapareça em
+            // previews diferentes ou após relogin
+            const updatedUser = { ...currentUser, hasSeenWelcome: true }
+            setCurrentUser(updatedUser)
+            updateProfile(currentUser.id, updatedUser).catch(err => {
+              console.error('Erro ao salvar hasSeenWelcome:', err)
+            })
           }}
         />
       )}
@@ -409,11 +455,26 @@ function Dashboard({ user, onLogout, initialGroupId }) {
       <header className="dashboard-header">
         <HeaderDecorations />
         <div className="header-content">
-          <Logo size="medium" showText={true} variant="light" />
+          <Logo
+            size="medium"
+            showText={true}
+            variant="light"
+            onClick={() => setActiveTab('feed')}
+            ariaLabel="InclusivChat — voltar ao feed"
+          />
           <div className="header-right">
             <div className="user-info">
               <div className="user-name-container">
-                <span className="user-name">{currentUser.name}</span>
+                {/* FIX P2 (#6): clique no nome próprio abre o perfil */}
+                <button
+                  type="button"
+                  className="user-name user-name-button"
+                  onClick={() => handleTabChange('profile')}
+                  aria-label="Abrir meu perfil"
+                  title="Abrir meu perfil"
+                >
+                  {currentUser.name}
+                </button>
                 <span className="user-pronoun">({currentUser.pronoun})</span>
                 {/* Barra compacta de progresso diário */}
                 <DailyEssenceProgressBar user={currentUser} />
@@ -422,14 +483,19 @@ function Dashboard({ user, onLogout, initialGroupId }) {
                 🔮 {currentUser.essence || currentUser.points || 0} Essências
               </div>
             </div>
-            <NotificationBell user={currentUser} />
+            <NotificationBell
+              user={currentUser}
+              onOpenPost={handleOpenPost}
+              onOpenGroup={handleOpenGroup}
+            />
             <button
               onClick={() => setShowFeedback(true)}
               className="faq-button-header"
               aria-label="Enviar Feedback"
               title="Enviar Feedback"
             >
-              💜 Feedback
+              <span aria-hidden="true">💜</span>
+              <span className="btn-label-text">Feedback</span>
             </button>
             <button
               onClick={() => setShowFAQ(true)}
@@ -437,7 +503,8 @@ function Dashboard({ user, onLogout, initialGroupId }) {
               aria-label="Abrir FAQ"
               title="Perguntas Frequentes"
             >
-              ❓ FAQ
+              <span aria-hidden="true">❓</span>
+              <span className="btn-label-text">FAQ</span>
             </button>
             <button
               onClick={handleLogoutClick}
@@ -460,23 +527,31 @@ function Dashboard({ user, onLogout, initialGroupId }) {
       {/* Navegação */}
       <nav className="dashboard-nav">
         <button
-          className={`nav-button ${activeTab === 'feed' ? 'active' : ''}`}
-          onClick={() => setActiveTab('feed')}
-          aria-pressed={activeTab === 'feed'}
+          className={`nav-button ${activeTab === 'feed' && !viewedProfile ? 'active' : ''}`}
+          onClick={() => handleTabChange('feed')}
+          aria-pressed={activeTab === 'feed' && !viewedProfile}
         >
           <span>📰</span> Feed
         </button>
         <button
-          className={`nav-button ${activeTab === 'groups' ? 'active' : ''}`}
-          onClick={() => setActiveTab('groups')}
-          aria-pressed={activeTab === 'groups'}
+          className={`nav-button ${activeTab === 'groups' && !viewedProfile ? 'active' : ''}`}
+          onClick={() => handleTabChange('groups')}
+          aria-pressed={activeTab === 'groups' && !viewedProfile}
         >
           <span>🎯</span> Grupos
         </button>
+        {/* FIX P2 (#9): aba dedicada de Recompensas, antes acessível apenas via Editar Perfil */}
         <button
-          className={`nav-button ${activeTab === 'profile' ? 'active' : ''}`}
-          onClick={() => setActiveTab('profile')}
-          aria-pressed={activeTab === 'profile'}
+          className={`nav-button ${activeTab === 'rewards' ? 'active' : ''}`}
+          onClick={() => setActiveTab('rewards')}
+          aria-pressed={activeTab === 'rewards'}
+        >
+          <span>🎁</span> Recompensas
+        </button>
+        <button
+          className={`nav-button ${activeTab === 'profile' && !viewedProfile ? 'active' : ''}`}
+          onClick={() => handleTabChange('profile')}
+          aria-pressed={activeTab === 'profile' && !viewedProfile}
         >
           <span>🙋</span> Perfil
         </button>
@@ -484,20 +559,43 @@ function Dashboard({ user, onLogout, initialGroupId }) {
 
       {/* Conteúdo */}
              <main className={`dashboard-content ${currentUser.activeTheme ? `theme-${currentUser.activeTheme}` : ''}`}>
-               {activeTab === 'feed' && (
-                 <Feed user={currentUser} onUserUpdate={setCurrentUser} onOpenGroup={handleOpenGroup} />
-               )}
-               {activeTab === 'groups' && (
-                 <Groups
-                   user={currentUser}
-                   onUserUpdate={setCurrentUser}
-                   targetGroupId={pendingGroupId}
-                   onGroupOpened={() => setPendingGroupId(null)}
+               {profileLoading ? (
+                 <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--spacing-xl)' }}>
+                   <LoadingSpinner size="large" text="Carregando perfil..." />
+                 </div>
+               ) : viewedProfile ? (
+                 <Profile
+                   user={viewedProfile}
+                   isOwnProfile={false}
+                   onBack={() => setViewedProfile(null)}
                  />
-               )}
-               {activeTab === 'profile' && (
-                 <Profile user={currentUser} onUserUpdate={setCurrentUser} />
-               )}
+                 ) : (
+                   <>
+                     {activeTab === 'feed' && (
+                       <Feed
+                         user={currentUser}
+                         onUserUpdate={setCurrentUser}
+                         onOpenGroup={handleOpenGroup}
+                         onOpenProfile={handleOpenProfile}
+                       />
+                     )}
+                     {activeTab === 'groups' && (
+                       <Groups
+                         user={currentUser}
+                         onUserUpdate={setCurrentUser}
+                         targetGroupId={pendingGroupId}
+                         onGroupOpened={() => setPendingGroupId(null)}
+                         onOpenProfile={handleOpenProfile}
+                       />
+                     )}
+                     {activeTab === 'rewards' && (
+                       <Rewards user={currentUser} onUserUpdate={setCurrentUser} />
+                     )}
+                     {activeTab === 'profile' && (
+                       <Profile user={currentUser} onUserUpdate={setCurrentUser} />
+                     )}
+                   </>
+                 )}
              </main>
 
       {/* Footer com créditos */}

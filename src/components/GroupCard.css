@@ -67,6 +67,29 @@
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
+/* FIX P2 (#7): badge de membros é clicável → abre modal de listagem */
+.chat-members-button {
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chat-members-button:hover {
+  background: rgba(255, 255, 255, 0.32);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.chat-members-button:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
 .chat-description {
   padding: var(--spacing-md) var(--spacing-lg);
   background: var(--background);
@@ -115,6 +138,36 @@
   align-items: center;
   gap: var(--spacing-xs);
   font-size: 0.9rem;
+}
+
+/* FIX P2 (#6): nome do autor da mensagem no chat é clicável → abre perfil */
+.message-author-button {
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  transition: background 0.18s ease;
+}
+
+.message-author-button:hover {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.message-author-button:hover strong {
+  text-decoration: underline;
+}
+
+.message-author-button:focus-visible {
+  outline: 2px solid var(--mystic-purple);
+  outline-offset: 2px;
 }
 
 .message-header strong {

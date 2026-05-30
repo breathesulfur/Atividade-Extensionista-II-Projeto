@@ -6,9 +6,8 @@ import { addEssence, ESSENCE, checkBadges, BADGES, THEMES, applyTheme, getEssenc
 import { getPosts, getGroups } from '../utils/storage'
 import { updateProfile } from '../lib/db'
 import { validateRequiredField, validateEmail, validateSelect, validatePassword, validateConfirmPassword } from '../utils/validation'
-import ThemeSelector from './ThemeSelector'
-import AvatarFrameSelector from './AvatarFrameSelector'
-import MysticTitleSelector from './MysticTitleSelector'
+/* FIX P2 (#9): seletores cosméticos foram movidos para Rewards.jsx
+   (aba dedicada no Dashboard). Imports não são mais necessários aqui. */
 import './EditProfile.css'
 
 // Componente AccordionSection movido para fora para evitar recriação
@@ -245,7 +244,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
   // Preserva a posição de scroll ao abrir abas específicas
   const toggleSection = useCallback((sectionId) => {
     // Abas que devem preservar o scroll ao abrir
-    const tabsToPreserveScroll = ['social-media', 'platforms', 'rewards']
+    const tabsToPreserveScroll = ['social-media', 'platforms']
     
     // Se está abrindo uma das abas especificadas, salva a posição de scroll
     const isOpening = openSection !== sectionId
@@ -264,7 +263,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
   // Efeito para restaurar a posição de scroll após abertura de abas específicas
   useEffect(() => {
     // Abas que devem preservar o scroll
-    const tabsToPreserveScroll = ['social-media', 'platforms', 'rewards']
+    const tabsToPreserveScroll = ['social-media', 'platforms']
     
     // Verifica se uma das abas foi aberta e há uma posição de scroll salva
     if (isRestoringScrollRef.current && scrollPositionRef.current !== null && tabsToPreserveScroll.includes(openSection)) {
@@ -640,73 +639,9 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
     onCancel()
   }
 
-  // Handlers para recompensas (temas, molduras, títulos)
-  // Atualizam apenas o estado local currentUser, não dependem da prop user
-  const handleThemeSelect = async (themeId, updatedUser) => {
-    if (!updatedUser) return
-    
-    // Se themeId for null, remove o tema ativo (retorna ao padrão)
-    let userWithTheme
-    if (themeId === null || themeId === undefined) {
-      userWithTheme = {
-        ...updatedUser,
-        activeTheme: null
-      }
-    } else {
-      // Aplica o tema ao usuário atualizado
-      userWithTheme = applyTheme(updatedUser, themeId)
-    }
-    
-    setCurrentUser(userWithTheme)
-
-    // Propaga preview para o Dashboard (para que o fundo do app também mude)
-    if (typeof onUserUpdate === 'function') {
-      onUserUpdate(userWithTheme)
-    }
-
-    try {
-      const snapshot = userSnapshotRef.current || {}
-      await updateProfile(snapshot.id, userWithTheme)
-    } catch (error) {
-      console.error('Erro ao salvar tema:', error)
-    }
-  }
-
-  const handleFrameSelect = async (frameId, updatedUser) => {
-    if (!updatedUser) return
-
-    setCurrentUser(updatedUser)
-
-    // Propaga preview para o Dashboard (moldura visível imediatamente)
-    if (typeof onUserUpdate === 'function') {
-      onUserUpdate(updatedUser)
-    }
-
-    try {
-      const snapshot = userSnapshotRef.current || {}
-      await updateProfile(snapshot.id, updatedUser)
-    } catch (error) {
-      console.error('Erro ao salvar moldura:', error)
-    }
-  }
-
-  const handleTitleSelect = async (titleId, updatedUser) => {
-    if (!updatedUser) return
-
-    setCurrentUser(updatedUser)
-
-    // Propaga preview para o Dashboard (título visível imediatamente)
-    if (typeof onUserUpdate === 'function') {
-      onUserUpdate(updatedUser)
-    }
-
-    try {
-      const snapshot = userSnapshotRef.current || {}
-      await updateProfile(snapshot.id, updatedUser)
-    } catch (error) {
-      console.error('Erro ao salvar título:', error)
-    }
-  }
+  /* FIX P2 (#9): handlers handleThemeSelect / handleFrameSelect /
+     handleTitleSelect foram movidos para Rewards.jsx (aba dedicada).
+     Esta tela agora trata apenas dos dados editáveis do perfil. */
 
   // Se não há snapshot ainda, mostra loading mas mantém o componente montado
   if (!userSnapshotRef.current) {
@@ -1310,33 +1245,9 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
           </div>
         </AccordionSection>
 
-        {/* Recompensas */}
-        <AccordionSection 
-          id="rewards" 
-          icon="🎨" 
-          title="Recompensas"
-          isOpen={openSection === 'rewards'}
-          onToggle={toggleSection}
-        >
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: 'var(--spacing-md)' }}>
-            Personalize seu perfil com temas, molduras e títulos desbloqueados com Essências
-          </p>
-          
-          <ThemeSelector 
-            user={currentUser || userSnapshotRef.current || {}} 
-            onThemeSelect={handleThemeSelect}
-          />
-          
-          <AvatarFrameSelector 
-            user={currentUser || userSnapshotRef.current || {}} 
-            onFrameSelect={handleFrameSelect}
-          />
-          
-          <MysticTitleSelector 
-            user={currentUser || userSnapshotRef.current || {}} 
-            onTitleSelect={handleTitleSelect}
-          />
-        </AccordionSection>
+        {/* FIX P2 (#9): seção de Recompensas movida para uma aba dedicada no Dashboard
+            (Rewards.jsx). O accordion antigo aqui foi removido para evitar dois
+            pontos de entrada com a mesma funcionalidade. */}
       </form>
 
       {/* Botões de Ação - Sticky */}

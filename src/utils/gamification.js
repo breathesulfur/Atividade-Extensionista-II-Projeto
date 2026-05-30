@@ -223,31 +223,31 @@ export const addEssence = (user, essence) => {
     return {
       ...user,
       essencias_totais: essenciasTotais + essence,
-      essencia: essenciasDisponiveis, // Mantém compatibilidade
-      points: essenciasDisponiveis // Mantém compatibilidade
+      essence: essenciasDisponiveis,   // Campo persistido no BD (precisa ser sempre sincronizado)
+      points: essenciasDisponiveis,    // Mantém compatibilidade legada
     }
   }
-  
+
   // Calcula quanto pode ser adicionado hoje
   const remainingDaily = DAILY_ESSENCE_LIMIT - todayEssence
   const essenceToAdd = Math.min(essence, remainingDaily)
-  
+
   // Atualiza contadores
   const newEssenciasTotais = essenciasTotais + essence // Sempre incrementa total
   const newEssenciasDisponiveis = essenciasDisponiveis + essenceToAdd // Incrementa disponível apenas dentro do limite
-  
+
   // Atualiza registro diário
   const updatedDailyEssence = {
     ...dailyEssence,
     [today]: todayEssence + essenceToAdd
   }
-  
+
   return {
     ...user,
     essencias_totais: newEssenciasTotais,
     essencias_disponiveis: newEssenciasDisponiveis,
-    essencia: newEssenciasDisponiveis, // Mantém compatibilidade (usa disponível)
-    points: newEssenciasDisponiveis, // Mantém compatibilidade
+    essence: newEssenciasDisponiveis, // FIX P0: campo persistido no BD (antes era "essencia" com typo, nunca atualizava "essence")
+    points: newEssenciasDisponiveis,  // Mantém compatibilidade legada
     dailyEssence: updatedDailyEssence
   }
 }
@@ -357,13 +357,13 @@ export const subtractEssence = (user, essence) => {
   const essenciasTotais = user.essencias_totais ?? essenciasDisponiveis
   
   const newEssenciasDisponiveis = Math.max(0, essenciasDisponiveis - essence) // Não permite valores negativos
-  
+
   return {
     ...user,
     essencias_totais: essenciasTotais, // Total nunca diminui
     essencias_disponiveis: newEssenciasDisponiveis,
-    essencia: newEssenciasDisponiveis, // Mantém compatibilidade (usa disponível)
-    points: newEssenciasDisponiveis // Mantém compatibilidade
+    essence: newEssenciasDisponiveis, // FIX P0: precisa atualizar o campo persistido no BD
+    points: newEssenciasDisponiveis,  // Mantém compatibilidade legada
   }
 }
 
@@ -717,27 +717,44 @@ export const unlockAvatarFrame = (user, frameId) => {
 }
 
 /**
- * Verifica se o usuário pode desbloquear um título místico (baseado em essencias_disponiveis)
- * Títulos consomem Essências disponíveis para desbloqueio
+ * Verifica se o usuário pode desbloquear um título místico.
+ *
+ * FIX QA: removido o critério de threshold de essências. Conforme o FAQ
+ * ("Títulos são desbloqueados ao longo do tempo, a partir da combinação
+ * de diferentes ações positivas"), títulos são RECOMPENSAS POR
+ * COMPORTAMENTO, não compras automáticas. Esta função agora retorna
+ * sempre false — títulos permanecem bloqueados até serem liberados via
+ * um mecanismo futuro (ações cumulativas, badges combinadas, decisão
+ * manual etc.). Permanece exportada para preservar o contrato com o
+ * MysticTitleSelector, que mostrará todos os títulos como bloqueados
+ * (overlay 🔒).
  */
 export const canUnlockMysticTitle = (user, titleId) => {
   const title = Object.values(MYSTIC_TITLES).find(t => t.id === titleId)
   if (!title) return false
 
-  // Usa essencias_disponiveis para verificar desbloqueio de títulos
-  const essenciasDisponiveis = user.essencias_disponiveis ?? (user.essence || user.points || 0)
+  // Mantém a guarda contra "desbloquear de novo" caso a função seja
+  // chamada por engano em um título já desbloqueado.
   const unlockedTitles = user.unlockedMysticTitles || []
-
-  // Se já está desbloqueado, não pode desbloquear novamente
   if (unlockedTitles.includes(titleId)) return false
 
-  // Verifica se tem essências disponíveis suficientes
-  return essenciasDisponiveis >= title.requiredEssence
+  // Sem critério automático no momento — sempre bloqueado.
+  return false
 }
 
 /**
- * Desbloqueia um título místico
- * Títulos consomem Essências disponíveis ao desbloquear
+ * Desbloqueia um título místico.
+ *
+ * FIX bug pós-QA: títulos eram desbloqueados automaticamente pelo
+ * useEffect do Dashboard quando o usuário atingia o threshold de essências
+ * E o unlockMysticTitle CONSUMIA o saldo inteiro via subtractEssence,
+ * zerando as essências do usuário sem qualquer pedido de confirmação.
+ *
+ * Novo design: títulos são *recompensas* (marcos de progresso), não
+ * compras. O requiredEssence funciona apenas como gatilho de liberação;
+ * o saldo NÃO é consumido. Compras explícitas (temas e molduras de
+ * avatar) continuam usando subtractEssence em seus próprios fluxos
+ * via "Aplicar" no Recompensas.
  */
 export const unlockMysticTitle = (user, titleId) => {
   const unlockedTitles = user.unlockedMysticTitles || []
@@ -745,11 +762,9 @@ export const unlockMysticTitle = (user, titleId) => {
     const title = Object.values(MYSTIC_TITLES).find(t => t.id === titleId)
     if (!title) return user
 
-    // Consome essências disponíveis ao desbloquear título
-    let updatedUser = subtractEssence(user, title.requiredEssence)
-
+    // NÃO consome mais essências — título é recompensa pelo marco atingido.
     return {
-      ...updatedUser,
+      ...user,
       unlockedMysticTitles: [...unlockedTitles, titleId]
     }
   }

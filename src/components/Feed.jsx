@@ -4,7 +4,7 @@ import CreatePost from './CreatePost'
 import { fetchPosts, createPost, deletePost, subscribeToPosts } from '../lib/db'
 import './Feed.css'
 
-function Feed({ user, onUserUpdate, onOpenGroup }) {
+function Feed({ user, onUserUpdate, onOpenGroup, onOpenProfile }) {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [showCreatePost, setShowCreatePost] = useState(false)
@@ -77,6 +77,7 @@ function Feed({ user, onUserUpdate, onOpenGroup }) {
               onDelete={handleDeletePost}
               onUserUpdate={onUserUpdate}
               onOpenGroup={onOpenGroup}
+              onOpenProfile={onOpenProfile}
             />
           ))
         )}
