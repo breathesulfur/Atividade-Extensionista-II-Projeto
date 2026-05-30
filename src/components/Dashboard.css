@@ -1113,7 +1113,8 @@
 .theme-serene_moon .create-group-button,
 .theme-serene_moon .send-button,
 .theme-serene_moon .create-post-button,
-.theme-serene_moon .comment-submit {
+.theme-serene_moon .comment-submit,
+.theme-serene_moon .submit-button {
   background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
               linear-gradient(135deg, #C8A000 0%, #E8C030 100%) !important;
   color: white !important;
@@ -1125,7 +1126,8 @@
 .theme-serene_moon .create-group-button:hover,
 .theme-serene_moon .send-button:hover:not(:disabled),
 .theme-serene_moon .create-post-button:hover,
-.theme-serene_moon .comment-submit:hover {
+.theme-serene_moon .comment-submit:hover,
+.theme-serene_moon .submit-button:hover:not(:disabled) {
   box-shadow: 0 4px 18px rgba(200, 160, 0, 0.55) !important;
   transform: translateY(-1px);
 }
@@ -1173,7 +1175,8 @@
 .theme-pink_aura .create-group-button,
 .theme-pink_aura .send-button,
 .theme-pink_aura .create-post-button,
-.theme-pink_aura .comment-submit {
+.theme-pink_aura .comment-submit,
+.theme-pink_aura .submit-button {
   background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
               linear-gradient(135deg, #2A6040 0%, #3E8058 100%) !important;
   color: white !important;
@@ -1185,7 +1188,8 @@
 .theme-pink_aura .create-group-button:hover,
 .theme-pink_aura .send-button:hover:not(:disabled),
 .theme-pink_aura .create-post-button:hover,
-.theme-pink_aura .comment-submit:hover {
+.theme-pink_aura .comment-submit:hover,
+.theme-pink_aura .submit-button:hover:not(:disabled) {
   box-shadow: 0 4px 18px rgba(42, 96, 64, 0.55) !important;
   transform: translateY(-1px);
 }
@@ -1233,7 +1237,8 @@
 .theme-soft_sky .create-group-button,
 .theme-soft_sky .send-button,
 .theme-soft_sky .create-post-button,
-.theme-soft_sky .comment-submit {
+.theme-soft_sky .comment-submit,
+.theme-soft_sky .submit-button {
   background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
               linear-gradient(135deg, #4090B8 0%, #68B8D8 100%) !important;
   color: white !important;
@@ -1245,7 +1250,8 @@
 .theme-soft_sky .create-group-button:hover,
 .theme-soft_sky .send-button:hover:not(:disabled),
 .theme-soft_sky .create-post-button:hover,
-.theme-soft_sky .comment-submit:hover {
+.theme-soft_sky .comment-submit:hover,
+.theme-soft_sky .submit-button:hover:not(:disabled) {
   box-shadow: 0 4px 18px rgba(64, 144, 184, 0.55) !important;
   transform: translateY(-1px);
 }
@@ -1293,7 +1299,8 @@
 .theme-pink_mist .create-group-button,
 .theme-pink_mist .send-button,
 .theme-pink_mist .create-post-button,
-.theme-pink_mist .comment-submit {
+.theme-pink_mist .comment-submit,
+.theme-pink_mist .submit-button {
   background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
               linear-gradient(135deg, #B01830 0%, #D83050 100%) !important;
   color: white !important;
@@ -1305,7 +1312,8 @@
 .theme-pink_mist .create-group-button:hover,
 .theme-pink_mist .send-button:hover:not(:disabled),
 .theme-pink_mist .create-post-button:hover,
-.theme-pink_mist .comment-submit:hover {
+.theme-pink_mist .comment-submit:hover,
+.theme-pink_mist .submit-button:hover:not(:disabled) {
   box-shadow: 0 4px 18px rgba(176, 24, 48, 0.55) !important;
   transform: translateY(-1px);
 }
@@ -1353,7 +1361,8 @@
 .theme-lilac_dawn .create-group-button,
 .theme-lilac_dawn .send-button,
 .theme-lilac_dawn .create-post-button,
-.theme-lilac_dawn .comment-submit {
+.theme-lilac_dawn .comment-submit,
+.theme-lilac_dawn .submit-button {
   background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
               linear-gradient(135deg, #7060C0 0%, #9080E0 100%) !important;
   color: white !important;
@@ -1365,7 +1374,8 @@
 .theme-lilac_dawn .create-group-button:hover,
 .theme-lilac_dawn .send-button:hover:not(:disabled),
 .theme-lilac_dawn .create-post-button:hover,
-.theme-lilac_dawn .comment-submit:hover {
+.theme-lilac_dawn .comment-submit:hover,
+.theme-lilac_dawn .submit-button:hover:not(:disabled) {
   box-shadow: 0 4px 18px rgba(112, 96, 192, 0.55) !important;
   transform: translateY(-1px);
 }
@@ -1413,7 +1423,8 @@
 .theme-petal .create-group-button,
 .theme-petal .send-button,
 .theme-petal .create-post-button,
-.theme-petal .comment-submit {
+.theme-petal .comment-submit,
+.theme-petal .submit-button {
   background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 55%),
               linear-gradient(135deg, #D04878 0%, #F068A0 100%) !important;
   color: white !important;
@@ -1425,7 +1436,8 @@
 .theme-petal .create-group-button:hover,
 .theme-petal .send-button:hover:not(:disabled),
 .theme-petal .create-post-button:hover,
-.theme-petal .comment-submit:hover {
+.theme-petal .comment-submit:hover,
+.theme-petal .submit-button:hover:not(:disabled) {
   box-shadow: 0 4px 18px rgba(208, 72, 120, 0.55) !important;
   transform: translateY(-1px);
 }
