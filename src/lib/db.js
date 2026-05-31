@@ -176,11 +176,20 @@ const POST_SELECT = `
   comments (id, user_id, content, created_at, updated_at, profiles:user_id (name, pronoun))
 `
 
+// FIX QA: limita o feed aos 50 posts mais recentes. Sem o limit, a query
+// com todos os joins (profiles, likes, reactions, comments + perfil de cada
+// comment) carregava TODOS os posts do banco a cada login E a cada
+// reação/comentário de qualquer usuário (via realtime), causando lentidão
+// crescente conforme o banco cresce. 50 é o suficiente pra preencher
+// várias telas de scroll; carregar mais é um follow-up de paginação real.
+const FEED_PAGE_SIZE = 50
+
 export const fetchPosts = async () => {
   const { data, error } = await supabase
     .from('posts')
     .select(POST_SELECT)
     .order('created_at', { ascending: false })
+    .limit(FEED_PAGE_SIZE)
 
   if (error) { console.error('Erro ao buscar posts:', error); return [] }
   return (data || []).map(mapPost)
@@ -273,13 +282,27 @@ export const deleteComment = async (commentId) => {
 }
 
 // Realtime: feed
+// FIX QA: aplica debounce de 600ms no callback de refresh — antes, cada
+// reação/comentário/curtida de QUALQUER usuário disparava um refetch
+// completo (com todos os joins), saturando o cliente em momentos de
+// atividade. Agora múltiplos eventos em sequência colapsam num único
+// refetch.
+const debounce = (fn, ms) => {
+  let timeout
+  return (...args) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => fn(...args), ms)
+  }
+}
+
 export const subscribeToPosts = (onRefresh) => {
+  const debouncedRefresh = debounce(onRefresh, 600)
   const channel = supabase
     .channel('public:posts-feed')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, onRefresh)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'post_likes' }, onRefresh)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'post_reactions' }, onRefresh)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'comments' }, onRefresh)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, debouncedRefresh)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'post_likes' }, debouncedRefresh)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'post_reactions' }, debouncedRefresh)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'comments' }, debouncedRefresh)
     .subscribe()
 
   return () => supabase.removeChannel(channel)
