@@ -9,16 +9,22 @@ function MysticTitleSelector({ user, onTitleSelect }) {
 
   const handleTitleSelect = (titleId) => {
     if (unlockedTitles.includes(titleId)) {
-      // Título já desbloqueado, apenas aplica
+      // Título já desbloqueado, apenas aplica.
+      // FIX: grava nos DOIS campos. Componentes (Profile, este selector)
+      // leem activeMysticTitle, mas o toDbProfile em db.js persiste a
+      // partir de activeTitle. Sem o alias, a seleção do título ativo
+      // ficava só em memória e se perdia no próximo refresh.
       const updatedUser = {
         ...user,
-        activeMysticTitle: titleId
+        activeMysticTitle: titleId,
+        activeTitle: titleId
       }
       onTitleSelect(titleId, updatedUser)
     } else if (canUnlockMysticTitle(user, titleId)) {
       // Pode desbloquear, então desbloqueia primeiro e depois aplica
       const updatedUser = unlockMysticTitle(user, titleId)
       updatedUser.activeMysticTitle = titleId
+      updatedUser.activeTitle = titleId
       onTitleSelect(titleId, updatedUser)
     }
   }

@@ -38,6 +38,10 @@ const mapProfile = (row, email) => ({
   activeTheme: row.active_theme || null,
   activeAvatarFrame: row.active_avatar_frame || null,
   activeTitle: row.active_title || null,
+  // Alias para componentes (Profile, MysticTitleSelector) que leem
+  // activeMysticTitle. Sem isso, após refresh o título ativo persistido
+  // não aparece selecionado na UI.
+  activeMysticTitle: row.active_title || null,
   dailyEssence: row.daily_essence || {},
   hasSeenWelcome: row.has_seen_welcome || false,
   createdAt: row.created_at,
