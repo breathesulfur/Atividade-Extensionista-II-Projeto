@@ -35,6 +35,10 @@ const mapProfile = (row, email) => ({
   unlockedThemes: row.unlocked_themes || [],
   unlockedAvatarFrames: row.unlocked_avatar_frames || [],
   unlockedTitles: row.unlocked_titles || [],
+  // Alias para componentes que esperam unlockedMysticTitles (MysticTitleSelector,
+  // Profile, gamification.canUnlockMysticTitle). Sem isso, após refresh os
+  // títulos persistidos aparecem como bloqueados na UI.
+  unlockedMysticTitles: row.unlocked_titles || [],
   activeTheme: row.active_theme || null,
   activeAvatarFrame: row.active_avatar_frame || null,
   activeTitle: row.active_title || null,

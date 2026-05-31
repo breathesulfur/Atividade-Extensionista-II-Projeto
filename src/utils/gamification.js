@@ -719,27 +719,72 @@ export const unlockAvatarFrame = (user, frameId) => {
 /**
  * Verifica se o usuário pode desbloquear um título místico.
  *
- * FIX QA: removido o critério de threshold de essências. Conforme o FAQ
- * ("Títulos são desbloqueados ao longo do tempo, a partir da combinação
- * de diferentes ações positivas"), títulos são RECOMPENSAS POR
- * COMPORTAMENTO, não compras automáticas. Esta função agora retorna
- * sempre false — títulos permanecem bloqueados até serem liberados via
- * um mecanismo futuro (ações cumulativas, badges combinadas, decisão
- * manual etc.). Permanece exportada para preservar o contrato com o
- * MysticTitleSelector, que mostrará todos os títulos como bloqueados
- * (overlay 🔒).
+ * Conforme o FAQ ("Títulos são desbloqueados ao longo do tempo, a partir
+ * da combinação de diferentes ações positivas"), títulos são RECOMPENSAS
+ * POR COMPORTAMENTO. Cada título tem critérios específicos que combinam:
+ *   - threshold de essência (gatilho de marco, NÃO é custo)
+ *   - selos (badges) que comprovam ações positivas
+ *   - participação em grupos
+ *
+ * O saldo NÃO é consumido ao desbloquear (ver unlockMysticTitle).
+ *
+ * Critérios v1 (definidos com base nas descrições de cada título e nos
+ * dados já disponíveis no objeto user em memória):
+ *   - serene_walker      → 1º post + 1º comentário (interações recorrentes)
+ *   - welcoming_guardian → perfil completo + 1º comentário (acolhimento)
+ *   - connection_weaver  → entrou em grupo + ≥2 grupos participados
+ *   - gentle_soul        → postou + comentou + entrou em grupo
+ *   - wise_mentor        → ≥4 selos diferentes (variedade de ações)
+ *   - heart_guardian     → criou grupo + todos os 6 selos
  */
 export const canUnlockMysticTitle = (user, titleId) => {
   const title = Object.values(MYSTIC_TITLES).find(t => t.id === titleId)
   if (!title) return false
 
-  // Mantém a guarda contra "desbloquear de novo" caso a função seja
-  // chamada por engano em um título já desbloqueado.
-  const unlockedTitles = user.unlockedMysticTitles || []
+  // Guarda contra "desbloquear de novo" se a função for chamada em um
+  // título já desbloqueado. Considera ambos os campos por compatibilidade
+  // com componentes que usam unlockedMysticTitles (in-memory) e o mapper
+  // do db.js que persiste como unlockedTitles.
+  const unlockedTitles = user.unlockedMysticTitles || user.unlockedTitles || []
   if (unlockedTitles.includes(titleId)) return false
 
-  // Sem critério automático no momento — sempre bloqueado.
-  return false
+  // Gatilho de essência (não é custo — não consumido pelo unlockMysticTitle).
+  const essence = user.essencias_disponiveis ?? user.essence ?? user.points ?? 0
+  if (essence < title.requiredEssence) return false
+
+  // Pré-requisitos comportamentais por título.
+  const badges = user.badges || []
+  const has = (badgeId) => badges.includes(badgeId)
+  const joinedGroupsCount = (user.joinedGroups || []).length
+
+  switch (titleId) {
+    case 'serene_walker':
+      // Interações respeitosas recorrentes: postou ao menos 1x e comentou 1x.
+      return has('gentle_voice') && has('support_aura')
+
+    case 'welcoming_guardian':
+      // Completar perfil e apoiar comunidade: perfil completo + comentário.
+      return has('revealed_essence') && has('support_aura')
+
+    case 'connection_weaver':
+      // Participação ativa em grupos inclusivos: entrou e está em ≥2 grupos.
+      return has('belonging_circle') && joinedGroupsCount >= 2
+
+    case 'gentle_soul':
+      // Espalhando gentileza: postou + comentou + entrou em grupo.
+      return has('gentle_voice') && has('support_aura') && has('belonging_circle')
+
+    case 'wise_mentor':
+      // Compartilhando sabedoria e apoio: variedade — ≥4 selos diferentes.
+      return badges.length >= 4
+
+    case 'heart_guardian':
+      // Protegendo e acolhendo a comunidade: criou grupo + todos os 6 selos.
+      return has('space_guardian') && badges.length >= 6
+
+    default:
+      return false
+  }
 }
 
 /**
@@ -757,15 +802,25 @@ export const canUnlockMysticTitle = (user, titleId) => {
  * via "Aplicar" no Recompensas.
  */
 export const unlockMysticTitle = (user, titleId) => {
-  const unlockedTitles = user.unlockedMysticTitles || []
-  if (!unlockedTitles.includes(titleId)) {
+  // Considera ambos os campos (in-memory e persistido) para detectar se já
+  // está desbloqueado, evitando duplicação após refresh.
+  const existing = user.unlockedMysticTitles || user.unlockedTitles || []
+  if (!existing.includes(titleId)) {
     const title = Object.values(MYSTIC_TITLES).find(t => t.id === titleId)
     if (!title) return user
 
+    const newList = [...existing, titleId]
+
     // NÃO consome mais essências — título é recompensa pelo marco atingido.
+    // Escreve nos DOIS campos para garantir:
+    //   - unlockedMysticTitles: lido pelos componentes (MysticTitleSelector,
+    //     Profile) em memória.
+    //   - unlockedTitles: lido pelo toDbProfile em db.js para persistir na
+    //     coluna unlocked_titles do Supabase.
     return {
       ...user,
-      unlockedMysticTitles: [...unlockedTitles, titleId]
+      unlockedMysticTitles: newList,
+      unlockedTitles: newList
     }
   }
   return user
