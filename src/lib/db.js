@@ -39,6 +39,9 @@ const mapProfile = (row, email) => ({
   activeAvatarFrame: row.active_avatar_frame || null,
   activeTitle: row.active_title || null,
   dailyEssence: row.daily_essence || {},
+  // Mapa de cooldowns por tipo de ação (gamification.canPerformAction).
+  // Persistido em profiles.last_actions para evitar farm via refresh.
+  lastActions: row.last_actions || {},
   hasSeenWelcome: row.has_seen_welcome || false,
   createdAt: row.created_at,
 })
@@ -68,6 +71,9 @@ const toDbProfile = (user) => ({
     ...(user.dailyEssence || {}),
     joinedGroupsHistory: user.joinedGroups || [],
   },
+  // Persiste os timestamps de última ação por tipo (cooldowns).
+  // Sem isto, um refresh entre duas ações idênticas burlava o cooldown.
+  last_actions: user.lastActions || {},
   has_seen_welcome: user.hasSeenWelcome || false,
 })
 
