@@ -28,6 +28,12 @@ create table public.profiles (
   active_avatar_frame text default null,
   active_title text default null,
   daily_essence jsonb default '{}',
+  -- Mapa de { actionType -> ISO timestamp da última vez que essa ação foi
+  -- realizada }. Usado pelos cooldowns (ver gamification.canPerformAction).
+  -- Sem persistir, um refresh entre duas ações resetava o cooldown,
+  -- permitindo farm de essência. Estrutura: { "SUPPORTIVE_COMMENT": "2026-...",
+  -- "CREATE_POST": "2026-...", ... }.
+  last_actions jsonb default '{}',
   has_seen_welcome boolean default false,
   created_at timestamptz default now()
 );
