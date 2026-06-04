@@ -233,6 +233,11 @@ function Dashboard({ user, onLogout, initialGroupId }) {
   const previousEssenceRef = useRef(user.essence || user.points || 0)
   const processedMilestonesRef = useRef(new Set([Math.floor((user.essence || user.points || 0) / 50)]))
   const dailyLimitNotificationRef = useRef(false)
+  // FIX QA: rastreia títulos já notificados para evitar duplicidade
+  // (React.StrictMode em dev dispara cada useEffect 2x na montagem).
+  // Inicializa com os títulos JÁ desbloqueados — assim não notifica de novo
+  // após refresh/login.
+  const notifiedTitlesRef = useRef(new Set(user.unlockedMysticTitles || []))
 
   // Calcula variáveis CSS do tema ativo para injetar em toda a árvore de componentes
   const themeStyles = useMemo(() => {
@@ -354,13 +359,51 @@ function Dashboard({ user, onLogout, initialGroupId }) {
     previousEssenceRef.current = currentEssence
   }, [currentUser.essence, currentUser.points])
 
-  // FIX QA: removida a lógica de auto-unlock de títulos por threshold de
-  // essências. Segundo o FAQ ("Os Títulos são desbloqueados ao longo do
-  // tempo, a partir da combinação de diferentes ações positivas"), eles
-  // são RECOMPENSAS POR COMPORTAMENTO, não compras automáticas. Os títulos
-  // permanecem bloqueados até serem liberados por um mecanismo futuro
-  // (badges, ações cumulativas, etc.). A função unlockMysticTitle segue
-  // disponível para a liberação manual quando o mecanismo for implementado.
+  // Auto-unlock de títulos místicos quando os critérios v1 são atingidos.
+  //
+  // Critérios estão em gamification.canUnlockMysticTitle: cada título exige
+  // uma combinação específica de selos (badges) + participação em grupos +
+  // marco de essência (gatilho, NÃO consumido). Conforme o FAQ, títulos
+  // são recompensas por comportamento — não compras.
+  //
+  // Reage a mudanças em badges, joinedGroups e essence: qualquer dessas
+  // ações pode tornar um título elegível.
+  useEffect(() => {
+    // FIX QA: filtra também por notifiedTitlesRef para evitar duplicidade
+    // (StrictMode em dev / re-renders inesperados).
+    const newTitles = Object.values(MYSTIC_TITLES).filter(title =>
+      canUnlockMysticTitle(currentUser, title.id) &&
+      !notifiedTitlesRef.current.has(title.id)
+    )
+    if (newTitles.length === 0) return
+
+    // Marca como notificado ANTES de processar — torna esta passagem do
+    // efeito idempotente (se React re-executar, o ref já contém os ids).
+    newTitles.forEach(t => notifiedTitlesRef.current.add(t.id))
+
+    let updatedUser = currentUser
+    newTitles.forEach(title => {
+      updatedUser = unlockMysticTitle(updatedUser, title.id)
+    })
+
+    updateProfile(updatedUser.id, updatedUser)
+    setCurrentUser(updatedUser)
+
+    newTitles.forEach((title, index) => {
+      setTimeout(() => {
+        notifyAchievement(
+          `${title.icon} Título desbloqueado: ${title.name}`,
+          title.description,
+          6000
+        )
+      }, 300 + index * 600)
+    })
+  }, [
+    currentUser.badges,
+    currentUser.joinedGroups,
+    currentUser.essence,
+    currentUser.essencias_disponiveis
+  ])
 
   // Abre o modal de confirmação de logout
   const handleLogoutClick = () => {

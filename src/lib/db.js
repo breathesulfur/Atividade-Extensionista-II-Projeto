@@ -35,11 +35,9 @@ const mapProfile = (row, email) => ({
   unlockedThemes: row.unlocked_themes || [],
   unlockedAvatarFrames: row.unlocked_avatar_frames || [],
   unlockedTitles: row.unlocked_titles || [],
-  // Alias para componentes (Profile, MysticTitleSelector) que leem
-  // unlockedMysticTitles. Sem isso, mesmo títulos persistidos no BD
-  // aparecem como bloqueados na UI após login/refresh — e como
-  // resultado o fix do título ativo (abaixo) fica inacessível porque
-  // o usuário nem consegue clicar "Aplicar" em nenhum título.
+  // Alias para componentes que esperam unlockedMysticTitles (MysticTitleSelector,
+  // Profile, gamification.canUnlockMysticTitle). Sem isso, após refresh os
+  // títulos persistidos aparecem como bloqueados na UI.
   unlockedMysticTitles: row.unlocked_titles || [],
   activeTheme: row.active_theme || null,
   activeAvatarFrame: row.active_avatar_frame || null,
