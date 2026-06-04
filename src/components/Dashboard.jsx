@@ -11,6 +11,7 @@ import Tour from './Tour'
 import NotificationBell from './NotificationBell'
 import FeedbackForm from './FeedbackForm'
 import { updateProfile, getProfile } from '../lib/db'
+import { prefetchAll, clearCache } from '../lib/dataCache'
 import { setNotificationCallback, notifyEssenceGained, notifyAchievement } from '../utils/notifications'
 import { addEssence, DAILY_ESSENCE_LIMIT, THEMES, MYSTIC_TITLES, canUnlockMysticTitle, unlockMysticTitle, getEssenceGained } from '../utils/gamification'
 import './Dashboard.css'
@@ -158,6 +159,18 @@ function DailyEssenceProgressBar({ user }) {
 }
 
 function Dashboard({ user, onLogout, initialGroupId }) {
+  // FIX QA: esquenta o cache de posts/grupos antes mesmo de Feed/Groups
+  // montarem. Como Dashboard monta uma vez no login, isso elimina o atraso
+  // perceptível "pisca em branco" do primeiro acesso ao Feed e o "milésimo
+  // de segundo" antes de aparecer a lista de grupos.
+  //
+  // Roda no body do componente (não useEffect) pra disparar o mais cedo
+  // possível — o fetch fica em voo enquanto o React continua renderizando.
+  // É seguro porque prefetchAll é idempotente (deduplica fetches em voo).
+  if (typeof window !== 'undefined') {
+    prefetchAll()
+  }
+
   const [activeTab, setActiveTab] = useState(initialGroupId ? 'groups' : 'feed')
   const [currentUser, setCurrentUser] = useState(user)
   const [notifications, setNotifications] = useState([])
@@ -416,6 +429,8 @@ function Dashboard({ user, onLogout, initialGroupId }) {
     setIsLoggingOut(true)
     const { signOut } = await import('../lib/db')
     await signOut()
+    // Limpa cache de posts/grupos pra não vazar dados pro próximo usuário
+    clearCache()
     await new Promise(resolve => setTimeout(resolve, 400))
     onLogout()
   }

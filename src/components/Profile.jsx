@@ -5,18 +5,37 @@ import ThemeSelector from './ThemeSelector'
 import AvatarFrameSelector from './AvatarFrameSelector'
 import MysticTitleSelector from './MysticTitleSelector'
 import AvatarFrame from './AvatarFrame'
-import { fetchPosts, fetchGroups } from '../lib/db'
+import {
+  getCachedPosts,
+  getCachedGroups,
+  refreshPosts,
+  refreshGroups,
+  subscribePosts,
+  subscribeGroups,
+} from '../lib/dataCache'
 
-// Cache em memória das estatísticas calculadas, keyed por userId.
-// Quando o usuário navega Feed → Perfil → Feed → Perfil, antes era preciso
-// refazer fetchPosts + fetchGroups (round-trip ao Supabase) toda vez que
-// o Profile montava, deixando os contadores em 0 por ~300-1000ms até a
-// resposta chegar.
-//
-// Agora, ao montar, lemos o último snapshot do cache e mostramos
-// instantaneamente — depois o fetch real revalida em background (SWR).
-// O cache vive durante a sessão (módulo), então fechar o app limpa.
-const statsCache = new Map()
+// Calcula as estatísticas do user a partir das arrays de posts e groups.
+// Centralizado pra ser reaproveitado nos paths "do cache" e "do refetch"
+// (e também quando uma mutação em Feed/Groups dispara o subscribe).
+const computeStats = (userId, posts, groups) => {
+  const userPosts = posts.filter((p) => p.userId === userId)
+  const userComments = posts.reduce(
+    (count, post) =>
+      count + (post.comments?.filter((c) => c.userId === userId).length || 0),
+    0
+  )
+  const totalLikes = userPosts.reduce(
+    (count, post) => count + (post.likes?.length || 0),
+    0
+  )
+  const userGroups = groups.filter((g) => g.createdBy === userId)
+  return {
+    posts: userPosts.length,
+    comments: userComments,
+    likes: totalLikes,
+    groups: userGroups.length,
+  }
+}
 import {
   InstagramIcon,
   TwitterIcon,
@@ -84,56 +103,47 @@ function Profile({ user, onUserUpdate, isOwnProfile = true, onBack }) {
     ? Object.values(MYSTIC_TITLES).find(t => t.id === activeTitleId)
     : null
 
-  // Estatísticas do usuário — busca do Supabase (antes lia localStorage vazio,
-  // o que mantinha todos os contadores em 0 mesmo após ações).
+  // Estatísticas do usuário — derivadas do cache compartilhado de posts e
+  // groups (src/lib/dataCache.js).
   //
-  // FIX QA: estado inicial vem do cache em memória (statsCache acima) pra
-  // que reabrir o Perfil (depois de ir ao Feed, por exemplo) já mostre os
-  // últimos valores conhecidos enquanto o refetch acontece em background,
-  // em vez de piscar "0" por algumas centenas de ms.
-  const [stats, setStats] = useState(() =>
-    statsCache.get(user.id) || {
-      posts: 0,
-      comments: 0,
-      likes: 0,
-      groups: 0,
-    }
-  )
+  // FIX QA: antes, cada montagem do Profile rebuscava fetchPosts +
+  // fetchGroups do Supabase e os contadores ficavam em "0" até a resposta
+  // chegar (delay perceptível ao voltar do Feed). Agora:
+  //  - estado inicial calculado a partir do cache atual (instantâneo se já
+  //    foi buscado nesta sessão);
+  //  - subscribe nos dois caches: se Feed/Groups atualizar (post novo, grupo
+  //    excluído, etc.), o Profile reflete na hora;
+  //  - refresh em background no mount pra garantir dados atualizados.
+  const [stats, setStats] = useState(() => {
+    const posts = getCachedPosts()
+    const groups = getCachedGroups()
+    if (!posts || !groups) return { posts: 0, comments: 0, likes: 0, groups: 0 }
+    return computeStats(user.id, posts, groups)
+  })
 
   useEffect(() => {
-    let cancelled = false
+    const recompute = () => {
+      const posts = getCachedPosts()
+      const groups = getCachedGroups()
+      if (!posts || !groups) return
+      setStats(computeStats(user.id, posts, groups))
+    }
 
-    // Stale-while-revalidate: aplica o cache imediatamente caso o user.id
-    // tenha mudado depois da montagem inicial (mantém o estado em sincronia
-    // sem flash de zeros), e dispara o refetch em background.
-    const cached = statsCache.get(user.id)
-    if (cached) setStats(cached)
+    // Sincroniza com o estado atual do cache (caso outra tela já tenha
+    // populado depois da montagem inicial deste componente).
+    recompute()
 
-    ;(async () => {
-      const [posts, groups] = await Promise.all([fetchPosts(), fetchGroups()])
-      if (cancelled) return
+    const unsubPosts = subscribePosts(recompute)
+    const unsubGroups = subscribeGroups(recompute)
 
-      const userPosts = posts.filter((p) => p.userId === user.id)
-      const userComments = posts.reduce((count, post) => {
-        return count + (post.comments?.filter((c) => c.userId === user.id).length || 0)
-      }, 0)
-      const totalLikes = userPosts.reduce(
-        (count, post) => count + (post.likes?.length || 0),
-        0
-      )
-      const userGroups = groups.filter((g) => g.createdBy === user.id)
+    // Revalida em background. Se já houver fetch em voo, refreshPosts /
+    // refreshGroups dedupa.
+    refreshPosts().catch(() => {})
+    refreshGroups().catch(() => {})
 
-      const fresh = {
-        posts: userPosts.length,
-        comments: userComments,
-        likes: totalLikes,
-        groups: userGroups.length,
-      }
-      statsCache.set(user.id, fresh)
-      setStats(fresh)
-    })()
     return () => {
-      cancelled = true
+      unsubPosts()
+      unsubGroups()
     }
   }, [user.id])
 
