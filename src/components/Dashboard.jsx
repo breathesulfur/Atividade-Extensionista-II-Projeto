@@ -354,13 +354,44 @@ function Dashboard({ user, onLogout, initialGroupId }) {
     previousEssenceRef.current = currentEssence
   }, [currentUser.essence, currentUser.points])
 
-  // FIX QA: removida a lógica de auto-unlock de títulos por threshold de
-  // essências. Segundo o FAQ ("Os Títulos são desbloqueados ao longo do
-  // tempo, a partir da combinação de diferentes ações positivas"), eles
-  // são RECOMPENSAS POR COMPORTAMENTO, não compras automáticas. Os títulos
-  // permanecem bloqueados até serem liberados por um mecanismo futuro
-  // (badges, ações cumulativas, etc.). A função unlockMysticTitle segue
-  // disponível para a liberação manual quando o mecanismo for implementado.
+  // Auto-unlock de títulos místicos quando os critérios v1 são atingidos.
+  //
+  // Critérios estão em gamification.canUnlockMysticTitle: cada título exige
+  // uma combinação específica de selos (badges) + participação em grupos +
+  // marco de essência (gatilho, NÃO consumido). Conforme o FAQ, títulos
+  // são recompensas por comportamento — não compras.
+  //
+  // Reage a mudanças em badges, joinedGroups e essence: qualquer dessas
+  // ações pode tornar um título elegível.
+  useEffect(() => {
+    const newTitles = Object.values(MYSTIC_TITLES).filter(title =>
+      canUnlockMysticTitle(currentUser, title.id)
+    )
+    if (newTitles.length === 0) return
+
+    let updatedUser = currentUser
+    newTitles.forEach(title => {
+      updatedUser = unlockMysticTitle(updatedUser, title.id)
+    })
+
+    updateProfile(updatedUser.id, updatedUser)
+    setCurrentUser(updatedUser)
+
+    newTitles.forEach((title, index) => {
+      setTimeout(() => {
+        notifyAchievement(
+          `${title.icon} Título desbloqueado: ${title.name}`,
+          title.description,
+          6000
+        )
+      }, 300 + index * 600)
+    })
+  }, [
+    currentUser.badges,
+    currentUser.joinedGroups,
+    currentUser.essence,
+    currentUser.essencias_disponiveis
+  ])
 
   // Abre o modal de confirmação de logout
   const handleLogoutClick = () => {
