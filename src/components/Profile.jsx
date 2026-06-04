@@ -6,6 +6,17 @@ import AvatarFrameSelector from './AvatarFrameSelector'
 import MysticTitleSelector from './MysticTitleSelector'
 import AvatarFrame from './AvatarFrame'
 import { fetchPosts, fetchGroups } from '../lib/db'
+
+// Cache em memória das estatísticas calculadas, keyed por userId.
+// Quando o usuário navega Feed → Perfil → Feed → Perfil, antes era preciso
+// refazer fetchPosts + fetchGroups (round-trip ao Supabase) toda vez que
+// o Profile montava, deixando os contadores em 0 por ~300-1000ms até a
+// resposta chegar.
+//
+// Agora, ao montar, lemos o último snapshot do cache e mostramos
+// instantaneamente — depois o fetch real revalida em background (SWR).
+// O cache vive durante a sessão (módulo), então fechar o app limpa.
+const statsCache = new Map()
 import {
   InstagramIcon,
   TwitterIcon,
@@ -74,16 +85,30 @@ function Profile({ user, onUserUpdate, isOwnProfile = true, onBack }) {
     : null
 
   // Estatísticas do usuário — busca do Supabase (antes lia localStorage vazio,
-  // o que mantinha todos os contadores em 0 mesmo após ações)
-  const [stats, setStats] = useState({
-    posts: 0,
-    comments: 0,
-    likes: 0,
-    groups: 0,
-  })
+  // o que mantinha todos os contadores em 0 mesmo após ações).
+  //
+  // FIX QA: estado inicial vem do cache em memória (statsCache acima) pra
+  // que reabrir o Perfil (depois de ir ao Feed, por exemplo) já mostre os
+  // últimos valores conhecidos enquanto o refetch acontece em background,
+  // em vez de piscar "0" por algumas centenas de ms.
+  const [stats, setStats] = useState(() =>
+    statsCache.get(user.id) || {
+      posts: 0,
+      comments: 0,
+      likes: 0,
+      groups: 0,
+    }
+  )
 
   useEffect(() => {
     let cancelled = false
+
+    // Stale-while-revalidate: aplica o cache imediatamente caso o user.id
+    // tenha mudado depois da montagem inicial (mantém o estado em sincronia
+    // sem flash de zeros), e dispara o refetch em background.
+    const cached = statsCache.get(user.id)
+    if (cached) setStats(cached)
+
     ;(async () => {
       const [posts, groups] = await Promise.all([fetchPosts(), fetchGroups()])
       if (cancelled) return
@@ -98,12 +123,14 @@ function Profile({ user, onUserUpdate, isOwnProfile = true, onBack }) {
       )
       const userGroups = groups.filter((g) => g.createdBy === user.id)
 
-      setStats({
+      const fresh = {
         posts: userPosts.length,
         comments: userComments,
         likes: totalLikes,
         groups: userGroups.length,
-      })
+      }
+      statsCache.set(user.id, fresh)
+      setStats(fresh)
     })()
     return () => {
       cancelled = true
