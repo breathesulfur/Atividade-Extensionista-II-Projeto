@@ -25,7 +25,57 @@
  */
 import { fetchPosts, fetchGroups } from './db'
 
-const cache = { posts: null, groups: null }
+// Persistência em localStorage com TTL.
+//
+// Antes, mesmo com cache em memória, o primeiro acesso após login ou
+// refresh da página obrigava o Feed/Groups a esperar o round-trip ao
+// Supabase ("Carregando postagens..." por algumas centenas de ms).
+// Agora salvamos a última lista de posts/groups no localStorage; ao
+// reabrir o app, o estado inicial já vem hidratado e a UI renderiza
+// instantânea, enquanto refreshPosts/refreshGroups revalidam em
+// background.
+//
+// TTL de 24h é só pra evitar carregar dados muito antigos caso o
+// usuário fique offline por dias — fora isso, qualquer mutação local
+// ou refetch sobrescreve a entrada na hora.
+const STORAGE_KEY = 'inclusivchat:dataCache:v1'
+const TTL_MS = 24 * 60 * 60 * 1000
+
+const readPersisted = () => {
+  if (typeof localStorage === 'undefined') return { posts: null, groups: null }
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return { posts: null, groups: null }
+    const parsed = JSON.parse(raw)
+    if (!parsed || typeof parsed !== 'object') return { posts: null, groups: null }
+    const now = Date.now()
+    return {
+      posts: parsed.posts && now - (parsed.postsAt || 0) < TTL_MS ? parsed.posts : null,
+      groups: parsed.groups && now - (parsed.groupsAt || 0) < TTL_MS ? parsed.groups : null,
+    }
+  } catch {
+    return { posts: null, groups: null }
+  }
+}
+
+const writePersisted = () => {
+  if (typeof localStorage === 'undefined') return
+  try {
+    const now = Date.now()
+    const payload = {
+      posts: cache.posts,
+      groups: cache.groups,
+      postsAt: cache.posts != null ? now : 0,
+      groupsAt: cache.groups != null ? now : 0,
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
+  } catch {
+    // localStorage cheio ou bloqueado — ignora silenciosamente, o cache
+    // em memória continua funcionando.
+  }
+}
+
+const cache = readPersisted()
 const listeners = { posts: new Set(), groups: new Set() }
 const inflight = { posts: null, groups: null }
 
@@ -43,6 +93,7 @@ export const refreshPosts = () => {
   inflight.posts = fetchPosts()
     .then((data) => {
       cache.posts = data || []
+      writePersisted()
       notify('posts', cache.posts)
       return cache.posts
     })
@@ -59,6 +110,7 @@ export const refreshGroups = () => {
   inflight.groups = fetchGroups()
     .then((data) => {
       cache.groups = data || []
+      writePersisted()
       notify('groups', cache.groups)
       return cache.groups
     })
@@ -87,6 +139,7 @@ export const mutatePosts = (updater) => {
   const prev = cache.posts || []
   const next = typeof updater === 'function' ? updater(prev) : updater
   cache.posts = next
+  writePersisted()
   notify('posts', next)
 }
 
@@ -94,6 +147,7 @@ export const mutateGroups = (updater) => {
   const prev = cache.groups || []
   const next = typeof updater === 'function' ? updater(prev) : updater
   cache.groups = next
+  writePersisted()
   notify('groups', next)
 }
 
@@ -107,4 +161,7 @@ export const prefetchAll = () => {
 export const clearCache = () => {
   cache.posts = null
   cache.groups = null
+  if (typeof localStorage !== 'undefined') {
+    try { localStorage.removeItem(STORAGE_KEY) } catch {}
+  }
 }
