@@ -491,6 +491,57 @@
   box-shadow: 0 4px 15px rgba(112, 96, 192, 0.4);
 }
 
+/* 🌸 TEMA: Pétala Rosa - Rosa delicado */
+.theme-petal .theme-selector,
+.theme-petal .theme-selector-description,
+.theme-petal .section-title {
+  color: var(--theme-text, #6A1040);
+}
+.theme-petal .theme-selector-description { opacity: 0.9; }
+.theme-petal .section-title { font-weight: 700; }
+
+.theme-petal .theme-card,
+.theme-petal .theme-card.unlocked {
+  background: var(--theme-background, #FFF6F9);
+  border-color: var(--theme-primary, #D04878);
+  color: var(--theme-text, #6A1040);
+}
+.theme-petal .theme-card.unlocked:hover {
+  border-color: var(--theme-accent, #F068A0);
+  background: var(--theme-secondary, #FFF0F5);
+  box-shadow: 0 4px 20px rgba(208, 72, 120, 0.28);
+}
+.theme-petal .theme-card.active {
+  background: var(--theme-secondary, #FFF0F5);
+  border-color: var(--theme-primary, #D04878);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(208, 72, 120, 0.4);
+}
+.theme-petal .theme-card .theme-name,
+.theme-petal .theme-card.active .theme-name,
+.theme-petal .theme-card.unlocked .theme-name {
+  color: var(--theme-text, #6A1040) !important;
+  font-weight: 700;
+}
+.theme-petal .theme-card .theme-description,
+.theme-petal .theme-card.active .theme-description,
+.theme-petal .theme-card.unlocked .theme-description {
+  color: var(--theme-text, #6A1040) !important;
+  opacity: 0.9;
+}
+.theme-petal .lock-text { color: var(--theme-text, #6A1040); font-weight: 600; }
+.theme-petal .theme-active-badge,
+.theme-petal .theme-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #D04878) 0%, var(--theme-accent, #F068A0) 100%);
+  color: var(--theme-background, #FFF6F9);
+  border: 1px solid var(--theme-primary, #D04878);
+  box-shadow: 0 2px 8px rgba(208, 72, 120, 0.3);
+}
+.theme-petal .theme-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #F068A0) 0%, var(--theme-primary, #D04878) 100%);
+  box-shadow: 0 4px 15px rgba(208, 72, 120, 0.4);
+}
+
 @media (max-width: 640px) {
   .themes-grid {
     grid-template-columns: 1fr;

@@ -402,3 +402,44 @@
 .theme-lilac_dawn .frame-apply-button:hover {
   background: linear-gradient(135deg, var(--theme-accent, #9080E0) 0%, var(--theme-primary, #7060C0) 100%);
 }
+
+/* 🌸 TEMA: Pétala Rosa */
+.theme-petal .frame-card,
+.theme-petal .frame-card.unlocked {
+  background: var(--theme-background, #FFF6F9);
+  border-color: var(--theme-primary, #D04878);
+  color: var(--theme-text, #6A1040);
+}
+.theme-petal .frame-card.unlocked:hover {
+  border-color: var(--theme-accent, #F068A0);
+  background: var(--theme-secondary, #FFF0F5);
+  box-shadow: 0 4px 20px rgba(208, 72, 120, 0.28);
+}
+.theme-petal .frame-card.active {
+  background: var(--theme-secondary, #FFF0F5);
+  border-color: var(--theme-primary, #D04878);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(208, 72, 120, 0.4);
+}
+.theme-petal .frame-card .frame-name,
+.theme-petal .frame-card.active .frame-name,
+.theme-petal .frame-card.unlocked .frame-name {
+  color: var(--theme-text, #6A1040) !important;
+}
+.theme-petal .frame-card .frame-description,
+.theme-petal .frame-card.active .frame-description,
+.theme-petal .frame-card.unlocked .frame-description {
+  color: var(--theme-text, #6A1040) !important;
+  opacity: 0.9;
+}
+.theme-petal .frame-card .lock-text { color: var(--theme-text, #6A1040); }
+.theme-petal .frame-active-badge,
+.theme-petal .frame-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #D04878) 0%, var(--theme-accent, #F068A0) 100%);
+  color: var(--theme-background, #FFF6F9);
+  border: 1px solid var(--theme-primary, #D04878);
+  box-shadow: 0 2px 8px rgba(208, 72, 120, 0.3);
+}
+.theme-petal .frame-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #F068A0) 0%, var(--theme-primary, #D04878) 100%);
+}
