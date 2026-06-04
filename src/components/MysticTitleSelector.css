@@ -176,3 +176,253 @@
   background: var(--primary-dark);
   transform: translateY(-1px);
 }
+
+/* ========================================
+   APLICAÇÃO DE TEMAS NOS CARDS DE TÍTULO MÍSTICO
+   ======================================== */
+
+/* ☁️ TEMA: Céu Suave */
+.theme-soft_sky .title-card,
+.theme-soft_sky .title-card.unlocked {
+  background: var(--theme-background, #F5FBFF);
+  border-color: var(--theme-primary, #4090B8);
+  color: var(--theme-text, #1A5080);
+}
+.theme-soft_sky .title-card.unlocked:hover {
+  border-color: var(--theme-accent, #68B8D8);
+  background: var(--theme-secondary, #EEF8FF);
+  box-shadow: 0 4px 20px rgba(64, 144, 184, 0.28);
+}
+.theme-soft_sky .title-card.active {
+  background: var(--theme-secondary, #EEF8FF);
+  border-color: var(--theme-primary, #4090B8);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(64, 144, 184, 0.4);
+}
+.theme-soft_sky .title-card .title-name,
+.theme-soft_sky .title-card.active .title-name,
+.theme-soft_sky .title-card.unlocked .title-name {
+  color: var(--theme-text, #1A5080) !important;
+}
+.theme-soft_sky .title-card .title-description,
+.theme-soft_sky .title-card.active .title-description,
+.theme-soft_sky .title-card.unlocked .title-description {
+  color: var(--theme-text, #1A5080) !important;
+  opacity: 0.9;
+}
+.theme-soft_sky .title-card .lock-text { color: var(--theme-text, #1A5080); }
+.theme-soft_sky .title-active-badge,
+.theme-soft_sky .title-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #4090B8) 0%, var(--theme-accent, #68B8D8) 100%);
+  color: var(--theme-background, #F5FBFF);
+  border: 1px solid var(--theme-primary, #4090B8);
+  box-shadow: 0 2px 8px rgba(64, 144, 184, 0.3);
+}
+.theme-soft_sky .title-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #68B8D8) 0%, var(--theme-primary, #4090B8) 100%);
+}
+
+/* 🌙 TEMA: Lua Serena */
+.theme-serene_moon .title-card,
+.theme-serene_moon .title-card.unlocked {
+  background: var(--theme-background, #FEFBF0);
+  border-color: var(--theme-primary, #B8910E);
+  color: var(--theme-text, #5C4A1E);
+}
+.theme-serene_moon .title-card.unlocked:hover {
+  border-color: var(--theme-accent, #C9A227);
+  background: var(--theme-secondary, #FFFDF6);
+  box-shadow: 0 4px 20px rgba(184, 145, 14, 0.28);
+}
+.theme-serene_moon .title-card.active {
+  background: var(--theme-secondary, #FFFDF6);
+  border-color: var(--theme-primary, #B8910E);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(184, 145, 14, 0.4);
+}
+.theme-serene_moon .title-card .title-name,
+.theme-serene_moon .title-card.active .title-name,
+.theme-serene_moon .title-card.unlocked .title-name {
+  color: var(--theme-text, #5C4A1E) !important;
+}
+.theme-serene_moon .title-card .title-description,
+.theme-serene_moon .title-card.active .title-description,
+.theme-serene_moon .title-card.unlocked .title-description {
+  color: var(--theme-text, #5C4A1E) !important;
+  opacity: 0.9;
+}
+.theme-serene_moon .title-card .lock-text { color: var(--theme-text, #5C4A1E); }
+.theme-serene_moon .title-active-badge,
+.theme-serene_moon .title-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #B8910E) 0%, var(--theme-accent, #C9A227) 100%);
+  color: var(--theme-background, #FEFBF0);
+  border: 1px solid var(--theme-primary, #B8910E);
+  box-shadow: 0 2px 8px rgba(184, 145, 14, 0.3);
+}
+.theme-serene_moon .title-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #C9A227) 0%, var(--theme-primary, #B8910E) 100%);
+}
+
+/* 🌲 TEMA: Floresta Encantada */
+.theme-pink_aura .title-card,
+.theme-pink_aura .title-card.unlocked {
+  background: var(--theme-background, #F5FAF7);
+  border-color: var(--theme-primary, #2A6040);
+  color: var(--theme-text, #1A3D20);
+}
+.theme-pink_aura .title-card.unlocked:hover {
+  border-color: var(--theme-accent, #3E8058);
+  background: var(--theme-secondary, #EEF7F2);
+  box-shadow: 0 4px 20px rgba(42, 96, 64, 0.28);
+}
+.theme-pink_aura .title-card.active {
+  background: var(--theme-secondary, #EEF7F2);
+  border-color: var(--theme-primary, #2A6040);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(42, 96, 64, 0.4);
+}
+.theme-pink_aura .title-card .title-name,
+.theme-pink_aura .title-card.active .title-name,
+.theme-pink_aura .title-card.unlocked .title-name {
+  color: var(--theme-text, #1A3D20) !important;
+}
+.theme-pink_aura .title-card .title-description,
+.theme-pink_aura .title-card.active .title-description,
+.theme-pink_aura .title-card.unlocked .title-description {
+  color: var(--theme-text, #1A3D20) !important;
+  opacity: 0.9;
+}
+.theme-pink_aura .title-card .lock-text { color: var(--theme-text, #1A3D20); }
+.theme-pink_aura .title-active-badge,
+.theme-pink_aura .title-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #2A6040) 0%, var(--theme-accent, #3E8058) 100%);
+  color: var(--theme-background, #F5FAF7);
+  border: 1px solid var(--theme-primary, #2A6040);
+  box-shadow: 0 2px 8px rgba(42, 96, 64, 0.3);
+}
+.theme-pink_aura .title-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #3E8058) 0%, var(--theme-primary, #2A6040) 100%);
+}
+
+/* ❤️‍🔥 TEMA: Coração Mágico */
+.theme-pink_mist .title-card,
+.theme-pink_mist .title-card.unlocked {
+  background: var(--theme-background, #FFF5F7);
+  border-color: var(--theme-primary, #B01830);
+  color: var(--theme-text, #6A0A18);
+}
+.theme-pink_mist .title-card.unlocked:hover {
+  border-color: var(--theme-accent, #D83050);
+  background: var(--theme-secondary, #FFF0F4);
+  box-shadow: 0 4px 20px rgba(176, 24, 48, 0.28);
+}
+.theme-pink_mist .title-card.active {
+  background: var(--theme-secondary, #FFF0F4);
+  border-color: var(--theme-primary, #B01830);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(176, 24, 48, 0.4);
+}
+.theme-pink_mist .title-card .title-name,
+.theme-pink_mist .title-card.active .title-name,
+.theme-pink_mist .title-card.unlocked .title-name {
+  color: var(--theme-text, #6A0A18) !important;
+}
+.theme-pink_mist .title-card .title-description,
+.theme-pink_mist .title-card.active .title-description,
+.theme-pink_mist .title-card.unlocked .title-description {
+  color: var(--theme-text, #6A0A18) !important;
+  opacity: 0.9;
+}
+.theme-pink_mist .title-card .lock-text { color: var(--theme-text, #6A0A18); }
+.theme-pink_mist .title-active-badge,
+.theme-pink_mist .title-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #B01830) 0%, var(--theme-accent, #D83050) 100%);
+  color: var(--theme-background, #FFF5F7);
+  border: 1px solid var(--theme-primary, #B01830);
+  box-shadow: 0 2px 8px rgba(176, 24, 48, 0.3);
+}
+.theme-pink_mist .title-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #D83050) 0%, var(--theme-primary, #B01830) 100%);
+}
+
+/* 🌅 TEMA: Amanhecer Lilás */
+.theme-lilac_dawn .title-card,
+.theme-lilac_dawn .title-card.unlocked {
+  background: var(--theme-background, #FAF8FF);
+  border-color: var(--theme-primary, #7060C0);
+  color: var(--theme-text, #3A2070);
+}
+.theme-lilac_dawn .title-card.unlocked:hover {
+  border-color: var(--theme-accent, #9080E0);
+  background: var(--theme-secondary, #F4F0FF);
+  box-shadow: 0 4px 20px rgba(112, 96, 192, 0.28);
+}
+.theme-lilac_dawn .title-card.active {
+  background: var(--theme-secondary, #F4F0FF);
+  border-color: var(--theme-primary, #7060C0);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(112, 96, 192, 0.4);
+}
+.theme-lilac_dawn .title-card .title-name,
+.theme-lilac_dawn .title-card.active .title-name,
+.theme-lilac_dawn .title-card.unlocked .title-name {
+  color: var(--theme-text, #3A2070) !important;
+}
+.theme-lilac_dawn .title-card .title-description,
+.theme-lilac_dawn .title-card.active .title-description,
+.theme-lilac_dawn .title-card.unlocked .title-description {
+  color: var(--theme-text, #3A2070) !important;
+  opacity: 0.9;
+}
+.theme-lilac_dawn .title-card .lock-text { color: var(--theme-text, #3A2070); }
+.theme-lilac_dawn .title-active-badge,
+.theme-lilac_dawn .title-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #7060C0) 0%, var(--theme-accent, #9080E0) 100%);
+  color: var(--theme-background, #FAF8FF);
+  border: 1px solid var(--theme-primary, #7060C0);
+  box-shadow: 0 2px 8px rgba(112, 96, 192, 0.3);
+}
+.theme-lilac_dawn .title-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #9080E0) 0%, var(--theme-primary, #7060C0) 100%);
+}
+
+/* 🌸 TEMA: Pétala Rosa */
+.theme-petal .title-card,
+.theme-petal .title-card.unlocked {
+  background: var(--theme-background, #FFF6F9);
+  border-color: var(--theme-primary, #D04878);
+  color: var(--theme-text, #6A1040);
+}
+.theme-petal .title-card.unlocked:hover {
+  border-color: var(--theme-accent, #F068A0);
+  background: var(--theme-secondary, #FFF0F5);
+  box-shadow: 0 4px 20px rgba(208, 72, 120, 0.28);
+}
+.theme-petal .title-card.active {
+  background: var(--theme-secondary, #FFF0F5);
+  border-color: var(--theme-primary, #D04878);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(208, 72, 120, 0.4);
+}
+.theme-petal .title-card .title-name,
+.theme-petal .title-card.active .title-name,
+.theme-petal .title-card.unlocked .title-name {
+  color: var(--theme-text, #6A1040) !important;
+}
+.theme-petal .title-card .title-description,
+.theme-petal .title-card.active .title-description,
+.theme-petal .title-card.unlocked .title-description {
+  color: var(--theme-text, #6A1040) !important;
+  opacity: 0.9;
+}
+.theme-petal .title-card .lock-text { color: var(--theme-text, #6A1040); }
+.theme-petal .title-active-badge,
+.theme-petal .title-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #D04878) 0%, var(--theme-accent, #F068A0) 100%);
+  color: var(--theme-background, #FFF6F9);
+  border: 1px solid var(--theme-primary, #D04878);
+  box-shadow: 0 2px 8px rgba(208, 72, 120, 0.3);
+}
+.theme-petal .title-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #F068A0) 0%, var(--theme-primary, #D04878) 100%);
+}

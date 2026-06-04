@@ -287,6 +287,261 @@
   box-shadow: 0 4px 15px rgba(184, 212, 232, 0.4);
 }
 
+/* 🌙 TEMA: Lua Serena - Tons âmbar dourados */
+.theme-serene_moon .theme-selector,
+.theme-serene_moon .theme-selector-description,
+.theme-serene_moon .section-title {
+  color: var(--theme-text, #5C4A1E);
+}
+.theme-serene_moon .theme-selector-description { opacity: 0.9; }
+.theme-serene_moon .section-title { font-weight: 700; }
+
+.theme-serene_moon .theme-card,
+.theme-serene_moon .theme-card.unlocked {
+  background: var(--theme-background, #FEFBF0);
+  border-color: var(--theme-primary, #B8910E);
+  color: var(--theme-text, #5C4A1E);
+}
+.theme-serene_moon .theme-card.unlocked:hover {
+  border-color: var(--theme-accent, #C9A227);
+  background: var(--theme-secondary, #FFFDF6);
+  box-shadow: 0 4px 20px rgba(184, 145, 14, 0.28);
+}
+.theme-serene_moon .theme-card.active {
+  background: var(--theme-secondary, #FFFDF6);
+  border-color: var(--theme-primary, #B8910E);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(184, 145, 14, 0.4);
+}
+.theme-serene_moon .theme-card .theme-name,
+.theme-serene_moon .theme-card.active .theme-name,
+.theme-serene_moon .theme-card.unlocked .theme-name {
+  color: var(--theme-text, #5C4A1E) !important;
+  font-weight: 700;
+}
+.theme-serene_moon .theme-card .theme-description,
+.theme-serene_moon .theme-card.active .theme-description,
+.theme-serene_moon .theme-card.unlocked .theme-description {
+  color: var(--theme-text, #5C4A1E) !important;
+  opacity: 0.9;
+}
+.theme-serene_moon .lock-text { color: var(--theme-text, #5C4A1E); font-weight: 600; }
+.theme-serene_moon .theme-active-badge,
+.theme-serene_moon .theme-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #B8910E) 0%, var(--theme-accent, #C9A227) 100%);
+  color: var(--theme-background, #FEFBF0);
+  border: 1px solid var(--theme-primary, #B8910E);
+  box-shadow: 0 2px 8px rgba(184, 145, 14, 0.3);
+}
+.theme-serene_moon .theme-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #C9A227) 0%, var(--theme-primary, #B8910E) 100%);
+  box-shadow: 0 4px 15px rgba(184, 145, 14, 0.4);
+}
+
+/* 🌲 TEMA: Floresta Encantada - Verde floresta */
+.theme-pink_aura .theme-selector,
+.theme-pink_aura .theme-selector-description,
+.theme-pink_aura .section-title {
+  color: var(--theme-text, #1A3D20);
+}
+.theme-pink_aura .theme-selector-description { opacity: 0.9; }
+.theme-pink_aura .section-title { font-weight: 700; }
+
+.theme-pink_aura .theme-card,
+.theme-pink_aura .theme-card.unlocked {
+  background: var(--theme-background, #F5FAF7);
+  border-color: var(--theme-primary, #2A6040);
+  color: var(--theme-text, #1A3D20);
+}
+.theme-pink_aura .theme-card.unlocked:hover {
+  border-color: var(--theme-accent, #3E8058);
+  background: var(--theme-secondary, #EEF7F2);
+  box-shadow: 0 4px 20px rgba(42, 96, 64, 0.28);
+}
+.theme-pink_aura .theme-card.active {
+  background: var(--theme-secondary, #EEF7F2);
+  border-color: var(--theme-primary, #2A6040);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(42, 96, 64, 0.4);
+}
+.theme-pink_aura .theme-card .theme-name,
+.theme-pink_aura .theme-card.active .theme-name,
+.theme-pink_aura .theme-card.unlocked .theme-name {
+  color: var(--theme-text, #1A3D20) !important;
+  font-weight: 700;
+}
+.theme-pink_aura .theme-card .theme-description,
+.theme-pink_aura .theme-card.active .theme-description,
+.theme-pink_aura .theme-card.unlocked .theme-description {
+  color: var(--theme-text, #1A3D20) !important;
+  opacity: 0.9;
+}
+.theme-pink_aura .lock-text { color: var(--theme-text, #1A3D20); font-weight: 600; }
+.theme-pink_aura .theme-active-badge,
+.theme-pink_aura .theme-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #2A6040) 0%, var(--theme-accent, #3E8058) 100%);
+  color: var(--theme-background, #F5FAF7);
+  border: 1px solid var(--theme-primary, #2A6040);
+  box-shadow: 0 2px 8px rgba(42, 96, 64, 0.3);
+}
+.theme-pink_aura .theme-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #3E8058) 0%, var(--theme-primary, #2A6040) 100%);
+  box-shadow: 0 4px 15px rgba(42, 96, 64, 0.4);
+}
+
+/* ❤️‍🔥 TEMA: Coração Mágico - Carmim vibrante */
+.theme-pink_mist .theme-selector,
+.theme-pink_mist .theme-selector-description,
+.theme-pink_mist .section-title {
+  color: var(--theme-text, #6A0A18);
+}
+.theme-pink_mist .theme-selector-description { opacity: 0.9; }
+.theme-pink_mist .section-title { font-weight: 700; }
+
+.theme-pink_mist .theme-card,
+.theme-pink_mist .theme-card.unlocked {
+  background: var(--theme-background, #FFF5F7);
+  border-color: var(--theme-primary, #B01830);
+  color: var(--theme-text, #6A0A18);
+}
+.theme-pink_mist .theme-card.unlocked:hover {
+  border-color: var(--theme-accent, #D83050);
+  background: var(--theme-secondary, #FFF0F4);
+  box-shadow: 0 4px 20px rgba(176, 24, 48, 0.28);
+}
+.theme-pink_mist .theme-card.active {
+  background: var(--theme-secondary, #FFF0F4);
+  border-color: var(--theme-primary, #B01830);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(176, 24, 48, 0.4);
+}
+.theme-pink_mist .theme-card .theme-name,
+.theme-pink_mist .theme-card.active .theme-name,
+.theme-pink_mist .theme-card.unlocked .theme-name {
+  color: var(--theme-text, #6A0A18) !important;
+  font-weight: 700;
+}
+.theme-pink_mist .theme-card .theme-description,
+.theme-pink_mist .theme-card.active .theme-description,
+.theme-pink_mist .theme-card.unlocked .theme-description {
+  color: var(--theme-text, #6A0A18) !important;
+  opacity: 0.9;
+}
+.theme-pink_mist .lock-text { color: var(--theme-text, #6A0A18); font-weight: 600; }
+.theme-pink_mist .theme-active-badge,
+.theme-pink_mist .theme-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #B01830) 0%, var(--theme-accent, #D83050) 100%);
+  color: var(--theme-background, #FFF5F7);
+  border: 1px solid var(--theme-primary, #B01830);
+  box-shadow: 0 2px 8px rgba(176, 24, 48, 0.3);
+}
+.theme-pink_mist .theme-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #D83050) 0%, var(--theme-primary, #B01830) 100%);
+  box-shadow: 0 4px 15px rgba(176, 24, 48, 0.4);
+}
+
+/* 🌅 TEMA: Amanhecer Lilás - Lilás vibrante */
+.theme-lilac_dawn .theme-selector,
+.theme-lilac_dawn .theme-selector-description,
+.theme-lilac_dawn .section-title {
+  color: var(--theme-text, #3A2070);
+}
+.theme-lilac_dawn .theme-selector-description { opacity: 0.9; }
+.theme-lilac_dawn .section-title { font-weight: 700; }
+
+.theme-lilac_dawn .theme-card,
+.theme-lilac_dawn .theme-card.unlocked {
+  background: var(--theme-background, #FAF8FF);
+  border-color: var(--theme-primary, #7060C0);
+  color: var(--theme-text, #3A2070);
+}
+.theme-lilac_dawn .theme-card.unlocked:hover {
+  border-color: var(--theme-accent, #9080E0);
+  background: var(--theme-secondary, #F4F0FF);
+  box-shadow: 0 4px 20px rgba(112, 96, 192, 0.28);
+}
+.theme-lilac_dawn .theme-card.active {
+  background: var(--theme-secondary, #F4F0FF);
+  border-color: var(--theme-primary, #7060C0);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(112, 96, 192, 0.4);
+}
+.theme-lilac_dawn .theme-card .theme-name,
+.theme-lilac_dawn .theme-card.active .theme-name,
+.theme-lilac_dawn .theme-card.unlocked .theme-name {
+  color: var(--theme-text, #3A2070) !important;
+  font-weight: 700;
+}
+.theme-lilac_dawn .theme-card .theme-description,
+.theme-lilac_dawn .theme-card.active .theme-description,
+.theme-lilac_dawn .theme-card.unlocked .theme-description {
+  color: var(--theme-text, #3A2070) !important;
+  opacity: 0.9;
+}
+.theme-lilac_dawn .lock-text { color: var(--theme-text, #3A2070); font-weight: 600; }
+.theme-lilac_dawn .theme-active-badge,
+.theme-lilac_dawn .theme-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #7060C0) 0%, var(--theme-accent, #9080E0) 100%);
+  color: var(--theme-background, #FAF8FF);
+  border: 1px solid var(--theme-primary, #7060C0);
+  box-shadow: 0 2px 8px rgba(112, 96, 192, 0.3);
+}
+.theme-lilac_dawn .theme-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #9080E0) 0%, var(--theme-primary, #7060C0) 100%);
+  box-shadow: 0 4px 15px rgba(112, 96, 192, 0.4);
+}
+
+/* 🌸 TEMA: Pétala Rosa - Rosa delicado */
+.theme-petal .theme-selector,
+.theme-petal .theme-selector-description,
+.theme-petal .section-title {
+  color: var(--theme-text, #6A1040);
+}
+.theme-petal .theme-selector-description { opacity: 0.9; }
+.theme-petal .section-title { font-weight: 700; }
+
+.theme-petal .theme-card,
+.theme-petal .theme-card.unlocked {
+  background: var(--theme-background, #FFF6F9);
+  border-color: var(--theme-primary, #D04878);
+  color: var(--theme-text, #6A1040);
+}
+.theme-petal .theme-card.unlocked:hover {
+  border-color: var(--theme-accent, #F068A0);
+  background: var(--theme-secondary, #FFF0F5);
+  box-shadow: 0 4px 20px rgba(208, 72, 120, 0.28);
+}
+.theme-petal .theme-card.active {
+  background: var(--theme-secondary, #FFF0F5);
+  border-color: var(--theme-primary, #D04878);
+  border-width: 3px;
+  box-shadow: 0 4px 25px rgba(208, 72, 120, 0.4);
+}
+.theme-petal .theme-card .theme-name,
+.theme-petal .theme-card.active .theme-name,
+.theme-petal .theme-card.unlocked .theme-name {
+  color: var(--theme-text, #6A1040) !important;
+  font-weight: 700;
+}
+.theme-petal .theme-card .theme-description,
+.theme-petal .theme-card.active .theme-description,
+.theme-petal .theme-card.unlocked .theme-description {
+  color: var(--theme-text, #6A1040) !important;
+  opacity: 0.9;
+}
+.theme-petal .lock-text { color: var(--theme-text, #6A1040); font-weight: 600; }
+.theme-petal .theme-active-badge,
+.theme-petal .theme-apply-button {
+  background: linear-gradient(135deg, var(--theme-primary, #D04878) 0%, var(--theme-accent, #F068A0) 100%);
+  color: var(--theme-background, #FFF6F9);
+  border: 1px solid var(--theme-primary, #D04878);
+  box-shadow: 0 2px 8px rgba(208, 72, 120, 0.3);
+}
+.theme-petal .theme-apply-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent, #F068A0) 0%, var(--theme-primary, #D04878) 100%);
+  box-shadow: 0 4px 15px rgba(208, 72, 120, 0.4);
+}
+
 @media (max-width: 640px) {
   .themes-grid {
     grid-template-columns: 1fr;
