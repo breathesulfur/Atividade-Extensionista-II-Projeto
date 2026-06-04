@@ -154,6 +154,25 @@ export const getSession = () => supabase.auth.getSession()
 export const onAuthStateChange = (callback) =>
   supabase.auth.onAuthStateChange(callback)
 
+// Dispara o envio do email de recuperação via Supabase Auth.
+// O usuário recebe um link que, ao clicar, abre o app no host indicado em
+// redirectTo com o token de recuperação na URL — capturado pelo SDK do
+// Supabase, que emite o evento PASSWORD_RECOVERY (ver App.jsx).
+//
+// Importante: o SMTP padrão do Supabase tem limite baixo (~3-4 emails/h
+// no plano Free). Para produção real, configurar SMTP custom em
+// Authentication → Settings → SMTP no dashboard do Supabase.
+export const requestPasswordReset = (email) =>
+  supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/`,
+  })
+
+// Atualiza a senha do usuário logado. Usado após o PASSWORD_RECOVERY,
+// quando o Supabase já recuperou a sessão temporária a partir do token
+// no link do email.
+export const updatePassword = (newPassword) =>
+  supabase.auth.updateUser({ password: newPassword })
+
 // ─────────────────────────────────────────────
 // Perfil
 // ─────────────────────────────────────────────
