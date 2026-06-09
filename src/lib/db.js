@@ -296,27 +296,181 @@ export const deleteComment = async (commentId) => {
 }
 
 // Realtime: feed
-// FIX QA: aplica debounce de 600ms no callback de refresh — antes, cada
-// reação/comentário/curtida de QUALQUER usuário disparava um refetch
-// completo (com todos os joins), saturando o cliente em momentos de
-// atividade. Agora múltiplos eventos em sequência colapsam num único
-// refetch.
-const debounce = (fn, ms) => {
+//
+// FIX QA (v2): em vez de refazer fetchPosts() inteiro a cada evento (que com
+// N usuários online vira N queries pesadas simultâneas no Supabase), aplicamos
+// **patches incrementais** no cache local usando o próprio payload do
+// postgres_changes. Likes e reactions são autossuficientes (não precisam ir
+// ao banco); comments e posts INSERT/UPDATE buscam só a linha afetada para
+// pegar o perfil do autor.
+//
+// Refetch global vira fallback — disparado só quando um patch falha ou quando
+// chega um evento que não sabemos tratar. O fallback usa debounce com
+// jitter aleatório (600ms + 0..1500ms) pra espalhar requisições entre
+// clientes em vez de todos baterem no mesmo instante.
+const debounceJittered = (fn, baseMs, jitterMs) => {
   let timeout
   return (...args) => {
     clearTimeout(timeout)
-    timeout = setTimeout(() => fn(...args), ms)
+    const delay = baseMs + Math.random() * jitterMs
+    timeout = setTimeout(() => fn(...args), delay)
   }
 }
 
-export const subscribeToPosts = (onRefresh) => {
-  const debouncedRefresh = debounce(onRefresh, 600)
+// Cache de perfis recém-buscados para enriquecer comments/posts via realtime.
+// TTL curto (60s) só pra coalescer enxurradas — fora isso não vale a pena
+// manter algo "global".
+const profileMicroCache = new Map()
+const PROFILE_CACHE_TTL = 60_000
+
+const fetchProfileLite = async (userId, fields) => {
+  const cacheKey = `${userId}:${fields}`
+  const cached = profileMicroCache.get(cacheKey)
+  if (cached && Date.now() - cached.at < PROFILE_CACHE_TTL) return cached.data
+  const { data } = await supabase
+    .from('profiles')
+    .select(fields)
+    .eq('id', userId)
+    .maybeSingle()
+  if (data) profileMicroCache.set(cacheKey, { data, at: Date.now() })
+  return data
+}
+
+export const subscribeToFeed = ({ applyPatch, fallbackRefresh }) => {
+  const fallback = debounceJittered(() => fallbackRefresh?.(), 600, 1500)
+
+  const onLike = (payload) => {
+    const row = payload.new && Object.keys(payload.new).length ? payload.new : payload.old
+    if (!row?.post_id || !row?.user_id) return
+    const { post_id, user_id } = row
+    applyPatch((prev) => prev.map((p) => {
+      if (p.id !== post_id) return p
+      const likes = p.likes || []
+      if (payload.eventType === 'INSERT') {
+        return likes.includes(user_id) ? p : { ...p, likes: [...likes, user_id] }
+      }
+      if (payload.eventType === 'DELETE') {
+        return { ...p, likes: likes.filter((id) => id !== user_id) }
+      }
+      return p
+    }))
+  }
+
+  const onReaction = (payload) => {
+    const row = payload.new && Object.keys(payload.new).length ? payload.new : payload.old
+    if (!row?.post_id || !row?.user_id || !row?.emoji) return
+    const { post_id, user_id, emoji } = row
+    applyPatch((prev) => prev.map((p) => {
+      if (p.id !== post_id) return p
+      const reactions = { ...(p.reactions || {}) }
+      const arr = reactions[emoji] || []
+      if (payload.eventType === 'INSERT') {
+        if (!arr.includes(user_id)) reactions[emoji] = [...arr, user_id]
+      } else if (payload.eventType === 'DELETE') {
+        const next = arr.filter((id) => id !== user_id)
+        if (next.length === 0) delete reactions[emoji]
+        else reactions[emoji] = next
+      }
+      return { ...p, reactions }
+    }))
+  }
+
+  const onComment = async (payload) => {
+    if (payload.eventType === 'DELETE') {
+      const id = payload.old?.id
+      if (!id) return
+      applyPatch((prev) => prev.map((p) => ({
+        ...p,
+        comments: (p.comments || []).filter((c) => c.id !== id),
+      })))
+      return
+    }
+
+    if (payload.eventType === 'UPDATE') {
+      const row = payload.new
+      if (!row?.id) return
+      applyPatch((prev) => prev.map((p) => ({
+        ...p,
+        comments: (p.comments || []).map((c) =>
+          c.id === row.id
+            ? { ...c, content: row.content, updatedAt: row.updated_at || null }
+            : c
+        ),
+      })))
+      return
+    }
+
+    if (payload.eventType === 'INSERT') {
+      const row = payload.new
+      if (!row?.id || !row?.post_id) return
+      const prof = await fetchProfileLite(row.user_id, 'name, pronoun')
+      const comment = {
+        id: row.id,
+        userId: row.user_id,
+        userName: prof?.name || 'Usuário',
+        userPronoun: prof?.pronoun || '',
+        content: row.content,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at || null,
+      }
+      applyPatch((prev) => prev.map((p) => {
+        if (p.id !== row.post_id) return p
+        // Dedup: o autor pode já ter inserido localmente via optimistic update.
+        const existing = (p.comments || []).filter((c) => c.id !== row.id)
+        return {
+          ...p,
+          comments: [...existing, comment].sort(
+            (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+          ),
+        }
+      }))
+    }
+  }
+
+  const onPostChange = async (payload) => {
+    if (payload.eventType === 'DELETE') {
+      const id = payload.old?.id
+      if (!id) return
+      applyPatch((prev) => prev.filter((p) => p.id !== id))
+      return
+    }
+
+    const id = payload.new?.id
+    if (!id) return
+    const { data } = await supabase
+      .from('posts')
+      .select(POST_SELECT)
+      .eq('id', id)
+      .maybeSingle()
+    if (!data) return
+    const mapped = mapPost(data)
+
+    applyPatch((prev) => {
+      if (payload.eventType === 'INSERT') {
+        if (prev.some((p) => p.id === mapped.id)) {
+          return prev.map((p) => (p.id === mapped.id ? mapped : p))
+        }
+        return [mapped, ...prev]
+      }
+      return prev.map((p) => (p.id === mapped.id ? mapped : p))
+    })
+  }
+
+  const safe = (fn) => async (payload) => {
+    try {
+      await fn(payload)
+    } catch (e) {
+      console.error('[realtime] patch falhou, agendando refresh:', e)
+      fallback()
+    }
+  }
+
   const channel = supabase
     .channel('public:posts-feed')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, debouncedRefresh)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'post_likes' }, debouncedRefresh)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'post_reactions' }, debouncedRefresh)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'comments' }, debouncedRefresh)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, safe(onPostChange))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'post_likes' }, safe(onLike))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'post_reactions' }, safe(onReaction))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'comments' }, safe(onComment))
     .subscribe()
 
   return () => supabase.removeChannel(channel)

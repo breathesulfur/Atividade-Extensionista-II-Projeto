@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import PostCard from './PostCard'
 import CreatePost from './CreatePost'
-import { createPost, deletePost, subscribeToPosts } from '../lib/db'
+import { createPost, deletePost } from '../lib/db'
 import {
   getCachedPosts,
   refreshPosts,
   subscribePosts,
   mutatePosts,
+  subscribeFeedRealtime,
 } from '../lib/dataCache'
 import './Feed.css'
 
@@ -40,7 +41,11 @@ function Feed({ user, onUserUpdate, onOpenGroup, onOpenProfile }) {
     })
 
     loadPosts()
-    const unsubRealtime = subscribeToPosts(loadPosts)
+    // FIX QA (v2): realtime aplica patches incrementais direto no cache
+    // (likes/reactions/comments) em vez de refazer fetchPosts() a cada
+    // evento. Refetch global vira fallback, evitando que N clientes online
+    // batam no Supabase ao mesmo tempo quando qualquer um interage.
+    const unsubRealtime = subscribeFeedRealtime()
 
     return () => {
       unsubCache()

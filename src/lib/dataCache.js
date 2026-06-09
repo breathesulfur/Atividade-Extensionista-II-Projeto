@@ -23,7 +23,7 @@
  * Resultado prático: voltar pro Feed/Groups/Profile depois da primeira
  * visita é instantâneo, e o refresh acontece em background.
  */
-import { fetchPosts, fetchGroups } from './db'
+import { fetchPosts, fetchGroups, subscribeToFeed } from './db'
 
 // Persistência em localStorage com TTL.
 //
@@ -156,6 +156,19 @@ export const prefetchAll = () => {
   refreshPosts().catch(() => {})
   refreshGroups().catch(() => {})
 }
+
+// Conecta o realtime do feed ao cache compartilhado.
+//
+// FIX QA (v2): antes, cada evento em posts/likes/reactions/comments disparava
+// um fetchPosts() completo em TODOS os clientes conectados — com N usuários
+// online, isso virava N queries pesadas simultâneas no Supabase a cada
+// reação. Agora os eventos viram patches incrementais via mutatePosts
+// (ver subscribeToFeed em db.js), e refreshPosts só é chamado como fallback.
+export const subscribeFeedRealtime = () =>
+  subscribeToFeed({
+    applyPatch: mutatePosts,
+    fallbackRefresh: () => { refreshPosts().catch(() => {}) },
+  })
 
 // Limpa cache (ex.: logout) pra evitar vazamento entre sessões.
 export const clearCache = () => {
