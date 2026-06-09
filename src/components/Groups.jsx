@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react'
 import GroupCard from './GroupCard'
 import CreateGroup from './CreateGroup'
 import LoadingSpinner from './LoadingSpinner'
-import { fetchGroups, createGroup as dbCreateGroup, deleteGroup as dbDeleteGroup, joinGroup, leaveGroup, createNotification } from '../lib/db'
+import { createGroup as dbCreateGroup, deleteGroup as dbDeleteGroup, joinGroup, leaveGroup, createNotification } from '../lib/db'
+import {
+  getCachedGroups,
+  refreshGroups,
+  subscribeGroups,
+  mutateGroups,
+} from '../lib/dataCache'
 import { addEssence, ESSENCE, checkBadges, getActionMessage, BADGES, getEssenceGained } from '../utils/gamification'
 import { getPosts } from '../utils/storage'
 import { notifyAchievement, notifyEssenceGained, notifySuccess, notifyError } from '../utils/notifications'
@@ -41,20 +47,37 @@ function getGameMeta(gameName) {
 }
 
 function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened, onOpenProfile }) {
-  const [groups, setGroups] = useState([])
+  // FIX QA: estado inicial vem do cache compartilhado (dataCache).
+  // Antes, clicar na aba Grupos depois de visitar outra aba mostrava
+  // "carregando" por algumas centenas de ms até o fetchGroups responder.
+  const [groups, setGroups] = useState(() => getCachedGroups() || [])
   const [showCreateGroup, setShowCreateGroup] = useState(false)
   const [selectedGroup, setSelectedGroup] = useState(null)
   // FIX bug pós-QA: estado de loading para evitar "flash" da empty-state
   // (que aparecia entre o mount inicial com groups=[] e a resolução do fetch).
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(() => getCachedGroups() === null)
 
   const loadGroups = async () => {
-    const data = await fetchGroups()
-    setGroups(data)
+    await refreshGroups()
     setLoading(false)
   }
 
-  useEffect(() => { loadGroups() }, [])
+  useEffect(() => {
+    const cached = getCachedGroups()
+    if (cached) {
+      setGroups(cached)
+      setLoading(false)
+    }
+
+    const unsubscribe = subscribeGroups((next) => {
+      setGroups(next)
+      setLoading(false)
+    })
+
+    loadGroups()
+
+    return unsubscribe
+  }, [])
 
   // Quando vem um targetGroupId externo (compartilhamento via post),
   // abre automaticamente o grupo correspondente.
@@ -70,7 +93,7 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened, onOpenProfil
   // Cria novo grupo
   const handleCreateGroup = async (groupData) => {
     const newGroup = await dbCreateGroup(user.id, groupData.name, groupData.description, groupData.game)
-    if (newGroup) setGroups(prev => [...prev, newGroup])
+    if (newGroup) mutateGroups(prev => [...prev, newGroup])
     setShowCreateGroup(false)
   }
 
@@ -82,7 +105,7 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened, onOpenProfil
     if (!window.confirm(`Tem certeza que deseja excluir o grupo "${group.name}"?`)) return
 
     await dbDeleteGroup(groupId)
-    setGroups(prev => prev.filter(g => g.id !== groupId))
+    mutateGroups(prev => prev.filter(g => g.id !== groupId))
     notifySuccess('Grupo excluído com sucesso!')
   }
 
@@ -94,12 +117,12 @@ function Groups({ user, onUserUpdate, targetGroupId, onGroupOpened, onOpenProfil
     if (isMember) {
       if (!window.confirm('Tem certeza que deseja sair do grupo?')) return
       await leaveGroup(groupId, user.id)
-      setGroups(prev => prev.map(g =>
+      mutateGroups(prev => prev.map(g =>
         g.id === groupId ? { ...g, members: g.members.filter(id => id !== user.id) } : g
       ))
     } else {
       await joinGroup(groupId, user.id)
-      setGroups(prev => prev.map(g =>
+      mutateGroups(prev => prev.map(g =>
         g.id === groupId ? { ...g, members: [...g.members, user.id] } : g
       ))
 
