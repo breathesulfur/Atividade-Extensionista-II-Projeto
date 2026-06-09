@@ -548,8 +548,15 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         return
       }
 
-      // Valida senha se foi fornecida
-      if (formData.password && formData.password.trim()) {
+      // FIX QA: só considera "trocar de senha" se o usuário preencheu
+      // AMBOS os campos. Sem isto, autofill do navegador no campo
+      // "Nova Senha" (sem mexer no confirm) disparava "senhas não
+      // coincidem" mesmo o usuário não tendo intenção de mudar a senha.
+      const senhaInformada = formData.password && formData.password.trim()
+      const confirmacaoInformada = formData.confirmPassword && formData.confirmPassword.trim()
+      const trocandoSenha = senhaInformada && confirmacaoInformada
+
+      if (trocandoSenha) {
         if (formData.password.length < 6) {
           notifyError('A senha deve ter pelo menos 6 caracteres.')
           setLastErrorSection('account-data')
@@ -564,6 +571,14 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
           setLoading(false)
           return
         }
+      } else if (senhaInformada && !confirmacaoInformada) {
+        // Usuário começou a digitar uma senha mas não confirmou.
+        // Pede a confirmação em vez de bloquear silenciosamente.
+        notifyError('Confirme a nova senha para alterá-la.')
+        setLastErrorSection('account-data')
+        setOpenSection('account-data')
+        setLoading(false)
+        return
       }
 
       // Simula delay de requisição
@@ -771,6 +786,12 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
                 placeholder="Deixe em branco para manter a senha atual"
                 disabled={loading}
                 minLength={6}
+                // FIX QA: sem isto, o Chrome/Firefox autofilla a senha
+                // salva da conta no campo "Nova Senha" assim que o form
+                // monta — o usuário não digitou nada, mas formData.password
+                // já chega populado e a validação reclama "senhas não
+                // coincidem" no submit.
+                autoComplete="new-password"
               />
               <button
                 type="button"
@@ -809,6 +830,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
                     placeholder="Confirme a nova senha"
                     disabled={loading}
                     minLength={6}
+                    autoComplete="new-password"
                   />
                   <button
                     type="button"
