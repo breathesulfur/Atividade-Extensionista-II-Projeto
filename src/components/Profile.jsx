@@ -24,10 +24,23 @@ const computeStats = (userId, posts, groups) => {
       count + (post.comments?.filter((c) => c.userId === userId).length || 0),
     0
   )
-  const totalLikes = userPosts.reduce(
-    (count, post) => count + (post.likes?.length || 0),
-    0
-  )
+  // FIX QA: "curtidas" agora são armazenadas como reação ❤️ na tabela
+  // post_reactions (handleReaction em PostCard chama dbToggleReaction).
+  // A tabela post_likes virou legado e fica vazia para posts novos —
+  // contar post.likes deixava a estatística sempre em 0.
+  //
+  // Agora somamos todas as reações recebidas (qualquer emoji), o que
+  // bate com o que o autor vê embaixo do próprio post. Para posts antigos
+  // sem entradas em post_reactions, caímos no fallback de post.likes.
+  const totalLikes = userPosts.reduce((count, post) => {
+    const reactions = post.reactions || {}
+    const reactionCount = Object.values(reactions).reduce(
+      (sum, users) => sum + (users?.length || 0),
+      0
+    )
+    if (reactionCount > 0) return count + reactionCount
+    return count + (post.likes?.length || 0)
+  }, 0)
   const userGroups = groups.filter((g) => g.createdBy === userId)
   return {
     posts: userPosts.length,
@@ -277,7 +290,7 @@ function Profile({ user, onUserUpdate, isOwnProfile = true, onBack }) {
             </div>
             <div className="stat-card">
               <div className="stat-value">{stats.likes}</div>
-              <div className="stat-label">Curtidas Recebidas</div>
+              <div className="stat-label">Reações Recebidas</div>
             </div>
             <div className="stat-card">
               <div className="stat-value">{stats.groups}</div>
