@@ -98,6 +98,36 @@ create table public.group_messages (
 );
 
 -- =============================================
+-- ÍNDICES (performance)
+-- =============================================
+--
+-- Sem esses índices, a query do feed (posts ⨝ likes/reactions/comments
+-- com ORDER BY created_at + LIMIT 50) faz seq scan + nested loops sob
+-- RLS — em produção isso virava ~60s na primeira carga ("Carregando
+-- postagens..."). Para bancos existentes, ver supabase_migration_indexes.sql.
+
+CREATE INDEX IF NOT EXISTS idx_posts_created_at
+  ON public.posts(created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_post_likes_post_id
+  ON public.post_likes(post_id);
+
+CREATE INDEX IF NOT EXISTS idx_post_reactions_post_id
+  ON public.post_reactions(post_id);
+
+CREATE INDEX IF NOT EXISTS idx_comments_post_id_created_at
+  ON public.comments(post_id, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_comments_user_id
+  ON public.comments(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_group_members_user_id
+  ON public.group_members(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_group_messages_group_created
+  ON public.group_messages(group_id, created_at);
+
+-- =============================================
 -- ROW LEVEL SECURITY (RLS)
 -- =============================================
 

@@ -69,3 +69,11 @@ create policy "feedback_select" on public.feedback
 -- 4. REALTIME para notifications
 -- =============================================
 alter publication supabase_realtime add table public.notifications;
+
+-- =============================================
+-- 5. ÍNDICES (performance)
+-- =============================================
+-- Acelera o fetchNotifications(userId) — filtra por user_id e ordena
+-- por created_at DESC com LIMIT 50.
+CREATE INDEX IF NOT EXISTS idx_notifications_user_created
+  ON public.notifications(user_id, created_at DESC);

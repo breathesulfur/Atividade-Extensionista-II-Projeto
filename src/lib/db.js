@@ -182,7 +182,25 @@ export const updateProfile = async (userId, userData) => {
 // Posts
 // ─────────────────────────────────────────────
 
+// FIX QA: tirei o `profiles:user_id (name, pronoun)` que ficava DENTRO
+// de comments. Embora pareça uma string a mais, esse join aninhado é
+// avaliado por linha sob RLS — pra cada comentário de cada post o
+// PostgREST faz um lookup de profile sob política, o que vira O(N×M)
+// mesmo com índice. Em produção isso virou o gargalo: ~60s no login
+// inicial. O perfil dos comentaristas agora é resolvido em uma única
+// query em batch depois (ver enrichCommentAuthors).
 const POST_SELECT = `
+  *,
+  profiles:user_id (name, pronoun, avatar, city, state, active_avatar_frame, unlocked_avatar_frames),
+  post_likes (user_id),
+  post_reactions (user_id, emoji),
+  comments (id, user_id, content, created_at, updated_at)
+`
+
+// Mesmo SELECT mas mantendo o profile aninhado dos comments — usado em
+// caminhos pontuais (criar post, refresh single post via realtime) onde
+// o custo é desprezível.
+const POST_SELECT_WITH_COMMENT_AUTHORS = `
   *,
   profiles:user_id (name, pronoun, avatar, city, state, active_avatar_frame, unlocked_avatar_frames),
   post_likes (user_id),
@@ -190,15 +208,66 @@ const POST_SELECT = `
   comments (id, user_id, content, created_at, updated_at, profiles:user_id (name, pronoun))
 `
 
-// FIX QA: limita o feed aos 50 posts mais recentes. Sem o limit, a query
-// com todos os joins (profiles, likes, reactions, comments + perfil de cada
-// comment) carregava TODOS os posts do banco a cada login E a cada
-// reação/comentário de qualquer usuário (via realtime), causando lentidão
-// crescente conforme o banco cresce. 50 é o suficiente pra preencher
-// várias telas de scroll; carregar mais é um follow-up de paginação real.
-const FEED_PAGE_SIZE = 50
+// FIX QA: limit 50 → 20. Cada post traz N comentários + likes + reactions
+// no payload — reduzir o tamanho do resultado também alivia o serializer.
+// Quem precisar de mais posts vai via scroll paginado (follow-up).
+const FEED_PAGE_SIZE = 20
+
+// Cache em memória de perfis recentemente resolvidos pra dedupes entre
+// fetchPosts e patches de realtime. TTL curto (60s) — só evita refetch
+// dos mesmos perfis em bursts; mudanças de nome se refletem rápido.
+const PROFILE_BATCH_CACHE_TTL = 60_000
+const profileBatchCache = new Map()
+
+// Resolve em batch os perfis dos autores dos comentários. Uma única
+// query (SELECT ... WHERE id IN (...)) usando o PK index — instantâneo
+// mesmo com milhares de profiles.
+const enrichCommentAuthors = async (mappedPosts) => {
+  const missingIds = new Set()
+  const now = Date.now()
+  for (const post of mappedPosts) {
+    for (const c of post.comments) {
+      if (!c.userId) continue
+      const cached = profileBatchCache.get(c.userId)
+      if (cached && now - cached.at < PROFILE_BATCH_CACHE_TTL) continue
+      missingIds.add(c.userId)
+    }
+  }
+
+  if (missingIds.size > 0) {
+    const { data } = await supabase
+      .from('profiles')
+      .select('id, name, pronoun')
+      .in('id', Array.from(missingIds))
+    for (const row of data || []) {
+      profileBatchCache.set(row.id, { data: row, at: now })
+    }
+  }
+
+  // Aplica os nomes nos comentários.
+  for (const post of mappedPosts) {
+    for (const c of post.comments) {
+      if (c.userName && c.userName !== 'Usuário') continue
+      const cached = profileBatchCache.get(c.userId)?.data
+      if (cached) {
+        c.userName = cached.name || 'Usuário'
+        c.userPronoun = cached.pronoun || ''
+      }
+    }
+  }
+  return mappedPosts
+}
+
+// performance.now() precisa ser chamado como método de `performance` —
+// extrair a função (const fn = performance.now) perde o binding e
+// dispara "Illegal invocation". Wrapper inline preserva o contexto.
+const nowMs = () =>
+  typeof performance !== 'undefined' && performance.now
+    ? performance.now()
+    : Date.now()
 
 export const fetchPosts = async () => {
+  const started = nowMs()
   const { data, error } = await supabase
     .from('posts')
     .select(POST_SELECT)
@@ -206,7 +275,17 @@ export const fetchPosts = async () => {
     .limit(FEED_PAGE_SIZE)
 
   if (error) { console.error('Erro ao buscar posts:', error); return [] }
-  return (data || []).map(mapPost)
+  const mapped = (data || []).map(mapPost)
+  await enrichCommentAuthors(mapped)
+
+  // Log de telemetria pra confirmar o efeito dos índices/refactor.
+  const elapsed = Math.round(nowMs() - started)
+  if (elapsed > 500) {
+    console.warn(`[fetchPosts] demorou ${elapsed}ms (${mapped.length} posts)`)
+  } else {
+    console.info(`[fetchPosts] ${elapsed}ms (${mapped.length} posts)`)
+  }
+  return mapped
 }
 
 export const createPost = async (userId, content) => {
@@ -437,9 +516,11 @@ export const subscribeToFeed = ({ applyPatch, fallbackRefresh }) => {
 
     const id = payload.new?.id
     if (!id) return
+    // Pra um único post o join aninhado de comments→profiles é trivial,
+    // então usamos o SELECT completo (sem precisar de enrichCommentAuthors).
     const { data } = await supabase
       .from('posts')
-      .select(POST_SELECT)
+      .select(POST_SELECT_WITH_COMMENT_AUTHORS)
       .eq('id', id)
       .maybeSingle()
     if (!data) return
