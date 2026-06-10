@@ -157,9 +157,7 @@ Onde encontrar:
 - **Supabase**: Dashboard → Project Settings → API
 - **EmailJS**: [emailjs.com](https://www.emailjs.com) → Account → API Keys
 
-> Todos os `.env*` (exceto `.env.example`) são ignorados pelo Git.
-
-### Schema do Banco
+### Esquema do Banco
 
 Execute os arquivos SQL no **Supabase → SQL Editor**, na ordem:
 
