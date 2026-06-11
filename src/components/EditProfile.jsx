@@ -166,6 +166,26 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+  // FIX QA: rastreia se o usuário realmente tem intenção de mudar a senha.
+  // autoComplete="new-password" não é 100% respeitado (Chrome/Edge +
+  // gerenciadores de senha autofillam mesmo assim) e o accordion mantém
+  // os inputs no DOM mesmo colapsados, então a senha pode ser injetada
+  // silenciosamente. Só consideramos "trocar senha" se o usuário digitou
+  // (keydown imprimível) ou clicou no olho — autofill não dispara nenhum
+  // dos dois.
+  const userIntendsPasswordChangeRef = useRef(false)
+  const markPasswordIntent = useCallback(() => {
+    userIntendsPasswordChangeRef.current = true
+  }, [])
+  const handlePasswordKeyDown = useCallback((e) => {
+    // Ignora teclas de navegação/modificadores — só conta digitação real.
+    if (e.key && e.key.length === 1) {
+      userIntendsPasswordChangeRef.current = true
+    } else if (e.key === 'Backspace' || e.key === 'Delete') {
+      userIntendsPasswordChangeRef.current = true
+    }
+  }, [])
   
   // Estado para controlar accordion (apenas uma seção aberta por vez)
   // Foto de Perfil abre por padrão
@@ -548,13 +568,16 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
         return
       }
 
-      // FIX QA: só considera "trocar de senha" se o usuário preencheu
-      // AMBOS os campos. Sem isto, autofill do navegador no campo
-      // "Nova Senha" (sem mexer no confirm) disparava "senhas não
-      // coincidem" mesmo o usuário não tendo intenção de mudar a senha.
+      // FIX QA: só considera "trocar de senha" se o usuário realmente
+      // teve intenção (digitou ou clicou no olho). Antes confiávamos no
+      // autoComplete="new-password" + "ambos campos preenchidos", mas
+      // Chrome/Edge/gerenciadores ainda autofillam silenciosamente —
+      // inclusive com a aba "Dados da Conta" colapsada, porque o
+      // accordion mantém os inputs no DOM. Isso fazia o submit acusar
+      // "senhas não coincidem" sem o usuário ter tocado em senha.
       const senhaInformada = formData.password && formData.password.trim()
       const confirmacaoInformada = formData.confirmPassword && formData.confirmPassword.trim()
-      const trocandoSenha = senhaInformada && confirmacaoInformada
+      const trocandoSenha = userIntendsPasswordChangeRef.current && senhaInformada && confirmacaoInformada
 
       if (trocandoSenha) {
         if (formData.password.length < 6) {
@@ -571,7 +594,7 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
           setLoading(false)
           return
         }
-      } else if (senhaInformada && !confirmacaoInformada) {
+      } else if (userIntendsPasswordChangeRef.current && senhaInformada && !confirmacaoInformada) {
         // Usuário começou a digitar uma senha mas não confirmou.
         // Pede a confirmação em vez de bloquear silenciosamente.
         notifyError('Confirme a nova senha para alterá-la.')
@@ -781,7 +804,8 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                onBlur={(e) => !loading && formData.password && validatePassword(e, 6)}
+                onKeyDown={handlePasswordKeyDown}
+                onBlur={(e) => !loading && userIntendsPasswordChangeRef.current && formData.password && validatePassword(e, 6)}
                 className="form-input password-input"
                 placeholder="Deixe em branco para manter a senha atual"
                 disabled={loading}
@@ -795,7 +819,10 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => {
+                  markPasswordIntent()
+                  setShowPassword(!showPassword)
+                }}
                 className="password-toggle"
                 aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                 tabIndex={0}
@@ -825,7 +852,8 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    onBlur={(e) => !loading && formData.confirmPassword && validateConfirmPassword(e, formData.password)}
+                    onKeyDown={handlePasswordKeyDown}
+                    onBlur={(e) => !loading && userIntendsPasswordChangeRef.current && formData.confirmPassword && validateConfirmPassword(e, formData.password)}
                     className="form-input password-input"
                     placeholder="Confirme a nova senha"
                     disabled={loading}
@@ -834,7 +862,10 @@ function EditProfile({ user, onSave, onCancel, onUserUpdate }) {
                   />
                   <button
                     type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    onClick={() => {
+                      markPasswordIntent()
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }}
                     className="password-toggle"
                     aria-label={showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'}
                     tabIndex={0}
